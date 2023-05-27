@@ -16,6 +16,9 @@
       ],
       "parserOptions": {
         "project": "tsconfig.json"
+      },
+      "rules": {
+        "no-underscore-dangle": ["error", { "allow": ["_mongoClientPromise"] }]
       }
     }
   ]

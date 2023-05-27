@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "jsdom": "^22.0.0",
+    "mongodb": "^5.5.0",
     "next": "13.4.4",
     "object-hash": "^3.0.0",
     "react": "18.2.0",

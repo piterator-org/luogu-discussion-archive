@@ -1,9 +1,13 @@
-import fetchDiscussion from "@/lib/fetch";
+import { notFound } from "next/navigation";
+import { collection } from "@/lib/mongodb";
 
 export default async function Page({ params }: { params: { id: string } }) {
-  const { author, content, forum, replies, time } = await fetchDiscussion(
-    params.id
-  );
+  const { author, content, forum, replies, time } =
+    (await (
+      await collection
+    ).findOne({
+      id: parseInt(params.id, 10),
+    })) ?? notFound();
   return (
     <>
       <div>
