@@ -6,7 +6,7 @@ export default async function Page({ params }: { params: { id: string } }) {
     (await (
       await collection
     ).findOne({
-      id: parseInt(params.id, 10),
+      _id: parseInt(params.id, 10),
     })) ?? notFound();
   return (
     <>

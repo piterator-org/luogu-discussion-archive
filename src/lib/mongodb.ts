@@ -22,10 +22,6 @@ const clientPromise =
 // separate module, the client can be shared across functions.
 export default clientPromise;
 
-export const collection = clientPromise.then(async (client) => {
-  const coll = client
-    .db("luoguDiscussionArchive")
-    .collection<Discussion>("discussions");
-  await coll.createIndex("id", { unique: true });
-  return coll;
-});
+export const collection = clientPromise.then((client) =>
+  client.db("luoguDiscussionArchive").collection<Discussion>("discussions")
+);

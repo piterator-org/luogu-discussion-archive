@@ -8,7 +8,7 @@ interface Reply {
 }
 
 export interface Discussion {
-  id: number;
+  _id: number;
   forum: string;
   author: number;
   time: Date;
@@ -115,5 +115,5 @@ export default (async function fetchDiscussion(id) {
     replies.push(...pageReplies.slice(offset));
     pageHashes.forEach((h) => hashes.add(h));
   }
-  return { id, ...extractMetadata(app), replies: replies.reverse() };
+  return { _id: id, ...extractMetadata(app), replies: replies.reverse() };
 } as (id: number) => Promise<Discussion>);
