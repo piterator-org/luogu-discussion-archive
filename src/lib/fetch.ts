@@ -1,6 +1,6 @@
 import { JSDOM } from "jsdom";
 import hash from "object-hash";
-import { collection } from "@/lib/mongodb";
+import { collection, users } from "@/lib/mongodb";
 
 export interface Reply {
   author: number;
@@ -22,18 +22,30 @@ async function fetchPage(id: number, page: number) {
 }
 
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-const extractPage = (app: HTMLElement) =>
+function extractUser(element: Element, promises: Promise<unknown>[]) {
+  const a = element.querySelector('a[href^="/user/"]')!;
+  const uid = parseInt(a.getAttribute("href")!.slice("/user/".length), 10);
+  const user = {
+    username: a.textContent!,
+    color: a.getAttribute("class")!.split(" ", 1)[0].slice("lg-fg-".length),
+    checkmark: element.querySelector("a > svg")?.getAttribute("fill") ?? "",
+    badge: element.querySelector("span.am-badge")?.innerHTML ?? "",
+  };
+  promises.push(
+    users.then((c) =>
+      c.updateOne({ _id: uid }, { $set: user }, { upsert: true })
+    )
+  );
+  return uid;
+}
+
+const extractPage = (app: HTMLElement, promises: Promise<unknown>[]) =>
   Array.from(
     app.querySelectorAll("article.am-comment-primary > div.am-comment-main")
   ).map((element) => ({
-    author: parseInt(
-      element
-        .querySelector(
-          'header.am-comment-hd > div.am-comment-meta > a[href^="/user/"]'
-        )!
-        .getAttribute("href")!
-        .slice("/user/".length),
-      10
+    author: extractUser(
+      element.querySelector("header.am-comment-hd > div.am-comment-meta")!,
+      promises
     ),
     time: new Date(
       `${
@@ -51,19 +63,17 @@ const extractPage = (app: HTMLElement) =>
     content: element.querySelector("div.am-comment-bd")!.innerHTML.trim(),
   })) as Reply[];
 
-const extractMetadata = (app: HTMLElement) => ({
+const extractMetadata = (app: HTMLElement, promises: Promise<unknown>[]) => ({
   forum: app
     .querySelector(
       'ul.lg-summary-list > li > span > a[href^="/discuss/lists?forumname="]'
     )!
     .getAttribute("href")!
     .slice("/discuss/lists?forumname=".length),
-  author: parseInt(
-    app
-      .querySelector('ul.lg-summary-list > li > span > a[href^="/user/"]')!
-      .getAttribute("href")!
-      .slice("/user/".length),
-    10
+  author: extractUser(
+    app.querySelector('ul.lg-summary-list > li > span > a[href^="/user/"]')!
+      .parentElement!,
+    promises
   ),
   time: new Date(
     `${Array.from(app.querySelectorAll("ul.lg-summary-list > li > span")!)
@@ -78,7 +88,11 @@ const extractMetadata = (app: HTMLElement) => ({
 });
 /* eslint-enable @typescript-eslint/no-non-null-assertion */
 
-async function fetchReplies(id: number, pages: number) {
+async function fetchReplies(
+  id: number,
+  pages: number,
+  promises: Promise<unknown>[]
+) {
   const lastSaved = await (await collection).findOne({ _id: id });
   const lashHashes = new Set(lastSaved?.replies.map(hash.MD5));
 
@@ -87,7 +101,7 @@ async function fetchReplies(id: number, pages: number) {
   for (let i = pages; i > 0; i -= 1) {
     const pageHashes: string[] = [];
     // eslint-disable-next-line no-await-in-loop
-    const pageReplies = extractPage(await fetchPage(id, i))
+    const pageReplies = extractPage(await fetchPage(id, i), promises)
       .reverse()
       .filter((reply, index) =>
         ((replyHash) =>
@@ -118,6 +132,7 @@ async function fetchReplies(id: number, pages: number) {
 
 export default async function saveDiscussion(id: number) {
   const app = await fetchPage(id, 1);
+  const promises: Promise<unknown>[] = [];
   const replies = await fetchReplies(
     id,
     Math.max(
@@ -125,14 +140,15 @@ export default async function saveDiscussion(id: number) {
         (e) => parseInt(e.getAttribute("data-ci-pagination-page") as string, 10)
       ),
       1
-    )
+    ),
+    promises
   );
   await (
     await collection
   ).updateOne(
     { _id: id },
     {
-      $set: extractMetadata(app),
+      $set: extractMetadata(app, promises),
       $push: { replies: { $each: replies } },
       $currentDate: { lastUpdate: { $type: "date" } },
     },

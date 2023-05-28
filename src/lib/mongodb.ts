@@ -1,5 +1,5 @@
 import { MongoClient } from "mongodb";
-import type { Discussion } from "@/types/mongodb";
+import type { Discussion, User } from "@/types/mongodb";
 
 if (!process.env.MONGO_URI)
   throw Error(
@@ -22,6 +22,12 @@ const clientPromise =
 // separate module, the client can be shared across functions.
 export default clientPromise;
 
-export const collection = clientPromise.then((client) =>
-  client.db("luoguDiscussionArchive").collection<Discussion>("discussions")
+const dbPromise = clientPromise.then((client) =>
+  client.db("luoguDiscussionArchive")
 );
+
+export const collection = dbPromise.then((db) =>
+  db.collection<Discussion>("discussions")
+);
+
+export const users = dbPromise.then((db) => db.collection<User>("users"));

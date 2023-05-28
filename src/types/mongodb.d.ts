@@ -15,3 +15,11 @@ export interface Discussion {
   content: string;
   replies: Reply[];
 }
+
+export interface User {
+  _id: number;
+  username: string;
+  color: string;
+  checkmark: string;
+  badge: string;
+}
