@@ -7,7 +7,8 @@ export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  const data = await fetchDiscussion(parseInt(params.id, 10));
-  await (await collection).insertOne(data);
+  const id = parseInt(params.id, 10);
+  await fetchDiscussion(id);
+  const data = await (await collection).findOne({ _id: id });
   return NextResponse.json({ data });
 }

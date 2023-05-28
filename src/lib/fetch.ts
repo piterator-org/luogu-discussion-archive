@@ -1,5 +1,6 @@
 import { JSDOM } from "jsdom";
 import hash from "object-hash";
+import { collection } from "@/lib/mongodb";
 
 interface Reply {
   author: number;
@@ -86,7 +87,7 @@ const extractMetadata = (app: HTMLElement) => ({
 });
 /* eslint-enable @typescript-eslint/no-non-null-assertion */
 
-export default (async function fetchDiscussion(id) {
+export default async function fetchDiscussion(id: number) {
   const app = await fetchPage(id, 1);
   const lastPage = Math.max(
     ...Array.from(app.querySelectorAll("[data-ci-pagination-page]")).map(
@@ -95,6 +96,8 @@ export default (async function fetchDiscussion(id) {
     ),
     1
   );
+  const lastSaved = await (await collection).findOne({ _id: id });
+  const lashHashes = new Set(lastSaved?.replies.map(hash.MD5));
 
   const hashes: Set<string> = new Set();
   const replies: Reply[] = [];
@@ -114,6 +117,40 @@ export default (async function fetchDiscussion(id) {
       if (!hashes.has(pageHashes[offset])) break;
     replies.push(...pageReplies.slice(offset));
     pageHashes.forEach((h) => hashes.add(h));
+
+    if (lastSaved) {
+      while (
+        offset < pageReplies.length &&
+        !lashHashes.has(pageHashes[offset]) &&
+        pageReplies[offset].time >=
+          lastSaved.replies[lastSaved.replies.length - 1].time
+      )
+        offset += 1;
+      if (offset < pageReplies.length) {
+        /* eslint-disable no-await-in-loop */
+        await (
+          await collection
+        ).updateOne(
+          { _id: id },
+          {
+            $set: extractMetadata(app),
+            $push: {
+              replies: {
+                $each: replies.reverse().slice(pageReplies.length - offset),
+              },
+            },
+          }
+        );
+        return;
+        /* eslint-enable no-await-in-loop */
+      }
+    }
   }
-  return { _id: id, ...extractMetadata(app), replies: replies.reverse() };
-} as (id: number) => Promise<Discussion>);
+  await (
+    await collection
+  ).updateOne(
+    { _id: id },
+    { $set: { ...extractMetadata(app), replies: replies.reverse() } },
+    { upsert: true }
+  );
+}
