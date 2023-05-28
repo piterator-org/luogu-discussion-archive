@@ -2,19 +2,10 @@ import { JSDOM } from "jsdom";
 import hash from "object-hash";
 import { collection } from "@/lib/mongodb";
 
-interface Reply {
+export interface Reply {
   author: number;
   time: Date;
   content: string;
-}
-
-export interface Discussion {
-  _id: number;
-  forum: string;
-  author: number;
-  time: Date;
-  content: string;
-  replies: Reply[];
 }
 
 async function fetchPage(id: number, page: number) {
@@ -87,21 +78,13 @@ const extractMetadata = (app: HTMLElement) => ({
 });
 /* eslint-enable @typescript-eslint/no-non-null-assertion */
 
-export default async function fetchDiscussion(id: number) {
-  const app = await fetchPage(id, 1);
-  const lastPage = Math.max(
-    ...Array.from(app.querySelectorAll("[data-ci-pagination-page]")).map(
-      (element) =>
-        parseInt(element.getAttribute("data-ci-pagination-page") as string, 10)
-    ),
-    1
-  );
+async function fetchReplies(id: number, pages: number) {
   const lastSaved = await (await collection).findOne({ _id: id });
   const lashHashes = new Set(lastSaved?.replies.map(hash.MD5));
 
   const hashes: Set<string> = new Set();
   const replies: Reply[] = [];
-  for (let i = lastPage; i > 0; i -= 1) {
+  for (let i = pages; i > 0; i -= 1) {
     const pageHashes: string[] = [];
     // eslint-disable-next-line no-await-in-loop
     const pageReplies = extractPage(await fetchPage(id, i))
@@ -118,7 +101,7 @@ export default async function fetchDiscussion(id: number) {
     replies.push(...pageReplies.slice(offset));
     pageHashes.forEach((h) => hashes.add(h));
 
-    if (lastSaved) {
+    if (lastSaved && lastSaved.replies.length) {
       while (
         offset < pageReplies.length &&
         !lashHashes.has(pageHashes[offset]) &&
@@ -126,31 +109,33 @@ export default async function fetchDiscussion(id: number) {
           lastSaved.replies[lastSaved.replies.length - 1].time
       )
         offset += 1;
-      if (offset < pageReplies.length) {
-        /* eslint-disable no-await-in-loop */
-        await (
-          await collection
-        ).updateOne(
-          { _id: id },
-          {
-            $set: extractMetadata(app),
-            $push: {
-              replies: {
-                $each: replies.reverse().slice(pageReplies.length - offset),
-              },
-            },
-          }
-        );
-        return;
-        /* eslint-enable no-await-in-loop */
-      }
+      if (offset < pageReplies.length)
+        return replies.reverse().slice(pageReplies.length - offset);
     }
   }
+  return replies.reverse();
+}
+
+export default async function saveDiscussion(id: number) {
+  const app = await fetchPage(id, 1);
+  const replies = await fetchReplies(
+    id,
+    Math.max(
+      ...Array.from(app.querySelectorAll("[data-ci-pagination-page]")).map(
+        (e) => parseInt(e.getAttribute("data-ci-pagination-page") as string, 10)
+      ),
+      1
+    )
+  );
   await (
     await collection
   ).updateOne(
     { _id: id },
-    { $set: { ...extractMetadata(app), replies: replies.reverse() } },
+    {
+      $set: extractMetadata(app),
+      $push: { replies: { $each: replies } },
+      $currentDate: { lastUpdate: { $type: "date" } },
+    },
     { upsert: true }
   );
 }

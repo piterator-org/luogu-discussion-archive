@@ -1,5 +1,5 @@
 import { MongoClient } from "mongodb";
-import type { Discussion } from "@/lib/fetch";
+import type { Discussion } from "@/types/mongodb";
 
 if (!process.env.MONGO_URI)
   throw Error(
