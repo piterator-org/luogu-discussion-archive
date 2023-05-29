@@ -10,6 +10,7 @@ export interface Discussion {
   _id: number;
   lastUpdate: Date;
   forum: string;
+  title: string;
   author: number;
   time: Date;
   content: string;

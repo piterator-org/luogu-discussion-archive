@@ -66,6 +66,7 @@ export default async function saveDiscussion(id: number) {
     })) as Reply[];
 
   const extractMetadata = (app: HTMLElement) => ({
+    title: app.querySelector("div.lg-toolbar > h1")!.textContent!,
     forum: app
       .querySelector(
         'ul.lg-summary-list > li > span > a[href^="/discuss/lists?forumname="]'
