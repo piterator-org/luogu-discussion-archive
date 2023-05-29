@@ -18,7 +18,10 @@
         "project": "tsconfig.json"
       },
       "rules": {
-        "no-underscore-dangle": ["error", { "allow": ["_mongoClientPromise"] }]
+        "no-underscore-dangle": [
+          "error",
+          { "allow": ["_id", "_mongoClientPromise"] }
+        ]
       }
     }
   ]

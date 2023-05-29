@@ -3,6 +3,9 @@ const nextConfig = {
   eslint: {
     dirs: ["."],
   },
+  images: {
+    remotePatterns: [{ protocol: "https", hostname: "cdn.luogu.com.cn" }],
+  },
 };
 
 module.exports = nextConfig;
