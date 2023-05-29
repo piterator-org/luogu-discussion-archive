@@ -1,5 +1,6 @@
 import { JSDOM } from "jsdom";
 import hash from "object-hash";
+import pRetry, { AbortError } from "p-retry";
 import { collection, users } from "@/lib/mongodb";
 
 export interface Reply {
@@ -16,11 +17,14 @@ export default async function saveDiscussion(id: number) {
       `https://www.luogu.com.cn/discuss/${id}?page=${page}`,
       { headers: { cookie: process.env.COOKIE as string }, cache: "no-cache" }
     );
-    if (!response.ok) throw Error(response.statusText);
+    if (response.status > 500) throw Error(response.statusText);
+    if (!response.ok) throw new AbortError(response.statusText);
     const { document } = new JSDOM(await response.text()).window;
     const app = document.getElementById("app-old");
     if (!app)
-      throw Error(document.querySelector("div")?.textContent ?? undefined);
+      throw new AbortError(
+        Error(document.querySelector("div")?.textContent ?? undefined)
+      );
     return app;
   }
 
@@ -98,8 +102,10 @@ export default async function saveDiscussion(id: number) {
     const replies: Reply[] = [];
     for (let i = pages; i > 0; i -= 1) {
       const pageHashes: string[] = [];
-      // eslint-disable-next-line no-await-in-loop
-      const pageReplies = extractReplies(await fetchPage(i))
+      const pageReplies = extractReplies(
+        // eslint-disable-next-line no-await-in-loop
+        await pRetry(() => fetchPage(i), { retries: 3 })
+      )
         .reverse()
         .filter((reply, index) =>
           ((replyHash) =>
@@ -128,7 +134,7 @@ export default async function saveDiscussion(id: number) {
     return replies.reverse();
   }
 
-  const app = await fetchPage(1);
+  const app = await pRetry(() => fetchPage(1), { maxTimeout: 5000 });
   const replies = await fetchReplies(
     Math.max(
       ...Array.from(app.querySelectorAll("[data-ci-pagination-page]")).map(
