@@ -1,7 +1,9 @@
+"use client";
+
 import "katex/dist/katex.css";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
-import katex from "katex";
-import splitAtDelimiters from "katex/contrib/auto-render/splitAtDelimiters";
+import renderMathInElement from "katex/contrib/auto-render";
 import { User } from "@/types/mongodb";
 import UserInfo from "./UserInfo";
 
@@ -14,6 +16,18 @@ export default function Reply({
     content: string;
   };
 }) {
+  const contentRef = useRef<HTMLDivElement>(null);
+  useEffect(
+    () =>
+      renderMathInElement(contentRef.current as HTMLDivElement, {
+        delimiters: [
+          { left: "$$", right: "$$", display: true },
+          { left: "$", right: "$", display: false },
+        ],
+      }),
+    [reply.content]
+  );
+
   return (
     <div className="reply list-group-item position-relative">
       <a
@@ -38,19 +52,9 @@ export default function Reply({
         <div className="reply-content pe-4 py-2">
           <div
             className="markdown"
+            ref={contentRef}
             /* eslint-disable-next-line react/no-danger */
-            dangerouslySetInnerHTML={{
-              __html: splitAtDelimiters(reply.content, [
-                { left: "$$", right: "$$", display: true },
-                { left: "$", right: "$", display: false },
-              ])
-                .map((v) =>
-                  v.type === "math"
-                    ? katex.renderToString(v.data, { displayMode: v.display })
-                    : v.data
-                )
-                .join(""),
-            }}
+            dangerouslySetInnerHTML={{ __html: reply.content }}
           />
           <span
             className="text-end text-body-tertiary d-block d-md-none"
