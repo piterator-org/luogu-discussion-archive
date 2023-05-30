@@ -1,4 +1,4 @@
-export default function ForumName(forum: string): string {
+export default function getForumName(forum: string) {
   return (
     {
       siteaffairs: "站务版",
