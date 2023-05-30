@@ -1,5 +1,3 @@
-import "./bootstrap.scss";
-
 export default function NavBar() {
   return (
     <nav className="navbar navbar-expand-md fixed-top bg-white shadow-sm">
