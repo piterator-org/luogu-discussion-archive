@@ -41,8 +41,8 @@ export default function Reply({
             /* eslint-disable-next-line react/no-danger */
             dangerouslySetInnerHTML={{
               __html: splitAtDelimiters(reply.content, [
-                { left: "$", right: "$", display: false },
                 { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
               ])
                 .map((v) =>
                   v.type === "math"
