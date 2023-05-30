@@ -1,6 +1,7 @@
 import "./luogu3.css";
 import "./bootstrap.scss";
 import { Inter } from "next/font/google";
+import NavBar from "./NavBar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +17,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="zh-Hans-CN">
-      <body className={`container ${inter.className}`}>{children}</body>
+      <body>
+        <NavBar />
+        <div
+          className={`container-lg ${inter.className}`}
+          style={{ marginTop: "6rem" }}
+        >
+          {children}
+        </div>
+      </body>
     </html>
   );
 }
