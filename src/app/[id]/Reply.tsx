@@ -4,6 +4,7 @@ import "katex/dist/katex.css";
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import renderMathInElement from "katex/contrib/auto-render";
+import hljs from "highlight.js";
 import { User } from "@/types/mongodb";
 import UserInfo from "./UserInfo";
 
@@ -17,16 +18,18 @@ export default function Reply({
   };
 }) {
   const contentRef = useRef<HTMLDivElement>(null);
-  useEffect(
-    () =>
-      renderMathInElement(contentRef.current as HTMLDivElement, {
-        delimiters: [
-          { left: "$$", right: "$$", display: true },
-          { left: "$", right: "$", display: false },
-        ],
-      }),
-    [reply.content]
-  );
+  useEffect(() => {
+    hljs.configure({ languages: ["cpp"] });
+    contentRef.current
+      ?.querySelectorAll("code")
+      .forEach((element) => hljs.highlightElement(element));
+    renderMathInElement(contentRef.current as HTMLDivElement, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "$", right: "$", display: false },
+      ],
+    });
+  }, [reply.content]);
 
   return (
     <div className="reply list-group-item position-relative">

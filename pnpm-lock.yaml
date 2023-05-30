@@ -4,6 +4,9 @@ dependencies:
   bootstrap:
     specifier: 5.3.0
     version: 5.3.0(@popperjs/core@2.11.8)
+  highlight.js:
+    specifier: ^11.8.0
+    version: 11.8.0
   jsdom:
     specifier: ^22.0.0
     version: 22.0.0
@@ -1762,6 +1765,11 @@ packages:
     dependencies:
       function-bind: 1.1.1
     dev: true
+
+  /highlight.js@11.8.0:
+    resolution: {integrity: sha512-MedQhoqVdr0U6SSnWPzfiadUcDHfN/Wzq25AkXiQv9oiOO/sG0S7XkvpFIqWBl9Yq1UYyYOOVORs5UW2XlPyzg==}
+    engines: {node: '>=12.0.0'}
+    dev: false
 
   /html-encoding-sniffer@3.0.0:
     resolution: {integrity: sha512-oWv4T4yJ52iKrufjnyZPkrN0CH3QnrUqdB6In1g5Fe1mia8GmF36gnfNySxoZtxD5+NmYw1EElVXiBk93UeskA==}
