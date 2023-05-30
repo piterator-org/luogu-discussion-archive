@@ -28,7 +28,7 @@ export default async function Page({ params }: { params: { id: string } }) {
     <div className="row">
       <div className="col-lg-4 col-md-5 col-12 order-md-last mb-4s">
         <div className="rounded-4 shadow px-4 py-3">
-          <div className="mb-2 fs-2 fw-semibold d-block d-md-none">标题</div>
+          <div className="mb-2 fs-2 fw-semibold d-block d-md-none">{title}</div>
           <ul className="list-group">
             <li className="d-flex justify-content-between lh-lg">
               <span className="fw-semibold">板块</span>
