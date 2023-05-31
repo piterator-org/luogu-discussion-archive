@@ -153,24 +153,24 @@ export default async function saveDiscussion(id: number) {
     },
     { upsert: true }
   );
-  const replies = await fetchReplies(
-    Math.max(
-      ...Array.from(app.querySelectorAll("[data-ci-pagination-page]")).map(
-        (e) => parseInt(e.getAttribute("data-ci-pagination-page") as string, 10)
-      ),
-      1
+
+  const pages = Math.max(
+    ...Array.from(app.querySelectorAll("[data-ci-pagination-page]")).map((e) =>
+      parseInt(e.getAttribute("data-ci-pagination-page") as string, 10)
     )
   );
-  await Promise.all([
-    collection.then((c) =>
-      c.updateOne(
-        { _id: id },
-        {
-          $push: { replies: { $each: replies } },
-          $currentDate: { lastUpdate: { $type: "date" } },
-        }
-      )
-    ),
-    ...promises,
-  ]);
+  if (pages > 1) {
+    const replies = await fetchReplies(pages);
+    await (
+      await collection
+    ).updateOne(
+      { _id: id },
+      {
+        $push: { replies: { $each: replies } },
+        $currentDate: { lastUpdate: { $type: "date" } },
+      }
+    );
+  }
+
+  await Promise.all(promises);
 }
