@@ -43,6 +43,6 @@
     "typescript": "5.0.4"
   },
   "engines": {
-    "pnpm": "^8.0.0"
+    "pnpm": "^8.6.0"
   }
 }
