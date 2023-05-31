@@ -22,6 +22,7 @@
     "react-dom": "18.2.0"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^13.4.4",
     "@types/bootstrap": "^5.2.6",
     "@types/jsdom": "^21.1.1",
     "@types/katex": "^0.16.0",

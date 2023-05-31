@@ -23,6 +23,15 @@
           { "allow": ["_id", "_mongoClientPromise"] }
         ]
       }
+    },
+    {
+      "files": ["*.config.*", ".*rc.*"],
+      "rules": {
+        "import/no-extraneous-dependencies": [
+          "error",
+          { "devDependencies": true }
+        ]
+      }
     }
   ]
 }
