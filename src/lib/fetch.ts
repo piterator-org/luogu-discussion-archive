@@ -94,6 +94,18 @@ export default async function saveDiscussion(id: number) {
   });
   /* eslint-enable @typescript-eslint/no-non-null-assertion */
 
+  function hashReplies(replies: Reply[]): [Reply[], string[]] {
+    const hashes: string[] = [];
+    return [
+      replies.filter((reply, index) =>
+        ((replyHash) =>
+          (!index || replyHash !== hashes[hashes.length - 1]) &&
+          hashes.push(replyHash))(hash.MD5(reply))
+      ),
+      hashes,
+    ];
+  }
+
   async function fetchReplies(pages: number) {
     const lastSaved = await (await collection).findOne({ _id: id });
     const lashHashes = new Set(lastSaved?.replies.map(hash.MD5));
@@ -101,17 +113,12 @@ export default async function saveDiscussion(id: number) {
     const hashes: Set<string> = new Set();
     const replies: Reply[] = [];
     for (let i = pages; i > 0; i -= 1) {
-      const pageHashes: string[] = [];
-      const pageReplies = extractReplies(
-        // eslint-disable-next-line no-await-in-loop
-        await pRetry(() => fetchPage(i), { retries: 3 })
-      )
-        .reverse()
-        .filter((reply, index) =>
-          ((replyHash) =>
-            (!index || replyHash !== pageHashes[pageHashes.length - 1]) &&
-            pageHashes.push(replyHash))(hash.MD5(reply))
-        );
+      const [pageReplies, pageHashes] = hashReplies(
+        extractReplies(
+          // eslint-disable-next-line no-await-in-loop
+          await pRetry(() => fetchPage(i), { retries: 3 })
+        ).reverse()
+      );
 
       let offset;
       for (offset = 0; offset < pageReplies.length; offset += 1)
@@ -135,6 +142,17 @@ export default async function saveDiscussion(id: number) {
   }
 
   const app = await pRetry(() => fetchPage(1), { maxTimeout: 5000 });
+  await (
+    await collection
+  ).updateOne(
+    { _id: id },
+    {
+      $set: extractMetadata(app),
+      $setOnInsert: { replies: hashReplies(extractReplies(app))[0] },
+      $currentDate: { lastUpdate: { $type: "date" } },
+    },
+    { upsert: true }
+  );
   const replies = await fetchReplies(
     Math.max(
       ...Array.from(app.querySelectorAll("[data-ci-pagination-page]")).map(
@@ -148,11 +166,9 @@ export default async function saveDiscussion(id: number) {
       c.updateOne(
         { _id: id },
         {
-          $set: extractMetadata(app),
           $push: { replies: { $each: replies } },
           $currentDate: { lastUpdate: { $type: "date" } },
-        },
-        { upsert: true }
+        }
       )
     ),
     ...promises,
