@@ -1,13 +1,11 @@
-"use client";
-
 import "katex/dist/katex.css";
 import "highlight.js/styles/tokyo-night-dark.css";
-import { useEffect, useRef } from "react";
 import Image from "next/image";
-import renderMathInElement from "katex/contrib/auto-render";
+import { JSDOM } from "jsdom";
 import hljs from "highlight.js";
 import { User } from "@/types/mongodb";
 import UserInfo from "./UserInfo";
+import Content from "./Content";
 
 export default function Reply({
   reply,
@@ -18,19 +16,11 @@ export default function Reply({
     content: string;
   };
 }) {
-  const contentRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    hljs.configure({ languages: ["cpp"] });
-    contentRef.current
-      ?.querySelectorAll("code")
-      .forEach((element) => hljs.highlightElement(element));
-    renderMathInElement(contentRef.current as HTMLDivElement, {
-      delimiters: [
-        { left: "$$", right: "$$", display: true },
-        { left: "$", right: "$", display: false },
-      ],
-    });
-  }, [reply.content]);
+  const { body } = new JSDOM(reply.content).window.document;
+  hljs.configure({ languages: ["cpp"] });
+  body
+    .querySelectorAll("code")
+    .forEach((element) => hljs.highlightElement(element));
 
   return (
     <div className="reply list-group-item position-relative">
@@ -54,12 +44,7 @@ export default function Reply({
           </span>
         </div>
         <div className="reply-content pe-4 py-2">
-          <div
-            className="markdown"
-            ref={contentRef}
-            /* eslint-disable-next-line react/no-danger */
-            dangerouslySetInnerHTML={{ __html: reply.content }}
-          />
+          <Content content={body.innerHTML} />
           <span
             className="text-end text-body-tertiary d-block d-md-none"
             style={{ fontSize: ".8rem" }}
