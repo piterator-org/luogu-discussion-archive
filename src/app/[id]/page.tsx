@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { collection, users } from "@/lib/mongodb";
 import UserInfo from "./UserInfo";
 import getForumName from "../../lib/forums";
-import "../markdown.css";
+import "./markdown.css";
 import Reply from "./Reply";
 
 export default async function Page({ params }: { params: { id: string } }) {

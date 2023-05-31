@@ -1,6 +1,7 @@
 "use client";
 
 import "katex/dist/katex.css";
+import "highlight.js/styles/tokyo-night-dark.css";
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import renderMathInElement from "katex/contrib/auto-render";

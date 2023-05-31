@@ -1,3 +1,4 @@
+import "./luogu3.css";
 import { User } from "@/types/mongodb";
 
 export default function UserInfo({ user }: { user: User }) {

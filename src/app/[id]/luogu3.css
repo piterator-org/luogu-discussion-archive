@@ -1,0 +1,68 @@
+/*! https://cdn.luogu.com.cn/css/luogu3.css */
+
+.lg-bg-pink {
+  background-color: #f495a0;
+}
+.lg-bg-red {
+  background-color: #e74c3c;
+}
+.lg-bg-yellow {
+  background-color: #f1c40f;
+}
+.lg-bg-orange {
+  background-color: #e67e22;
+}
+.lg-bg-purple {
+  background-color: #8e44ad;
+}
+.lg-bg-green {
+  background-color: #5eb95e;
+}
+.lg-bg-greendark {
+  background-color: rgba(5, 67, 16, 0.79);
+}
+.lg-bg-bluedark {
+  background-color: #2e468c;
+}
+.lg-bg-bluelight {
+  background-color: #3498db;
+}
+.lg-bg-black {
+  background-color: #34495e;
+}
+.lg-bg-gray {
+  background-color: #bbb;
+}
+.lg-bg-brown {
+  background-color: #996600;
+}
+.lg-fg-brown {
+  color: #996600 !important;
+}
+.lg-fg-gray {
+  color: #bbb !important;
+}
+.lg-fg-red {
+  color: #e74c3c !important;
+}
+.lg-fg-yellow {
+  color: #f1c40f !important;
+}
+.lg-fg-orange {
+  color: #e67e22 !important;
+}
+.lg-fg-purple {
+  color: #8e44ad !important;
+}
+.lg-fg-green {
+  color: #5eb95e !important;
+}
+.lg-fg-greendark {
+  color: rgba(5, 67, 16, 0.79) !important;
+}
+.lg-fg-bluedark {
+  color: #34495e !important;
+}
+.lg-fg-bluelight {
+  color: #0e90d2 !important;
+}

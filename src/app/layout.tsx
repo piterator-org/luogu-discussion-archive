@@ -1,4 +1,3 @@
-import "./luogu3.css";
 import "./bootstrap.scss";
 import { Inter } from "next/font/google";
 import NavBar from "./NavBar";
