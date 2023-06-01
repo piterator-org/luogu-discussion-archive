@@ -150,7 +150,7 @@ export default async function saveDiscussion(
   }
 
   const app = await pRetry(() => fetchPage(1), { maxTimeout: 5000 });
-  await (
+  const { upsertedCount } = await (
     await collection
   ).updateOne(
     { _id: id },
@@ -166,9 +166,10 @@ export default async function saveDiscussion(
   const pages = Math.max(
     ...Array.from(app.querySelectorAll("[data-ci-pagination-page]")).map((e) =>
       parseInt(e.getAttribute("data-ci-pagination-page") as string, 10)
-    )
+    ),
+    1
   );
-  if (pages > 1) {
+  if (!upsertedCount || pages > 1) {
     await (
       await collection
     ).updateOne(
