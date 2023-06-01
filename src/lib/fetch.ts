@@ -4,6 +4,7 @@ import hash from "object-hash";
 import pRetry, { AbortError } from "p-retry";
 import { collection, users } from "@/lib/mongodb";
 
+const PAGES_PER_SAVE = parseInt(process.env.MAX_NO_OF_PAGES ?? "128", 10);
 export const emitters: Record<number, EventEmitter> = {};
 export const metadata: Set<number> = new Set();
 
@@ -13,7 +14,10 @@ export interface Reply {
   content: string;
 }
 
-export default async function saveDiscussion(id: number) {
+export default async function saveDiscussion(
+  id: number,
+  maxPages = PAGES_PER_SAVE
+) {
   const promises: Promise<unknown>[] = [];
 
   async function fetchPage(page: number) {
@@ -165,16 +169,20 @@ export default async function saveDiscussion(id: number) {
     )
   );
   if (pages > 1) {
-    const replies = await fetchReplies(pages);
     await (
       await collection
     ).updateOne(
       { _id: id },
       {
-        $push: { replies: { $each: replies } },
+        $push: {
+          replies: {
+            $each: await fetchReplies(Math.min(pages, maxPages)),
+          },
+        },
         $currentDate: { lastUpdate: { $type: "date" } },
       }
     );
+    if (pages > maxPages) await saveDiscussion(id, maxPages + PAGES_PER_SAVE);
   }
 
   await Promise.all(promises);
