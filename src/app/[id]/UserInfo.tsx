@@ -1,11 +1,12 @@
 import "./luogu3.css";
 import { User } from "@/types/mongodb";
+import { getUserUrl } from "@/lib/luogu";
 
 export default function UserInfo({ user }: { user: User }) {
   return (
     <>
       <a
-        href={`https://www.luogu.com.cn/user/${user._id}`}
+        href={getUserUrl(user._id)}
         className={`lg-fg-${user.color}`}
         style={{ textDecorationLine: "none" }}
         target="_blank"

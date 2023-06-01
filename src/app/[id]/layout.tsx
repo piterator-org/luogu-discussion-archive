@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { collection, users } from "@/lib/mongodb";
 import getForumName from "@/lib/forums";
-import getDiscussionUrl from "@/lib/discussion";
+import { getDiscussionUrl, getForumUrl } from "@/lib/luogu";
 import UserInfo from "./UserInfo";
 import "./markdown.css";
 import Reply from "./Reply";
@@ -28,7 +28,14 @@ export default async function Page({
           <ul className="list-group">
             <li className="d-flex justify-content-between lh-lg">
               <span className="fw-semibold">板块</span>
-              <span className="text-muted">{getForumName(forum)}</span>
+              <a
+                className="link-primary text-decoration-none"
+                href={getForumUrl(forum)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {getForumName(forum)}
+              </a>
             </li>
             <li className="d-flex justify-content-between lh-lg">
               <span className="fw-semibold">楼主</span>

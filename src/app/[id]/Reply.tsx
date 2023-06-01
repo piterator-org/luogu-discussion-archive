@@ -4,6 +4,7 @@ import Image from "next/image";
 import { JSDOM } from "jsdom";
 import hljs from "highlight.js";
 import { User } from "@/types/mongodb";
+import { getUserUrl, getUserAvatarUrl } from "@/lib/luogu";
 import UserInfo from "./UserInfo";
 import Content from "./Content";
 
@@ -28,6 +29,8 @@ export default function Reply({
         "https://www.luogu.com.cn/discuss/"
       ).href
     );
+    element.setAttribute("target", "_blank");
+    element.setAttribute("rel", "noopener noreferrer");
   });
   body
     .querySelectorAll("code")
@@ -36,13 +39,13 @@ export default function Reply({
   return (
     <div className="reply list-group-item position-relative">
       <a
-        href={`https://www.luogu.com.cn/user/${reply.author._id}`}
+        href={getUserUrl(reply.author._id)}
         className="reply-avatar"
         target="_blank"
         rel="noopener noreferrer"
       >
         <Image
-          src={`https://cdn.luogu.com.cn/upload/usericon/${reply.author._id}.png`}
+          src={getUserAvatarUrl(reply.author._id)}
           className="rounded-circle shadow"
           fill
           alt={reply.author._id.toString()}
