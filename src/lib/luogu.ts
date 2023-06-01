@@ -9,7 +9,7 @@ export function getUserUrl(user: number) {
 }
 
 export function getUserAvatarUrl(user: number) {
-  return `https://cdn.luogu.com.cn/upload/usericon/${user}`;
+  return `https://cdn.luogu.com.cn/upload/usericon/${user}.png`;
 }
 
 export function getForumUrl(forum: string) {
