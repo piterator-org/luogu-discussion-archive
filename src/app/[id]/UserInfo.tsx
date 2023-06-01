@@ -9,7 +9,7 @@ export default function UserInfo({ user }: { user: User }) {
         className={`lg-fg-${user.color}`}
         style={{ textDecorationLine: "none" }}
         target="_blank"
-        rel="noreferrer"
+        rel="noopener noreferrer"
       >
         {user.username}
       </a>

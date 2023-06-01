@@ -48,7 +48,7 @@ export default async function Page({
       await (await collection)
         .aggregate([
           { $match: { _id: id } },
-          { $project: { _id: id, size: { $size: "$replies" } } },
+          { $project: { size: { $size: "$replies" } } },
         ])
         .toArray()
     )[0].size as number) / REPLIES_PER_PAGE

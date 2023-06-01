@@ -17,6 +17,15 @@ export default function Reply({
   };
 }) {
   const { body } = new JSDOM(reply.content).window.document;
+  body.querySelectorAll("a[href]").forEach((element) => {
+    element.setAttribute(
+      "href",
+      new URL(
+        element.getAttribute("href") as string,
+        "https://www.luogu.com.cn/discuss/"
+      ).href
+    );
+  });
   hljs.configure({ languages: ["cpp"] });
   body
     .querySelectorAll("code")
@@ -27,6 +36,8 @@ export default function Reply({
       <a
         href={`https://www.luogu.com.cn/user/${reply.author._id}`}
         className="reply-avatar"
+        target="_blank"
+        rel="noopener noreferrer"
       >
         <Image
           src={`https://cdn.luogu.com.cn/upload/usericon/${reply.author._id}.png`}
