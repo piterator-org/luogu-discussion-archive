@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import saveDiscussion from "@/lib/fetch";
-import { collection } from "@/lib/mongodb";
+import { startTask } from "@/lib/fetch";
 
 // eslint-disable-next-line import/prefer-default-export
 export async function GET(
@@ -8,7 +7,10 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const id = parseInt(params.id, 10);
-  await saveDiscussion(id);
-  const data = await (await collection).findOne({ _id: id });
-  return NextResponse.json({ data });
+  try {
+    await startTask(id);
+    return NextResponse.json({ ok: true });
+  } catch (err) {
+    return NextResponse.json({ ok: false, err: (err as Error).message });
+  }
 }

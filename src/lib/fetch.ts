@@ -1,7 +1,11 @@
+import { EventEmitter, once } from "node:events";
 import { JSDOM } from "jsdom";
 import hash from "object-hash";
 import pRetry, { AbortError } from "p-retry";
 import { collection, users } from "@/lib/mongodb";
+
+export const emitters: Record<number, EventEmitter> = {};
+export const metadata: Set<number> = new Set();
 
 export interface Reply {
   author: number;
@@ -153,6 +157,7 @@ export default async function saveDiscussion(id: number) {
     },
     { upsert: true }
   );
+  if (id in emitters) emitters[id].emit("start");
 
   const pages = Math.max(
     ...Array.from(app.querySelectorAll("[data-ci-pagination-page]")).map((e) =>
@@ -173,4 +178,19 @@ export default async function saveDiscussion(id: number) {
   }
 
   await Promise.all(promises);
+}
+
+export function startTask(id: number) {
+  if (!(id in emitters)) {
+    emitters[id] = new EventEmitter();
+    metadata.add(id);
+    once(emitters[id], "start").finally(() => metadata.delete(id));
+    saveDiscussion(id)
+      .catch((err) => emitters[id].emit("error", err))
+      .finally(() => {
+        delete emitters[id];
+      });
+  }
+  if (id in metadata) return once(emitters[id], "start");
+  return [];
 }
