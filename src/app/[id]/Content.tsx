@@ -1,5 +1,6 @@
 "use client";
 
+import "katex/dist/katex.css";
 import { useEffect, useRef } from "react";
 import renderMathInElement from "katex/contrib/auto-render";
 

@@ -1,4 +1,3 @@
-import "katex/dist/katex.css";
 import "highlight.js/styles/tokyo-night-dark.css";
 import Image from "next/image";
 import { JSDOM } from "jsdom";

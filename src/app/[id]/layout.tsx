@@ -5,6 +5,7 @@ import { getDiscussionUrl, getForumUrl } from "@/lib/luogu";
 import UserInfo from "./UserInfo";
 import "./markdown.css";
 import Reply from "./Reply";
+import UpdateButton from "./UpdateButton";
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
   const discussion = await (
@@ -17,7 +18,7 @@ export default async function Page({
   children,
   params,
 }: React.PropsWithChildren<{ params: { id: string } }>) {
-  const { content, forum, title, ...discussion } =
+  const { content, forum, title, lastUpdate, ...discussion } =
     (await (
       await collection
     ).findOne(
@@ -54,6 +55,12 @@ export default async function Page({
               <span className="fw-semibold">发布时间</span>
               <span className="text-muted">{time}</span>
             </li>
+            <li className="d-flex justify-content-between lh-lg">
+              <span className="fw-semibold">上次更新</span>
+              <span className="text-muted">
+                {lastUpdate.toLocaleString("zh")}
+              </span>
+            </li>
           </ul>
           <div className="mt-2 mb-1">
             <a
@@ -64,12 +71,7 @@ export default async function Page({
             >
               查看原帖
             </a>
-            <button
-              type="button"
-              className="btn btn-outline-primary shadow-sm ms-2"
-            >
-              更新帖子
-            </button>
+            <UpdateButton id={params.id} />
           </div>
         </div>
       </div>
