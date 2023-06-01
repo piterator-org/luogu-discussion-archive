@@ -6,6 +6,13 @@ import UserInfo from "./UserInfo";
 import "./markdown.css";
 import Reply from "./Reply";
 
+export async function generateMetadata({ params }: { params: { id: string } }) {
+  const discussion = await (
+    await collection
+  ).findOne({ _id: parseInt(params.id, 10) }, { projection: { title: 1 } });
+  return { title: discussion?.title };
+}
+
 export default async function Page({
   children,
   params,

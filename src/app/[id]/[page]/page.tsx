@@ -24,16 +24,10 @@ export default async function Page({
         { _id: id },
         {
           projection: {
-            _id: 0,
-            author: 0,
-            content: 0,
-            forum: 0,
-            lastUpdate: 0,
+            _id: 1,
             replies: {
               $slice: [(page - 1) * REPLIES_PER_PAGE, REPLIES_PER_PAGE],
             },
-            time: 0,
-            title: 0,
           },
         }
       )) ?? notFound()
