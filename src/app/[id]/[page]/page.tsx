@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { collection, users } from "@/lib/mongodb";
 import Reply from "../Reply";
 
-const REPLIES_PER_PAGE = 20;
+const REPLIES_PER_PAGE = parseInt(process.env.REPLIES_PER_PAGE ?? "10", 10);
 
 export default async function Page({
   params,
