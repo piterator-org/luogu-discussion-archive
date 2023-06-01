@@ -1,6 +1,14 @@
+"use client";
+
+import { useEffect } from "react";
+
 export default function NavBar() {
+  useEffect(() => {
+    import("bootstrap/js/dist/collapse");
+  });
+
   return (
-    <nav className="navbar navbar-expand-md sticky-top bg-white shadow-sm">
+    <nav className="navbar navbar-expand-md sticky-top bg-body shadow-sm">
       <div className="container-lg d-flex my-1">
         <a className="navbar-brand" href="/">
           LgLg.top

@@ -98,7 +98,7 @@ export default async function Page({
         <Reply reply={reply} />
       ))}
       {numPages > 1 && (
-        <div className="bg-white rounded-4 shadow my-4s px-4 py-3 py-md-4 text-center">
+        <div className="bg-body rounded-4 shadow my-4s px-4 py-3 py-md-4 text-center">
           <PageButton discussion={id} page={1} active={page} />
           {pagesLocalAttachedFront || ellipsis}
           {pagesLocal.map((curPage) => (

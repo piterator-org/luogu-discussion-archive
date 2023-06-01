@@ -74,7 +74,7 @@ export default async function Page({
         </div>
       </div>
       <div className="col-lg-8 col-md-7 col-12">
-        <div className="bg-white rounded-4 shadow mb-4s px-4 py-3 fs-2 fw-semibold d-none d-md-block">
+        <div className="bg-body rounded-4 shadow mb-4s px-4 py-3 fs-2 fw-semibold d-none d-md-block">
           {title}
         </div>
         <Reply reply={{ time, author, content }} />
