@@ -7,6 +7,9 @@ import { User } from "@/types/mongodb";
 import UserInfo from "./UserInfo";
 import Content from "./Content";
 
+hljs.registerAliases(["plain"], { languageName: "plaintext" });
+hljs.configure({ languages: ["cpp"] });
+
 export default function Reply({
   reply,
 }: {
@@ -26,7 +29,6 @@ export default function Reply({
       ).href
     );
   });
-  hljs.configure({ languages: ["cpp"] });
   body
     .querySelectorAll("code")
     .forEach((element) => hljs.highlightElement(element));
