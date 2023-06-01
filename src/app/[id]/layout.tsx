@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { collection, users } from "@/lib/mongodb";
 import getForumName from "@/lib/forums";
+import getDiscussionUrl from "@/lib/discussion";
 import UserInfo from "./UserInfo";
 import "./markdown.css";
 import Reply from "./Reply";
@@ -40,6 +41,20 @@ export default async function Page({
               <span className="text-muted">{time}</span>
             </li>
           </ul>
+          <div className="mt-2 mb-1">
+            <a
+              className="btn btn-outline-secondary shadow-sm"
+              href={getDiscussionUrl(parseInt(params.id, 10))}
+            >
+              查看原帖
+            </a>
+            <button
+              type="button"
+              className="btn btn-outline-primary shadow-sm ms-2"
+            >
+              更新帖子
+            </button>
+          </div>
         </div>
       </div>
       <div className="col-lg-8 col-md-7 col-12">

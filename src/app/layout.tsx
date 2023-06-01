@@ -1,6 +1,7 @@
 import "./bootstrap.scss";
 import { Inter } from "next/font/google";
 import NavBar from "./NavBar";
+import Footer from "./Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,6 +25,7 @@ export default function RootLayout({
         >
           {children}
         </div>
+        <Footer />
       </body>
     </html>
   );
