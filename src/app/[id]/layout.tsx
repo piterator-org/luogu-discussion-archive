@@ -52,6 +52,8 @@ export default async function Page({
             <a
               className="btn btn-outline-secondary shadow-sm"
               href={getDiscussionUrl(parseInt(params.id, 10))}
+              target="_blank"
+              rel="noopener noreferrer"
             >
               查看原帖
             </a>
