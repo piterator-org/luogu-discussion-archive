@@ -21,7 +21,7 @@ export default function RootLayout({
         <NavBar />
         <div
           className={`container-lg ${inter.className}`}
-          style={{ marginTop: "6rem" }}
+          style={{ marginTop: "2rem" }}
         >
           {children}
         </div>

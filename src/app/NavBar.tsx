@@ -1,6 +1,6 @@
 export default function NavBar() {
   return (
-    <nav className="navbar navbar-expand-md fixed-top bg-white shadow-sm">
+    <nav className="navbar navbar-expand-md sticky-top bg-white shadow-sm">
       <div className="container-lg d-flex my-1">
         <a className="navbar-brand" href="/">
           LgLg.top
