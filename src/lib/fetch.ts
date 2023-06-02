@@ -4,7 +4,7 @@ import hash from "object-hash";
 import pRetry, { AbortError } from "p-retry";
 import { collection, users } from "@/lib/mongodb";
 
-const PAGES_PER_SAVE = parseInt(process.env.MAX_NO_OF_PAGES ?? "128", 10);
+const PAGES_PER_SAVE = parseInt(process.env.PAGES_PER_SAVE ?? "128", 10);
 export const emitters: Record<number, EventEmitter> = {};
 export const metadata: Set<number> = new Set();
 
@@ -200,6 +200,6 @@ export function startTask(id: number) {
         delete emitters[id];
       });
   }
-  if (id in metadata) return once(emitters[id], "start");
+  if (metadata.has(id)) return once(emitters[id], "start");
   return [];
 }
