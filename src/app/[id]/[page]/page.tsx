@@ -31,7 +31,7 @@ export default async function Page({
           },
         }
       )) ?? notFound()
-    ).replies.map((reply) =>
+    ).replies.map((reply, i) =>
       users
         .then((u) => u.findOne({ _id: reply.author }))
         .then((u) => ({
@@ -39,6 +39,7 @@ export default async function Page({
           time: reply.time.toLocaleString("zh").split(":", 2).join(":"),
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           author: u!,
+          id: (page - 1) * REPLIES_PER_PAGE + i,
         }))
     )
   );
@@ -95,14 +96,19 @@ export default async function Page({
   return (
     <>
       {replies.map((reply) => (
-        <Reply reply={reply} />
+        <Reply reply={reply} key={reply.id} />
       ))}
       {numPages > 1 && (
         <div className="bg-body rounded-4 shadow my-4s px-4 py-3 py-md-4 text-center">
           <PageButton discussion={id} page={1} active={page} />
           {pagesLocalAttachedFront || ellipsis}
           {pagesLocal.map((curPage) => (
-            <PageButton discussion={id} page={curPage} active={page} />
+            <PageButton
+              discussion={id}
+              page={curPage}
+              active={page}
+              key={curPage}
+            />
           ))}
           {pagesLocalAttachedBack || ellipsis}
           <PageButton discussion={id} page={numPages} active={page} />
