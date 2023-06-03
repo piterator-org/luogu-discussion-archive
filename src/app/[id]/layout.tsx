@@ -18,7 +18,7 @@ export default async function Page({
   children,
   params,
 }: React.PropsWithChildren<{ params: { id: string } }>) {
-  const { content, forum, title, lastUpdate, ...discussion } =
+  const { content, forum, title, lastUpdate, replyCount, ...discussion } =
     (await (
       await collection
     ).findOne(
@@ -50,6 +50,10 @@ export default async function Page({
               <span>
                 <UserInfo user={author} />
               </span>
+            </li>
+            <li className="d-flex justify-content-between lh-lg">
+              <span className="fw-semibold">回复数量</span>
+              <span className="text-muted">{replyCount}</span>
             </li>
             <li className="d-flex justify-content-between lh-lg">
               <span className="fw-semibold">发布时间</span>

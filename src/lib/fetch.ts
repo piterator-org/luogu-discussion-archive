@@ -99,6 +99,12 @@ export default async function saveDiscussion(
         "article.am-comment-danger > div.am-comment-main > div.am-comment-bd"
       )!
       .innerHTML.trim(),
+    replyCount: parseInt(
+      app
+        .querySelector("article.am-comment-danger")!
+        .getAttribute("data-reply-count")!,
+      10
+    ),
   });
   /* eslint-enable @typescript-eslint/no-non-null-assertion */
 

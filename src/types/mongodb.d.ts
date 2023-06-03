@@ -14,6 +14,7 @@ export interface Discussion {
   author: number;
   time: Date;
   content: string;
+  replyCount: number;
   replies: Reply[];
 }
 
