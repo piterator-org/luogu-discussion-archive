@@ -18,7 +18,7 @@ export default function Content({ content }: { content: string }) {
 
   return (
     <div
-      className="markdown text-break"
+      className="markdown text-break overflow-x-auto"
       ref={contentRef}
       /* eslint-disable-next-line react/no-danger */
       dangerouslySetInnerHTML={{ __html: content }}
