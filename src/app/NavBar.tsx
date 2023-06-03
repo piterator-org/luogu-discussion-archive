@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect } from "react";
 
 export default function NavBar() {
@@ -34,9 +35,9 @@ export default function NavBar() {
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/">
+              <Link className="nav-link" href="/save">
                 保存帖子
-              </a>
+              </Link>
             </li>
             <li className="nav-item">
               <a className="nav-link" href="/">
