@@ -1,3 +1,5 @@
-export default function Page() {
-  return <>正在施工，敬请期待！</>;
+import { redirect } from "next/navigation";
+
+export default function Page({ params }: { params: { id: string } }) {
+  redirect(`/${params.id}/1`);
 }
