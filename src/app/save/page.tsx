@@ -1,19 +1,9 @@
+import SaveInput from "./SaveInput";
+
 export default function Page() {
   return (
-    <div>
-      <div
-        className="input-group input-group-lg mx-auto my-5x"
-        style={{ maxWidth: "40em" }}
-      >
-        <input
-          className="form-control shadow"
-          autoComplete="off"
-          placeholder="帖子链接或编号"
-        />
-        <button className="btn btn-success shadow" type="button">
-          立即保存
-        </button>
-      </div>
+    <>
+      <SaveInput />
       <div className="mb-5x px-4 py-5">
         <h2 className="pb-2 border-bottom">新版保存站的优点</h2>
         <div className="row g-4 py-5 row-cols-1 row-cols-lg-3">
@@ -76,6 +66,6 @@ export default function Page() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
