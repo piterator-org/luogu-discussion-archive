@@ -31,7 +31,7 @@ export default function SaveInput() {
         disabled={disabled}
         onClick={() => {
           setDisabled(true);
-          const id = url;
+          const id = url.split("?", 1)[0].split("/").reverse()[0];
           fetch(`/${id}/save`)
             .then(async (res) => {
               const r = (await res.json()) as
