@@ -15,3 +15,15 @@ export function getUserAvatarUrl(user: number) {
 export function getForumUrl(forum: string) {
   return `https://www.luogu.com.cn/discuss/lists?forumname=${forum}`;
 }
+
+export function getForumName(forum: string) {
+  return (
+    {
+      siteaffairs: "站务版",
+      problem: "题目总版",
+      academics: "学术版",
+      relevantaffairs: "灌水区",
+      service: "反馈、申请、工单专版",
+    }[forum] ?? forum
+  );
+}

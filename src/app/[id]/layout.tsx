@@ -1,8 +1,7 @@
 import { notFound } from "next/navigation";
 import { collection, users } from "@/lib/mongodb";
-import getForumName from "@/lib/forums";
-import { getDiscussionUrl, getForumUrl } from "@/lib/luogu";
-import UserInfo from "../utils/UserInfo";
+import { getDiscussionUrl, getForumName, getForumUrl } from "@/lib/luogu";
+import UserInfo from "@/components/UserInfo";
 import "./markdown.css";
 import Reply from "./Reply";
 import UpdateButton from "./UpdateButton";

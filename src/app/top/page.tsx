@@ -1,5 +1,5 @@
 import { collection, users } from "@/lib/mongodb";
-import UserInfo from "../utils/UserInfo";
+import UserInfo from "@/components/UserInfo";
 
 const NUM_DISCUSSIONS_TOP_CHARTS = parseInt(
   process.env.NUM_DISCUSSIONS_TOP_CHARTS ?? "50",
