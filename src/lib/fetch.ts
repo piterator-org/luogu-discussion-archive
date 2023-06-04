@@ -1,24 +1,15 @@
 import { EventEmitter, once } from "node:events";
 import { JSDOM } from "jsdom";
-import hash from "object-hash";
 import pRetry, { AbortError } from "p-retry";
-import { collection, users } from "@/lib/mongodb";
+import prisma from "@/lib/prisma";
+import type { PrismaPromise, Reply } from "@prisma/client";
 
 const PAGES_PER_SAVE = parseInt(process.env.PAGES_PER_SAVE ?? "128", 10);
 export const emitters: Record<number, EventEmitter> = {};
 export const metadata: Set<number> = new Set();
 
-export interface Reply {
-  author: number;
-  time: Date;
-  content: string;
-}
-
-export default async function saveDiscussion(
-  id: number,
-  maxPages = PAGES_PER_SAVE
-) {
-  const promises: Promise<unknown>[] = [];
+export async function saveDiscussion(id: number, maxPages = PAGES_PER_SAVE) {
+  let operations: PrismaPromise<unknown>[] = [];
 
   async function fetchPage(page: number) {
     const response = await fetch(
@@ -43,13 +34,15 @@ export default async function saveDiscussion(
     const user = {
       username: a.textContent!,
       color: a.getAttribute("class")!.split(" ", 1)[0].slice("lg-fg-".length),
-      checkmark: element.querySelector("a > svg")?.getAttribute("fill") ?? "",
-      badge: element.querySelector("span.am-badge")?.innerHTML ?? "",
+      checkmark: element.querySelector("a > svg")?.getAttribute("fill") ?? null,
+      badge: element.querySelector("span.am-badge")?.innerHTML ?? null,
     };
-    promises.push(
-      users.then((c) =>
-        c.updateOne({ _id: uid }, { $set: user }, { upsert: true })
-      )
+    operations.push(
+      prisma.user.upsert({
+        where: { id: uid },
+        create: { id: uid, ...user },
+        update: user,
+      })
     );
     return uid;
   }
@@ -58,7 +51,16 @@ export default async function saveDiscussion(
     Array.from(
       app.querySelectorAll("article.am-comment-primary > div.am-comment-main")
     ).map((element) => ({
-      author: extractUser(
+      id: parseInt(
+        element
+          .querySelector(
+            "header.am-comment-hd > div.am-comment-meta > a[data-report-id]"
+          )!
+          .getAttribute("data-report-id")!,
+        10
+      ),
+      discussionId: id,
+      authorId: extractUser(
         element.querySelector("header.am-comment-hd > div.am-comment-meta")!
       ),
       time: new Date(
@@ -85,7 +87,7 @@ export default async function saveDiscussion(
       )!
       .getAttribute("href")!
       .slice("/discuss/lists?forumname=".length),
-    author: extractUser(
+    authorId: extractUser(
       app.querySelector('ul.lg-summary-list > li > span > a[href^="/user/"]')!
         .parentElement!
     ),
@@ -108,91 +110,58 @@ export default async function saveDiscussion(
   });
   /* eslint-enable @typescript-eslint/no-non-null-assertion */
 
-  function hashReplies(replies: Reply[]): [Reply[], string[]] {
-    const hashes: string[] = [];
-    return [
-      replies.filter((reply, index) =>
-        ((replyHash) =>
-          (!index || replyHash !== hashes[hashes.length - 1]) &&
-          hashes.push(replyHash))(hash.MD5(reply))
-      ),
-      hashes,
-    ];
-  }
-
-  async function fetchReplies(pages: number) {
-    const lastSaved = await (await collection).findOne({ _id: id });
-    const lashHashes = new Set(lastSaved?.replies.map(hash.MD5));
-
-    const hashes: Set<string> = new Set();
-    const replies: Reply[] = [];
-    for (let i = pages; i > 0; i -= 1) {
-      const [pageReplies, pageHashes] = hashReplies(
-        extractReplies(
-          // eslint-disable-next-line no-await-in-loop
-          await pRetry(() => fetchPage(i), { retries: 3 })
-        ).reverse()
+  function saveReplies(replies: Reply[]) {
+    replies.forEach((reply) => {
+      operations.push(
+        prisma.reply.upsert({
+          where: { id: reply.id },
+          create: reply,
+          update: reply,
+        })
       );
-
-      let offset;
-      for (offset = 0; offset < pageReplies.length; offset += 1)
-        if (!hashes.has(pageHashes[offset])) break;
-      replies.push(...pageReplies.slice(offset));
-      pageHashes.forEach((h) => hashes.add(h));
-
-      if (lastSaved && lastSaved.replies.length) {
-        while (
-          offset < pageReplies.length &&
-          !lashHashes.has(pageHashes[offset]) &&
-          pageReplies[offset].time >=
-            lastSaved.replies[lastSaved.replies.length - 1].time
-        )
-          offset += 1;
-        if (offset < pageReplies.length)
-          return replies.reverse().slice(pageReplies.length - offset);
-      }
-    }
-    return replies.reverse();
+    });
   }
 
   const app = await pRetry(() => fetchPage(1), { maxTimeout: 5000 });
-  const { upsertedCount } = await (
-    await collection
-  ).updateOne(
-    { _id: id },
-    {
-      $set: extractMetadata(app),
-      $setOnInsert: { replies: hashReplies(extractReplies(app))[0] },
-      $currentDate: { lastUpdate: { $type: "date" } },
-    },
-    { upsert: true }
+  const discussion = extractMetadata(app);
+  operations.push(
+    prisma.discussion.upsert({
+      where: { id },
+      create: { id, ...discussion },
+      update: discussion,
+    })
   );
+  saveReplies(extractReplies(app));
+  await prisma.$transaction(operations);
   if (id in emitters) emitters[id].emit("start");
 
+  operations = [];
   const pages = Math.max(
     ...Array.from(app.querySelectorAll("[data-ci-pagination-page]")).map((e) =>
       parseInt(e.getAttribute("data-ci-pagination-page") as string, 10)
-    ),
-    1
+    )
   );
-  if (!upsertedCount || pages > 1) {
-    await (
-      await collection
-    ).updateOne(
-      { _id: id },
-      {
-        $push: {
-          replies: {
-            $each: await fetchReplies(Math.min(pages, maxPages)),
-          },
-        },
-        $currentDate: { lastUpdate: { $type: "date" } },
-      }
-    );
-    if (pages > maxPages) await saveDiscussion(id, maxPages + PAGES_PER_SAVE);
+  if (pages > 1) {
+    const { id: lastReply } = (
+      await prisma.reply.findMany({
+        where: { discussionId: id },
+        orderBy: { id: "desc" },
+        take: 1,
+      })
+    )[0];
+    for (let i = Math.min(pages, maxPages); i > 0; i -= 1) {
+      const replies = extractReplies(
+        // eslint-disable-next-line no-await-in-loop
+        await pRetry(() => fetchPage(i), { retries: 3 })
+      );
+      saveReplies(replies);
+      if (replies[replies.length - 1].id <= lastReply) break;
+    }
   }
+  await prisma.$transaction(operations);
+  operations = [];
 
-  await Promise.all(promises);
+  if (pages > maxPages) await saveDiscussion(id, maxPages + PAGES_PER_SAVE);
 }
 
 export function startTask(id: number) {

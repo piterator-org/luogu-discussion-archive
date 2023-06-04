@@ -1,4 +1,4 @@
-import { collection, users } from "@/lib/mongodb";
+import prisma from "@/lib/prisma";
 import UserInfo from "@/components/UserInfo";
 
 const NUM_DISCUSSIONS_TOP_CHARTS = parseInt(
@@ -7,13 +7,11 @@ const NUM_DISCUSSIONS_TOP_CHARTS = parseInt(
 );
 
 export default async function Page() {
-  const mostReplies = await (
-    await collection
-  )
-    .find({}, { projection: { replies: 0 } })
-    .sort({ replyCount: -1 })
-    .limit(NUM_DISCUSSIONS_TOP_CHARTS)
-    .toArray();
+  const mostReplies = await prisma.discussion.findMany({
+    select: { id: true, title: true, author: true, replyCount: true },
+    orderBy: { replyCount: "desc" },
+    take: NUM_DISCUSSIONS_TOP_CHARTS,
+  });
   return (
     <div className="mb-5x px-4 py-5">
       <h2 className="pb-2 text-center">排行榜</h2>
@@ -25,9 +23,9 @@ export default async function Page() {
             </h3>
             <ul className="list-group list-group-flush">
               {mostReplies.map((discussion) => (
-                <li className="list-group-item d-flex">
-                  {discussion._id}:{discussion.title}({discussion.replyCount}{" "}
-                  floors)
+                <li className="list-group-item d-flex" key={discussion.id}>
+                  {discussion.id}: {discussion.title} ({discussion.replyCount}{" "}
+                  floors) by <UserInfo user={discussion.author} />
                 </li>
               ))}
             </ul>

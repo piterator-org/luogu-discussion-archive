@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { collection, users } from "@/lib/mongodb";
+import prisma from "@/lib/prisma";
 import Reply from "../Reply";
 import PageButton from "./PageButton";
 
@@ -16,43 +16,21 @@ export default async function Page({
 }) {
   const id = parseInt(params.id, 10);
   const page = parseInt(params.page, 10);
-  const replies = await Promise.all(
+  const replies =
     (
-      (await (
-        await collection
-      ).findOne(
-        { _id: id },
-        {
-          projection: {
-            _id: 1,
-            replies: {
-              $slice: [(page - 1) * REPLIES_PER_PAGE, REPLIES_PER_PAGE],
-            },
-          },
-        }
-      )) ?? notFound()
-    ).replies.map((reply, i) =>
-      users
-        .then((u) => u.findOne({ _id: reply.author }))
-        .then((u) => ({
-          ...reply,
-          time: reply.time.toLocaleString("zh").split(":", 2).join(":"),
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          author: u!,
-          id: (page - 1) * REPLIES_PER_PAGE + i,
-        }))
-    )
-  );
-
+      await prisma.reply.findMany({
+        where: { discussionId: id },
+        select: { id: true, author: true, time: true, content: true },
+        skip: (page - 1) * REPLIES_PER_PAGE,
+        take: REPLIES_PER_PAGE,
+      })
+    ).map((reply) => ({
+      ...reply,
+      time: reply.time.toLocaleString("zh").split(":", 2).join(":"),
+    })) ?? notFound();
   const numPages = Math.ceil(
-    ((
-      await (await collection)
-        .aggregate([
-          { $match: { _id: id } },
-          { $project: { size: { $size: "$replies" } } },
-        ])
-        .toArray()
-    )[0].size as number) / REPLIES_PER_PAGE
+    (await prisma.reply.count({ where: { discussionId: id } })) /
+      REPLIES_PER_PAGE
   );
   const numPagesLocalOverlappedFront = Math.max(
     0,

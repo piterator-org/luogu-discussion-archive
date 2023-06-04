@@ -1,12 +1,12 @@
 import "./luogu3.css";
-import { User } from "@/types/mongodb";
+import type { User } from "@prisma/client";
 import { getUserUrl } from "@/lib/luogu";
 
 export default function UserInfo({ user }: { user: User }) {
   return (
     <>
       <a
-        href={getUserUrl(user._id)}
+        href={getUserUrl(user.id)}
         className={`lg-fg-${user.color}`}
         style={{ textDecorationLine: "none" }}
         target="_blank"

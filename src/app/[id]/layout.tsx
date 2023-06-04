@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { collection, users } from "@/lib/mongodb";
+import prisma from "@/lib/prisma";
 import { getDiscussionUrl, getForumName, getForumUrl } from "@/lib/luogu";
 import UserInfo from "@/components/UserInfo";
 import "./markdown.css";
@@ -7,9 +7,10 @@ import Reply from "./Reply";
 import UpdateButton from "./UpdateButton";
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
-  const discussion = await (
-    await collection
-  ).findOne({ _id: parseInt(params.id, 10) }, { projection: { title: 1 } });
+  const discussion = await prisma.discussion.findUnique({
+    select: { title: true },
+    where: { id: parseInt(params.id, 10) },
+  });
   return { title: discussion?.title };
 }
 
@@ -17,15 +18,27 @@ export default async function Page({
   children,
   params,
 }: React.PropsWithChildren<{ params: { id: string } }>) {
-  const { content, forum, title, lastUpdate, replyCount, ...discussion } =
-    (await (
-      await collection
-    ).findOne(
-      { _id: parseInt(params.id, 10) },
-      { projection: { _id: 0, replies: 0 } }
-    )) ?? notFound();
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const author = (await (await users).findOne({ _id: discussion.author }))!;
+  const {
+    title,
+    forum,
+    author,
+    content,
+    replyCount,
+    updatedAt,
+    ...discussion
+  } =
+    (await prisma.discussion.findUnique({
+      where: { id: parseInt(params.id, 10) },
+      select: {
+        title: true,
+        forum: true,
+        time: true,
+        author: true,
+        content: true,
+        replyCount: true,
+        updatedAt: true,
+      },
+    })) ?? notFound();
   const time = discussion.time.toLocaleString("zh").split(":", 2).join(":");
   return (
     <div className="row">
@@ -61,7 +74,7 @@ export default async function Page({
             <li className="d-flex justify-content-between lh-lg">
               <span className="fw-semibold">上次更新</span>
               <span className="text-muted">
-                {lastUpdate.toLocaleString("zh")}
+                {updatedAt.toLocaleString("zh")}
               </span>
             </li>
           </ul>

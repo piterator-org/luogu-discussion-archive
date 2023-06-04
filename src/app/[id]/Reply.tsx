@@ -2,7 +2,7 @@ import "highlight.js/styles/tokyo-night-dark.css";
 import Image from "next/image";
 import { JSDOM } from "jsdom";
 import hljs from "highlight.js";
-import { User } from "@/types/mongodb";
+import type { User } from "@prisma/client";
 import { getUserUrl, getUserAvatarUrl } from "@/lib/luogu";
 import UserInfo from "@/components/UserInfo";
 import Content from "./Content";
@@ -38,16 +38,16 @@ export default function Reply({
   return (
     <div className="reply list-group-item position-relative">
       <a
-        href={getUserUrl(reply.author._id)}
+        href={getUserUrl(reply.author.id)}
         className="reply-avatar"
         target="_blank"
         rel="noopener noreferrer"
       >
         <Image
-          src={getUserAvatarUrl(reply.author._id)}
+          src={getUserAvatarUrl(reply.author.id)}
           className="rounded-circle shadow"
           fill
-          alt={reply.author._id.toString()}
+          alt={reply.author.id.toString()}
         />
       </a>
       <div className="reply-card bg-white rounded-4 shadow mb-4s">
