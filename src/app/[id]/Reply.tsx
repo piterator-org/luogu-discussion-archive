@@ -4,7 +4,7 @@ import { JSDOM } from "jsdom";
 import hljs from "highlight.js";
 import { User } from "@/types/mongodb";
 import { getUserUrl, getUserAvatarUrl } from "@/lib/luogu";
-import UserInfo from "./UserInfo";
+import UserInfo from "../utils/UserInfo";
 import Content from "./Content";
 
 hljs.registerAliases(["plain"], { languageName: "plaintext" });

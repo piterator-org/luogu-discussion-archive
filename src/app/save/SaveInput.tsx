@@ -11,7 +11,7 @@ export default function SaveInput() {
 
   return (
     <div
-      className="input-group input-group-lg mx-auto my-5x"
+      className="input-group input-group-lg mx-auto"
       style={{ maxWidth: "40em" }}
     >
       <input
