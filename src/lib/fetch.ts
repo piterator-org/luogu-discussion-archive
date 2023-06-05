@@ -22,7 +22,7 @@ export async function saveDiscussion(id: number, maxPages = PAGES_PER_SAVE) {
     const app = document.getElementById("app-old");
     if (!app)
       throw new AbortError(
-        Error(document.querySelector("div")?.textContent ?? undefined)
+        Error(document.querySelector("div")?.textContent?.trim() ?? undefined)
       );
     return app;
   }
