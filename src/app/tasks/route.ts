@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { emitters, metadata } from "@/lib/fetch";
+import { emitters, metadata } from "@/lib/discussion";
 
 export const dynamic = "force-dynamic";
 

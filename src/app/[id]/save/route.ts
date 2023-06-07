@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { startTask } from "@/lib/fetch";
+import { startTask } from "@/lib/discussion";
 
 // eslint-disable-next-line import/prefer-default-export
 export async function GET(

@@ -1,8 +1,8 @@
 import { EventEmitter, once } from "node:events";
-import { JSDOM } from "jsdom";
-import pRetry, { AbortError } from "p-retry";
+import pRetry from "p-retry";
 import prisma from "@/lib/prisma";
 import type { PrismaPromise, Reply } from "@prisma/client";
+import { parseApp, parseComment, parseUser } from "./parser";
 
 const PAGES_PER_SAVE = parseInt(process.env.PAGES_PER_SAVE ?? "128", 10);
 export const emitters: Record<number, EventEmitter> = {};
@@ -11,40 +11,20 @@ export const metadata: Set<number> = new Set();
 export async function saveDiscussion(id: number, maxPages = PAGES_PER_SAVE) {
   let operations: PrismaPromise<unknown>[] = [];
 
-  async function fetchPage(page: number) {
-    const response = await fetch(
-      `https://www.luogu.com.cn/discuss/${id}?page=${page}`,
-      { headers: { cookie: process.env.COOKIE as string }, cache: "no-cache" }
-    );
-    if (response.status > 500) throw Error(response.statusText);
-    if (!response.ok) throw new AbortError(response.statusText);
-    const { document } = new JSDOM(await response.text()).window;
-    const app = document.getElementById("app-old");
-    if (!app)
-      throw new AbortError(
-        Error(document.querySelector("div")?.textContent?.trim() ?? undefined)
-      );
-    return app;
-  }
+  const fetchPage = (page: number) =>
+    parseApp(`https://www.luogu.com.cn/discuss/${id}?page=${page}`);
 
   /* eslint-disable @typescript-eslint/no-non-null-assertion */
-  function extractUser(element: Element) {
-    const a = element.querySelector('a[href^="/user/"]')!;
-    const uid = parseInt(a.getAttribute("href")!.slice("/user/".length), 10);
-    const user = {
-      username: a.textContent!,
-      color: a.getAttribute("class")!.split(" ", 1)[0].slice("lg-fg-".length),
-      checkmark: element.querySelector("a > svg")?.getAttribute("fill") ?? null,
-      badge: element.querySelector("span.am-badge")?.innerHTML ?? null,
-    };
+  function extractComment(element: Element) {
+    const user = parseUser(element.querySelector(".am-comment-meta")!);
     operations.push(
       prisma.user.upsert({
-        where: { id: uid },
-        create: { id: uid, ...user },
+        where: { id: user.id },
+        create: user,
         update: user,
       })
     );
-    return uid;
+    return { authorId: user.id, ...parseComment(element) };
   }
 
   const extractReplies = (app: HTMLElement) =>
@@ -53,30 +33,12 @@ export async function saveDiscussion(id: number, maxPages = PAGES_PER_SAVE) {
     ).map((element) => ({
       id: parseInt(
         element
-          .querySelector(
-            "header.am-comment-hd > div.am-comment-meta > a[data-report-id]"
-          )!
+          .querySelector(".am-comment-hd a[data-report-id]")!
           .getAttribute("data-report-id")!,
         10
       ),
       discussionId: id,
-      authorId: extractUser(
-        element.querySelector("header.am-comment-hd > div.am-comment-meta")!
-      ),
-      time: new Date(
-        `${
-          Array.from(
-            element.querySelector("header.am-comment-hd > div.am-comment-meta")!
-              .childNodes
-          )
-            .filter((node) => node.nodeType === node.TEXT_NODE)
-            .map((node) =>
-              /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.exec(node.textContent!.trim())
-            )
-            .filter((node) => node)[0]![0]
-        }+8`
-      ),
-      content: element.querySelector("div.am-comment-bd")!.innerHTML.trim(),
+      ...extractComment(element),
     })) as Reply[];
 
   const extractMetadata = (app: HTMLElement) => ({
@@ -87,20 +49,9 @@ export async function saveDiscussion(id: number, maxPages = PAGES_PER_SAVE) {
       )!
       .getAttribute("href")!
       .slice("/discuss/lists?forumname=".length),
-    authorId: extractUser(
-      app.querySelector('ul.lg-summary-list > li > span > a[href^="/user/"]')!
-        .parentElement!
+    ...extractComment(
+      app.querySelector("article.am-comment-danger > div.am-comment-main")!
     ),
-    time: new Date(
-      `${Array.from(app.querySelectorAll("ul.lg-summary-list > li > span")!)
-        .filter((element) => !element.children.length)[0]
-        .textContent!.trim()}+8`
-    ),
-    content: app
-      .querySelector(
-        "article.am-comment-danger > div.am-comment-main > div.am-comment-bd"
-      )!
-      .innerHTML.trim(),
     replyCount: parseInt(
       app
         .querySelector("article.am-comment-danger")!
