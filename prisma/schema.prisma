@@ -18,6 +18,7 @@ model User {
   badge       String?      @db.VarChar
   discussions Discussion[]
   Reply       Reply[]
+  judgements  Judgement[]
 }
 
 model Discussion {
@@ -41,4 +42,14 @@ model Reply {
   author       User       @relation(fields: [authorId], references: [id])
   authorId     Int
   content      String     @db.Text
+}
+
+model Judgement {
+  time    DateTime @db.Timestamp(0)
+  user    User     @relation(fields: [userId], references: [id])
+  userId  Int
+  content String   @db.VarChar
+
+  @@id([time, userId])
+  @@index([time(sort: Desc)])
 }
