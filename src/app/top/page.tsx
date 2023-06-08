@@ -1,6 +1,8 @@
 import prisma from "@/lib/prisma";
 import TopCharts from "./TopCharts";
 
+export const dynamic = "force-dynamic";
+
 const NUM_DISCUSSIONS_TOP_CHARTS = parseInt(
   process.env.NUM_DISCUSSIONS_TOP_CHARTS ?? "50",
   10
