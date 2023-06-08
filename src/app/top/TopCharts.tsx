@@ -26,7 +26,7 @@ export default function Page({
   const [selected, setSelected] = useState<string>("most-replies");
 
   return (
-    <div className="pt-5 pb-4">
+    <div className="pt-5 pb-3 pb-md-3x px-2 px-md-0">
       <h1 className="mb-4x text-center">排行榜</h1>
       <select
         className="form-select form-select-lg d-block d-md-none border-0 rounded-3 shadow-sm mb-4m"
@@ -38,7 +38,7 @@ export default function Page({
         <option value="most-recent">最新发布</option>
         <option value="most-clicked">最多点击</option>
       </select>
-      <div className="row g-md-4m mb-4s row-cols-1 row-cols-md-3">
+      <div className="row g-md-4m row-cols-1 row-cols-md-3">
         <div
           className={`col d-md-block ${
             selected !== "most-replies" ? "d-none" : ""

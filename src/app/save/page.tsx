@@ -3,10 +3,10 @@ import SaveInput from "./SaveInput";
 export default function Page() {
   return (
     <>
-      <div className="mt-6s mb-5s">
+      <div className="mt-6s px-3 px-md-0 mb-5s">
         <SaveInput />
       </div>
-      <div className="mb-5x px-4 py-5">
+      <div className="mb-5x px-3 px-md-0 py-5">
         <h2 className="pb-2 border-bottom">新版保存站的优点</h2>
         <div className="row g-4 py-5 row-cols-1 row-cols-lg-3">
           <div className="feature col">

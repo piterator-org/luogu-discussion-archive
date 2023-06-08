@@ -42,7 +42,7 @@ export default async function Page({
     })) ?? notFound();
   const time = stringifyTime(discussion.time);
   return (
-    <div className="row">
+    <div className="row px-2 px-md-0">
       <div className="col-lg-4 col-md-5 col-12 order-md-last mb-4s">
         <div className="rounded-4 shadow px-4 py-3">
           <div className="mb-2 fs-2 fw-semibold d-block d-md-none">{title}</div>

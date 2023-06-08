@@ -6,6 +6,10 @@ $spacers: map-merge(
   (
     tiny: $spacer * 0.125,
 
+    container-default: $spacer * 0.75,
+
+    3x: $spacer * 1.25,
+
     4s: $spacer * 1.75,
     4m: $spacer * 2,
     4x: $spacer * 2.25,
