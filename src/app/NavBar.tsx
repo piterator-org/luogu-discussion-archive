@@ -15,7 +15,7 @@ export default function NavBar() {
           LgLg.top
         </a>
         <button
-          className="navbar-toggler"
+          className="navbar-toggler border-0 shadow-sm"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarSupportedContent"
@@ -24,28 +24,28 @@ export default function NavBar() {
         </button>
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-md-0">
-            <li className="nav-item">
+            <li className="nav-item my-tiny my-md-0">
               <a className="nav-link" href="/">
                 发现
               </a>
             </li>
-            <li className="nav-item">
+            <li className="nav-item my-tiny my-md-0">
               <Link className="nav-link" href="/top">
                 排行榜
               </Link>
             </li>
-            <li className="nav-item">
+            <li className="nav-item my-tiny my-md-0">
               <Link className="nav-link" href="/save">
                 保存帖子
               </Link>
             </li>
-            <li className="nav-item">
+            <li className="nav-item my-tiny my-md-0">
               <a className="nav-link" href="/">
                 关于
               </a>
             </li>
           </ul>
-          <form className="d-flex" role="search">
+          <form className="d-flex my-tiny my-md-0" role="search">
             <input
               className="form-control border-0 shadow-sm me-2"
               type="search"

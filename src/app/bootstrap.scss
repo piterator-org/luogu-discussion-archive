@@ -4,6 +4,8 @@
 $spacers: map-merge(
   $spacers,
   (
+    tiny: $spacer * 0.125,
+
     4s: $spacer * 1.75,
     4m: $spacer * 2,
     4x: $spacer * 2.25,
