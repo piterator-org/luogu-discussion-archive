@@ -36,7 +36,7 @@ export default function Reply({
     .forEach((element) => hljs.highlightElement(element));
 
   return (
-    <div className="reply list-group-item position-relative">
+    <div className="reply position-relative">
       <a
         href={getUserUrl(reply.author.id)}
         className="reply-avatar"

@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import prisma from "@/lib/prisma";
+import stringifyTime from "@/lib/time";
 import Reply from "../Reply";
 import PageButton from "./PageButton";
 
@@ -26,7 +27,7 @@ export default async function Page({
       })
     ).map((reply) => ({
       ...reply,
-      time: reply.time.toLocaleString("zh").split(":", 2).join(":"),
+      time: stringifyTime(reply.time),
     })) ?? notFound();
   const numPages = Math.ceil(
     (await prisma.reply.count({ where: { discussionId: id } })) /

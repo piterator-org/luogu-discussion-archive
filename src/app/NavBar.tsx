@@ -30,9 +30,9 @@ export default function NavBar() {
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/">
+              <Link className="nav-link" href="/top">
                 排行榜
-              </a>
+              </Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" href="/save">

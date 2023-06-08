@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import prisma from "@/lib/prisma";
 import { getDiscussionUrl, getForumName, getForumUrl } from "@/lib/luogu";
+import stringifyTime from "@/lib/time";
 import UserInfo from "@/components/UserInfo";
 import "./markdown.css";
 import Reply from "./Reply";
@@ -39,7 +40,7 @@ export default async function Page({
         updatedAt: true,
       },
     })) ?? notFound();
-  const time = discussion.time.toLocaleString("zh").split(":", 2).join(":");
+  const time = stringifyTime(discussion.time);
   return (
     <div className="row">
       <div className="col-lg-4 col-md-5 col-12 order-md-last mb-4s">
