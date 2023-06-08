@@ -29,7 +29,7 @@ export default async function Page() {
       replyCount: true,
       time: true,
     },
-    orderBy: { time: "desc" },
+    orderBy: { id: "desc" },
     take: NUM_DISCUSSIONS_TOP_CHARTS,
   });
 
