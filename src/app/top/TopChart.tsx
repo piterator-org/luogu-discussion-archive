@@ -49,7 +49,7 @@ export default function TopChart({
                 className="text-end text-body-tertiary d-block"
                 style={{ fontSize: ".8rem" }}
               >
-                {discussion.replyCount} 楼 <br />
+                {discussion.replyCount} 层 <br />
                 {stringifyTime(discussion.time)}
               </span>
             </div>
