@@ -1,6 +1,6 @@
 import { EventEmitter, once } from "node:events";
-import prisma from "@/lib/prisma";
 import type { PrismaPromise, Reply } from "@prisma/client";
+import prisma from "./prisma";
 import { parseApp, parseComment, parseUser } from "./parser";
 
 const PAGES_PER_SAVE = parseInt(process.env.PAGES_PER_SAVE ?? "128", 10);
@@ -118,7 +118,9 @@ export function startTask(id: number) {
   if (!(id in emitters)) {
     emitters[id] = new EventEmitter();
     metadata.add(id);
-    once(emitters[id], "start").finally(() => metadata.delete(id));
+    once(emitters[id], "start")
+      .catch(() => {})
+      .finally(() => metadata.delete(id));
     saveDiscussion(id)
       .catch((err) => emitters[id].emit("error", err))
       .finally(() => {
@@ -126,5 +128,5 @@ export function startTask(id: number) {
       });
   }
   if (metadata.has(id)) return once(emitters[id], "start");
-  return [];
+  return Promise.resolve([]);
 }

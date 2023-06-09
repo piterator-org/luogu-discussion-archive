@@ -15,7 +15,7 @@ export default function UpdateButton({
       className="btn btn-outline-primary shadow-sm ms-2"
       onClick={() => {
         setDisabled(true);
-        fetch(target)
+        fetch(`${process.env.NEXT_PUBLIC_ARCHIVE_HOST ?? ""}/${target}`)
           .then(() => router.refresh())
           .finally(() => setDisabled(false));
       }}

@@ -14,6 +14,7 @@ export default async function Page({
 }) {
   const id = parseInt(params.id, 10);
   const page = parseInt(params.page, 10);
+  if (Number.isNaN(page)) notFound();
   const replies =
     (
       await prisma.reply.findMany({
