@@ -118,7 +118,9 @@ export function startTask(id: number) {
   if (!(id in emitters)) {
     emitters[id] = new EventEmitter();
     metadata.add(id);
-    once(emitters[id], "start").finally(() => metadata.delete(id));
+    once(emitters[id], "start")
+      .catch(() => {})
+      .finally(() => metadata.delete(id));
     saveDiscussion(id)
       .catch((err) => emitters[id].emit("error", err))
       .finally(() => {
