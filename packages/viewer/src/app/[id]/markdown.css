@@ -11,6 +11,10 @@
   max-width: 100%;
 }
 
+.markdown a {
+  text-underline-offset: 0.125em;
+}
+
 .markdown blockquote {
   margin-left: 2.5em;
   box-sizing: border-box;

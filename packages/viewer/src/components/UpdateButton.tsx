@@ -3,7 +3,10 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function UpdateButton({ id }: { id: string }) {
+export default function UpdateButton({
+  children,
+  target,
+}: React.PropsWithChildren<{ target: string }>) {
   const router = useRouter();
   const [disabled, setDisabled] = useState<boolean>(false);
   return (
@@ -12,13 +15,13 @@ export default function UpdateButton({ id }: { id: string }) {
       className="btn btn-outline-primary shadow-sm ms-2"
       onClick={() => {
         setDisabled(true);
-        fetch(`/${id}/save`)
+        fetch(target)
           .then(() => router.refresh())
           .finally(() => setDisabled(false));
       }}
       disabled={disabled}
     >
-      更新帖子
+      {children}
     </button>
   );
 }

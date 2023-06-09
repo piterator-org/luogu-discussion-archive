@@ -4,8 +4,8 @@ import { getDiscussionUrl, getForumName, getForumUrl } from "@/lib/luogu";
 import stringifyTime from "@/lib/time";
 import UserInfo from "@/components/UserInfo";
 import "./markdown.css";
+import UpdateButton from "@/components/UpdateButton";
 import Reply from "./Reply";
-import UpdateButton from "./UpdateButton";
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
   const discussion = await prisma.discussion.findUnique({
@@ -19,6 +19,7 @@ export default async function Page({
   children,
   params,
 }: React.PropsWithChildren<{ params: { id: string } }>) {
+  const id = parseInt(params.id, 10);
   const {
     title,
     forum,
@@ -29,7 +30,7 @@ export default async function Page({
     ...discussion
   } =
     (await prisma.discussion.findUnique({
-      where: { id: parseInt(params.id, 10) },
+      where: { id },
       select: {
         title: true,
         forum: true,
@@ -65,8 +66,14 @@ export default async function Page({
               </span>
             </li>
             <li className="d-flex justify-content-between lh-lg">
-              <span className="fw-semibold">回复数量</span>
+              <span className="fw-semibold">历史最多回复</span>
               <span className="text-muted">{replyCount}</span>
+            </li>
+            <li className="d-flex justify-content-between lh-lg">
+              <span className="fw-semibold">已保存回复</span>
+              <span className="text-muted">
+                {prisma.reply.count({ where: { discussionId: id } })}
+              </span>
             </li>
             <li className="d-flex justify-content-between lh-lg">
               <span className="fw-semibold">发布时间</span>
@@ -88,7 +95,7 @@ export default async function Page({
             >
               查看原帖
             </a>
-            <UpdateButton id={params.id} />
+            <UpdateButton target={`${params.id}/save`}>更新帖子</UpdateButton>
           </div>
         </div>
       </div>

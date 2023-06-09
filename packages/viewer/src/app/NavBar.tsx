@@ -35,6 +35,16 @@ export default function NavBar() {
               </Link>
             </li>
             <li className="nav-item my-tiny my-md-0">
+              <Link className="nav-link" href="/judgement">
+                陶片放逐
+              </Link>
+            </li>
+            <li className="nav-item my-tiny my-md-0">
+              <a className="nav-link" href="/">
+                小黑屋
+              </a>
+            </li>
+            <li className="nav-item my-tiny my-md-0">
               <Link className="nav-link" href="/save">
                 保存帖子
               </Link>

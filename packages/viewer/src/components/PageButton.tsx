@@ -1,11 +1,11 @@
 import Link from "next/link";
 
 export default function PageButton({
-  discussion,
+  target,
   page,
   active,
 }: {
-  discussion: number;
+  target: string;
   page: number;
   // eslint-disable-next-line react/require-default-props
   active?: number;
@@ -21,7 +21,7 @@ export default function PageButton({
   ) : (
     <Link
       className="btn btn-light btn-sm shadow-sm border-0 text-secondary mx-1 my-1"
-      href={`/${discussion}/${page}`}
+      href={target}
     >
       {page}
     </Link>

@@ -21,3 +21,5 @@ export const getForumName = (forum: string) =>
     service: "反馈、申请、工单专版",
     miaomiaowu: "小黑屋",
   }[forum] ?? forum);
+
+export const judgementUrl = "https://www.luogu.com.cn/judgement";
