@@ -32,13 +32,10 @@ export default function SaveInput() {
         onClick={() => {
           setDisabled(true);
           const id = url.split("?", 1)[0].split("/").reverse()[0];
-          fetch(`/${id}/save`)
+          fetch(`${process.env.NEXT_PUBLIC_ARCHIVE_HOST ?? ""}/${id}`)
             .then(async (res) => {
-              const r = (await res.json()) as
-                | { ok: true }
-                | { ok: false; err: string };
-              if (r.ok) router.push(`/${id}/1`);
-              else setError(r.err);
+              if (res.ok) router.push(`/${id}/1`);
+              else setError(((await res.json()) as { error: string }).error);
             })
             .catch((e: Error) => setError(e.message))
             .finally(() => setDisabled(false));

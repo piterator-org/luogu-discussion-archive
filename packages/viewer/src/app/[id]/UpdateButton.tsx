@@ -12,7 +12,7 @@ export default function UpdateButton({ id }: { id: string }) {
       className="btn btn-outline-primary shadow-sm ms-2"
       onClick={() => {
         setDisabled(true);
-        fetch(`/${id}/save`)
+        fetch(`${process.env.NEXT_PUBLIC_ARCHIVE_HOST ?? ""}/${id}`)
           .then(() => router.refresh())
           .finally(() => setDisabled(false));
       }}
