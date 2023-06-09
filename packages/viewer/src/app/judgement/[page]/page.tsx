@@ -11,6 +11,7 @@ export default async function Page({ params }: { params: { page: string } }) {
   const shards =
     (await prisma.judgement.findMany({
       select: { time: true, user: true, content: true },
+      orderBy: { time: "desc" },
       skip: (page - 1) * SHARDS_PER_PAGE,
       take: SHARDS_PER_PAGE,
     })) ?? notFound();
