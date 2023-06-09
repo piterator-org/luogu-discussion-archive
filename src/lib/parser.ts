@@ -1,18 +1,28 @@
 import { JSDOM } from "jsdom";
-import { AbortError } from "p-retry";
 
-export async function parseApp(url: string) {
+const delay = (ms?: number) =>
+  new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+
+export async function parseApp(url: string, retries = 1): Promise<HTMLElement> {
   const response = await fetch(url, {
     headers: { cookie: process.env.COOKIE as string },
     cache: "no-cache",
   });
-  if (response.status > 500) throw Error(response.statusText);
-  if (!response.ok) throw new AbortError(response.statusText);
+  if (response.status > 500) {
+    if (retries) {
+      await delay(1000);
+      return parseApp(url, retries - 1);
+    }
+    throw Error("Reached maximum retry limit");
+  }
+  if (!response.ok) throw Error(response.statusText);
   const { document } = new JSDOM(await response.text()).window;
   const app = document.getElementById("app-old");
   if (!app)
-    throw new AbortError(
-      Error(document.querySelector("div")?.textContent?.trim() ?? undefined)
+    throw Error(
+      document.querySelector("div")?.textContent?.trim() ?? undefined
     );
   return app;
 }

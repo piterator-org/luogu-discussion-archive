@@ -1,5 +1,4 @@
 import { EventEmitter, once } from "node:events";
-import pRetry from "p-retry";
 import prisma from "@/lib/prisma";
 import type { PrismaPromise, Reply } from "@prisma/client";
 import { parseApp, parseComment, parseUser } from "./parser";
@@ -12,7 +11,7 @@ export async function saveDiscussion(id: number, maxPages = PAGES_PER_SAVE) {
   let operations: PrismaPromise<unknown>[] = [];
 
   const fetchPage = (page: number) =>
-    parseApp(`https://www.luogu.com.cn/discuss/${id}?page=${page}`);
+    parseApp(`https://www.luogu.com.cn/discuss/${id}?page=${page}`, 3);
 
   /* eslint-disable @typescript-eslint/no-non-null-assertion */
   function extractComment(element: Element) {
@@ -73,7 +72,7 @@ export async function saveDiscussion(id: number, maxPages = PAGES_PER_SAVE) {
     });
   }
 
-  const app = await pRetry(() => fetchPage(1), { maxTimeout: 5000 });
+  const app = await fetchPage(1);
   const discussion = extractMetadata(app);
   operations.push(
     prisma.discussion.upsert({
@@ -103,7 +102,7 @@ export async function saveDiscussion(id: number, maxPages = PAGES_PER_SAVE) {
     for (let i = Math.min(pages, maxPages); i > 0; i -= 1) {
       const replies = extractReplies(
         // eslint-disable-next-line no-await-in-loop
-        await pRetry(() => fetchPage(i), { retries: 3 })
+        await fetchPage(i)
       );
       saveReplies(replies);
       if (replies[replies.length - 1].id <= lastReply) break;
