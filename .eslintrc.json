@@ -1,37 +1,4 @@
 {
-  "extends": [
-    "next/core-web-vitals",
-    "airbnb",
-    "plugin:react/jsx-runtime",
-    "plugin:prettier/recommended"
-  ],
-  "overrides": [
-    {
-      "files": ["*.ts", "*.tsx"],
-      "extends": [
-        "airbnb-typescript",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:@typescript-eslint/recommended-requiring-type-checking",
-        "plugin:prettier/recommended"
-      ],
-      "parserOptions": {
-        "project": "tsconfig.json"
-      },
-      "rules": {
-        "no-underscore-dangle": [
-          "error",
-          { "allow": ["_id", "_mongoClientPromise"] }
-        ]
-      }
-    },
-    {
-      "files": ["*.config.*", ".*rc.*"],
-      "rules": {
-        "import/no-extraneous-dependencies": [
-          "error",
-          { "devDependencies": true }
-        ]
-      }
-    }
-  ]
+  "root": true,
+  "extends": ["airbnb-base", "plugin:prettier/recommended"]
 }
