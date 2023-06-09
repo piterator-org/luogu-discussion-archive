@@ -13,7 +13,9 @@ fastify.register(cors);
 fastify.register(routes);
 /* eslint-enable @typescript-eslint/no-floating-promises */
 
-fastify.listen({ port: 3000 }).catch((err) => {
-  fastify.log.error(err);
-  process.exit(1);
-});
+fastify
+  .listen({ port: parseInt(process.env.PORT ?? "3000", 10) })
+  .catch((err) => {
+    fastify.log.error(err);
+    process.exit(1);
+  });
