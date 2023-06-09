@@ -15,10 +15,12 @@
   },
   "dependencies": {
     "@fastify/cors": "^8.3.0",
+    "@logtail/pino": "^0.4.0",
     "@prisma/client": "^4.15.0",
     "fastify": "^4.17.0",
     "fastify-plugin": "^4.5.0",
-    "jsdom": "^22.1.0"
+    "jsdom": "^22.1.0",
+    "pino": "^8.14.1"
   },
   "devDependencies": {
     "@types/jsdom": "^21.1.1",

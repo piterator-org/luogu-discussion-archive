@@ -1,10 +1,18 @@
 import Fastify from "fastify";
+import pino from "pino";
 import cors from "@fastify/cors";
 import prismaPlugin from "./plugins/prisma";
 import routes from "./plugins/routes";
 
 const fastify = Fastify({
-  logger: true,
+  logger: process.env.SOURCE_TOKEN
+    ? pino(
+        pino.transport<{ sourceToken: string }>({
+          target: "@logtail/pino",
+          options: { sourceToken: process.env.SOURCE_TOKEN },
+        }) as pino.TransportTargetOptions<{ sourceToken: string }>
+      )
+    : undefined,
 });
 
 /* eslint-disable @typescript-eslint/no-floating-promises */

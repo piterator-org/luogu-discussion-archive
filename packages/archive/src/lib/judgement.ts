@@ -1,11 +1,14 @@
-import type { PrismaPromise } from "@prisma/client";
+import type { PrismaClient, PrismaPromise } from "@prisma/client";
+import type { BaseLogger } from "pino";
 import { parseApp, parseComment, parseUser } from "./parser";
-import prisma from "./prisma";
 
-export default async function saveJudgements() {
+export default async function saveJudgements(
+  logger: BaseLogger,
+  prisma: PrismaClient
+) {
   const operations: PrismaPromise<unknown>[] = [];
 
-  (await parseApp("https://www.luogu.com.cn/judgement"))
+  (await parseApp(logger, "https://www.luogu.com.cn/judgement"))
     .querySelectorAll("li.feed-li > div.am-comment-main")
     .forEach((element) => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

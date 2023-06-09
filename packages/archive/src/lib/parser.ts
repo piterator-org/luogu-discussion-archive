@@ -1,3 +1,4 @@
+import type { BaseLogger } from "pino";
 import { JSDOM } from "jsdom";
 
 const delay = (ms?: number) =>
@@ -5,15 +6,23 @@ const delay = (ms?: number) =>
     setTimeout(resolve, ms);
   });
 
-export async function parseApp(url: string, retries = 1): Promise<HTMLElement> {
+export async function parseApp(
+  logger: BaseLogger,
+  url: string,
+  retries = 1
+): Promise<HTMLElement> {
   const response = await fetch(url, {
     headers: { cookie: process.env.COOKIE as string },
     cache: "no-cache",
   });
+  logger.info(
+    { retries, url, status: response.status, statusText: response.statusText },
+    "fetch"
+  );
   if (response.status > 500) {
     if (retries) {
       await delay(1000);
-      return parseApp(url, retries - 1);
+      return parseApp(logger, url, retries - 1);
     }
     throw Error("Reached maximum retry limit");
   }

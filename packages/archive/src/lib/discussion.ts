@@ -1,17 +1,22 @@
 import { EventEmitter, once } from "node:events";
-import type { PrismaPromise, Reply } from "@prisma/client";
-import prisma from "./prisma";
+import type { BaseLogger } from "pino";
+import type { PrismaClient, PrismaPromise, Reply } from "@prisma/client";
 import { parseApp, parseComment, parseUser } from "./parser";
 
 const PAGES_PER_SAVE = parseInt(process.env.PAGES_PER_SAVE ?? "128", 10);
 export const emitters: Record<number, EventEmitter> = {};
 export const metadata: Set<number> = new Set();
 
-export async function saveDiscussion(id: number, maxPages = PAGES_PER_SAVE) {
+export async function saveDiscussion(
+  logger: BaseLogger,
+  prisma: PrismaClient,
+  id: number,
+  maxPages = PAGES_PER_SAVE
+) {
   let operations: PrismaPromise<unknown>[] = [];
 
   const fetchPage = (page: number) =>
-    parseApp(`https://www.luogu.com.cn/discuss/${id}?page=${page}`, 3);
+    parseApp(logger, `https://www.luogu.com.cn/discuss/${id}?page=${page}`, 3);
 
   /* eslint-disable @typescript-eslint/no-non-null-assertion */
   function extractComment(element: Element) {
@@ -111,18 +116,26 @@ export async function saveDiscussion(id: number, maxPages = PAGES_PER_SAVE) {
   await prisma.$transaction(operations);
   operations = [];
 
-  if (pages > maxPages) await saveDiscussion(id, maxPages + PAGES_PER_SAVE);
+  if (pages > maxPages)
+    await saveDiscussion(logger, prisma, id, maxPages + PAGES_PER_SAVE);
 }
 
-export function startTask(id: number) {
+export function startTask(
+  logger: BaseLogger,
+  prisma: PrismaClient,
+  id: number
+) {
   if (!(id in emitters)) {
     emitters[id] = new EventEmitter();
     metadata.add(id);
     once(emitters[id], "start")
       .catch(() => {})
       .finally(() => metadata.delete(id));
-    saveDiscussion(id)
-      .catch((err) => emitters[id].emit("error", err))
+    saveDiscussion(logger, prisma, id)
+      .catch((err) => {
+        emitters[id].emit("error", err);
+        logger.error(err);
+      })
       .finally(() => {
         delete emitters[id];
       });
