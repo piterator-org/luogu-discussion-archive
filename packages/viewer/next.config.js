@@ -3,6 +3,7 @@ const nextConfig = {
   images: {
     remotePatterns: [{ protocol: "https", hostname: "cdn.luogu.com.cn" }],
   },
+  output: "standalone",
 };
 
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
