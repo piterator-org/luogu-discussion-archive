@@ -10,7 +10,7 @@ export default function Page() {
     <div className="pt-5 pb-3 pb-md-3x px-2 px-md-0">
       <div className="row justify-content-center">
         <div className="col-12 col-md-10 col-lg-8 col-xl-7 col-xxl-6">
-          <div className="rounded-4 shadow px-4 px-md-3x py-3x">
+          <div className="rounded-4 shadow p-3 p-md-3x">
             <h2 className="mb-4 text-center">关于</h2>
             <div className="markdown">
               <p>你好，这里是由 Piterator 打造的新一代洛谷讨论保存站。</p>
