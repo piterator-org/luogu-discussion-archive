@@ -3,7 +3,12 @@ import Image from "next/image";
 import { JSDOM } from "jsdom";
 import hljs from "highlight.js";
 import type { User } from "@prisma/client";
-import { getUserUrl, getUserAvatarUrl } from "@/lib/luogu";
+import {
+  getUserUrl,
+  getUserAvatarUrl,
+  isUserUrl,
+  getUserIdFromUrl,
+} from "@/lib/luogu";
 import UserInfo from "@/components/UserInfo";
 import Content from "./Content";
 
@@ -17,21 +22,47 @@ export default function Reply({
     time: string;
     author: User;
     content: string;
+    usersMetioned: Record<number, User>;
   };
 }) {
-  const { body } = new JSDOM(reply.content).window.document;
-  body.querySelectorAll("a[href]").forEach((element) => {
-    element.setAttribute(
-      "href",
-      new URL(
-        element.getAttribute("href") as string,
-        "https://www.luogu.com.cn/discuss/"
-      ).href
+  const doc = new JSDOM(reply.content).window.document;
+  doc.body.querySelectorAll("a[href]").forEach((element) => {
+    const urlAbsolute = new URL(
+      element.getAttribute("href") as string,
+      "https://www.luogu.com.cn/discuss/"
     );
+    element.setAttribute("href", urlAbsolute.href);
     element.setAttribute("target", "_blank");
     element.setAttribute("rel", "noopener noreferrer");
+    if (
+      element.previousSibling !== null &&
+      element.previousSibling.nodeName === "#text" &&
+      element.previousSibling.nodeValue !== null &&
+      element.previousSibling.nodeValue.endsWith("@") &&
+      isUserUrl(urlAbsolute)
+    ) {
+      if (reply.usersMetioned[getUserIdFromUrl(urlAbsolute)] !== undefined) {
+        element.classList.add("link-success");
+        // eslint-disable-next-line no-param-reassign
+        if (
+          element.innerHTML !==
+          reply.usersMetioned[getUserIdFromUrl(urlAbsolute)].username
+        ) {
+          const originalUsername = doc.createElement("span");
+          originalUsername.innerHTML = `(${element.innerHTML})`;
+          originalUsername.classList.add("text-warning");
+          // eslint-disable-next-line no-param-reassign
+          element.innerHTML =
+            reply.usersMetioned[getUserIdFromUrl(urlAbsolute)].username;
+          element.append(originalUsername);
+        }
+      } else {
+        element.classList.add("link-warning");
+      }
+      element.classList.add("text-decoration-none");
+    }
   });
-  body
+  doc.body
     .querySelectorAll("code")
     .forEach((element) => hljs.highlightElement(element));
 
@@ -59,7 +90,7 @@ export default function Reply({
           </span>
         </div>
         <div className="reply-content pe-4 py-2">
-          <Content content={body.innerHTML} />
+          <Content content={doc.body.innerHTML} />
           <span
             className="text-end text-body-tertiary d-block d-md-none"
             style={{ fontSize: ".8rem" }}
