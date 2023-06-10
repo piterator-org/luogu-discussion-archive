@@ -12,7 +12,7 @@ export default function Reply({
     time: string;
     author: User;
     content: string;
-    usersMetioned: Record<number, User>;
+    usersMetioned: User[];
   };
 }) {
   return (
@@ -39,7 +39,10 @@ export default function Reply({
           </span>
         </div>
         <div className="reply-content pe-4 py-2">
-          <Content content={reply.content} />
+          <Content
+            content={reply.content}
+            usersMetioned={reply.usersMetioned}
+          />
           <span
             className="text-end text-body-tertiary d-block d-md-none"
             style={{ fontSize: ".8rem" }}
