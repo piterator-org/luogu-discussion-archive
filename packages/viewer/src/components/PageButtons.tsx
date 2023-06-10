@@ -19,8 +19,8 @@ export default function PageButtons({
   const ellipsis = (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="16"
-      height="16"
+      width="1em"
+      height="1em"
       fill="currentColor"
       className="bi bi-three-dots text-end text-secondary mx-1"
       viewBox="0 0 16 16"
