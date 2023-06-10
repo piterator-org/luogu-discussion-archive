@@ -1,5 +1,6 @@
-import { redirect } from "next/navigation";
+import InfiniteScroll from "./InfiniteScroll";
 
 export default function Page({ params }: { params: { id: string } }) {
-  redirect(`/${params.id}/1`);
+  const id = parseInt(params.id, 10);
+  return <InfiniteScroll id={id} />;
 }
