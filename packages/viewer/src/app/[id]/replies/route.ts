@@ -1,5 +1,6 @@
-import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
+import serializeReply from "../serializeReply";
 
 // eslint-disable-next-line import/prefer-default-export
 export async function GET(
@@ -20,7 +21,15 @@ export async function GET(
   return NextResponse.json(
     replies.length
       ? {
-          data: replies,
+          data: await Promise.all(
+            replies.map(async (reply) => ({
+              ...reply,
+              ...(await serializeReply({
+                content: reply.content,
+                time: reply.time,
+              })),
+            }))
+          ),
           nextCursor: replies[replies.length - 1].id,
         }
       : { data: null }
