@@ -77,7 +77,7 @@ export default async function Page({
               </span>
             </li>
             <li className="d-flex justify-content-between lh-lg">
-              <span className="fw-semibold">历史最多回复</span>
+              <span className="fw-semibold">当前回复</span>
               <span className="text-muted">{replyCount}</span>
             </li>
             <li className="d-flex justify-content-between lh-lg">

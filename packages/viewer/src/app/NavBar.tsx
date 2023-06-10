@@ -11,9 +11,9 @@ export default function NavBar() {
   return (
     <nav className="navbar navbar-expand-md sticky-top bg-body shadow-sm">
       <div className="container-lg d-flex my-1 px-3x px-md-container-default">
-        <a className="navbar-brand" href="/">
+        <Link className="navbar-brand" href="/">
           LgLg.top
-        </a>
+        </Link>
         <button
           className="navbar-toggler border-0 shadow-sm"
           type="button"
@@ -25,9 +25,9 @@ export default function NavBar() {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-md-0">
             <li className="nav-item my-tiny my-md-0">
-              <a className="nav-link" href="/">
+              <Link className="nav-link" href="/">
                 发现
-              </a>
+              </Link>
             </li>
             <li className="nav-item my-tiny my-md-0">
               <Link className="nav-link" href="/top">
@@ -38,11 +38,6 @@ export default function NavBar() {
               <Link className="nav-link" href="/judgement">
                 陶片放逐
               </Link>
-            </li>
-            <li className="nav-item my-tiny my-md-0">
-              <a className="nav-link" href="/">
-                小黑屋
-              </a>
             </li>
             <li className="nav-item my-tiny my-md-0">
               <Link className="nav-link" href="/save">

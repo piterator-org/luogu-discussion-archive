@@ -10,17 +10,27 @@ export default function Page({
 }: {
   mostReplies: {
     id: number;
-    author: User;
-    title: string;
     time: Date;
     replyCount: number;
+    snapshots: {
+      time: Date;
+      title: string;
+      author: User;
+      forum: string;
+      content: string;
+    }[];
   }[];
   mostRecent: {
     id: number;
-    author: User;
-    title: string;
     time: Date;
     replyCount: number;
+    snapshots: {
+      time: Date;
+      title: string;
+      author: User;
+      forum: string;
+      content: string;
+    }[];
   }[];
 }) {
   const [selected, setSelected] = useState<string>("most-replies");

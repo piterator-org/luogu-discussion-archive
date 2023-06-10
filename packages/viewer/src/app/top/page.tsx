@@ -12,10 +12,19 @@ export default async function Page() {
   const mostReplies = await prisma.discussion.findMany({
     select: {
       id: true,
-      title: true,
-      author: true,
-      replyCount: true,
       time: true,
+      replyCount: true,
+      snapshots: {
+        select: {
+          time: true,
+          title: true,
+          forum: true,
+          author: true,
+          content: true,
+        },
+        orderBy: { time: "desc" },
+        take: 1,
+      },
     },
     orderBy: { replyCount: "desc" },
     take: NUM_DISCUSSIONS_TOP_CHARTS,
@@ -24,10 +33,19 @@ export default async function Page() {
   const mostRecent = await prisma.discussion.findMany({
     select: {
       id: true,
-      title: true,
-      author: true,
-      replyCount: true,
       time: true,
+      replyCount: true,
+      snapshots: {
+        select: {
+          time: true,
+          title: true,
+          forum: true,
+          author: true,
+          content: true,
+        },
+        orderBy: { time: "desc" },
+        take: 1,
+      },
     },
     orderBy: { id: "desc" },
     take: NUM_DISCUSSIONS_TOP_CHARTS,
