@@ -18,7 +18,7 @@ export default (function routes(fastify, options, done) {
       .catch((err: Error) => reply.code(500).send({ error: err.message }));
   });
 
-  fastify.get<{ Params: { id: string } }>("/:id", (request, reply) => {
+  fastify.get<{ Params: { id: string } }>("/:id(\\d+)", (request, reply) => {
     const id = parseInt(request.params.id, 10);
     startTask(
       fastify.log.child({ reqId: request.id as string, target: id }),
@@ -26,9 +26,7 @@ export default (function routes(fastify, options, done) {
       id
     )
       .then(() => reply.code(202).send({}))
-      .catch((err: Error) =>
-        reply.code(500).send({ ok: false, error: err.message })
-      );
+      .catch((err: Error) => reply.code(500).send({ error: err.message }));
   });
 
   done();

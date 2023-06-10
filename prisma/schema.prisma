@@ -11,27 +11,36 @@ datasource db {
 }
 
 model User {
-  id          Int          @id
-  username    String       @db.VarChar
-  color       String       @db.VarChar
-  checkmark   String?      @db.Char(7)
-  badge       String?      @db.VarChar
-  discussions Discussion[]
-  Reply       Reply[]
-  judgements  Judgement[]
+  id         Int         @id
+  username   String      @db.VarChar
+  color      String      @db.VarChar
+  checkmark  String?     @db.Char(7)
+  badge      String?     @db.VarChar
+  snapshots  Snapshot[]
+  replies    Reply[]
+  judgements Judgement[]
 }
 
 model Discussion {
-  id         Int      @id
-  title      String   @db.VarChar
-  forum      String   @db.VarChar
-  time       DateTime @db.Timestamp(0)
-  author     User     @relation(fields: [authorId], references: [id])
-  authorId   Int
-  content    String   @db.Text
+  id         Int        @id
+  time       DateTime   @db.Timestamp(0)
+  snapshots  Snapshot[]
   replyCount Int
   replies    Reply[]
-  updatedAt  DateTime @updatedAt
+}
+
+model Snapshot {
+  discussion   Discussion @relation(fields: [discussionId], references: [id])
+  discussionId Int
+  time         DateTime   @default(now())
+  until        DateTime   @updatedAt
+  title        String     @db.VarChar
+  forum        String     @db.VarChar
+  author       User       @relation(fields: [authorId], references: [id])
+  authorId     Int
+  content      String     @db.Text
+
+  @@id([discussionId, time])
 }
 
 model Reply {

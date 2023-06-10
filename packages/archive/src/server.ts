@@ -10,9 +10,9 @@ const fastify = Fastify({
         pino.transport<{ sourceToken: string }>({
           target: "@logtail/pino",
           options: { sourceToken: process.env.SOURCE_TOKEN },
-        }) as pino.TransportTargetOptions<{ sourceToken: string }>
+        })
       )
-    : undefined,
+    : true,
 });
 
 /* eslint-disable @typescript-eslint/no-floating-promises */

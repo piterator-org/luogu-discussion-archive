@@ -8,11 +8,19 @@ import UpdateButton from "@/components/UpdateButton";
 import Reply from "./Reply";
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
+  const id = parseInt(params.id, 10);
+  if (Number.isNaN(id)) notFound();
   const discussion = await prisma.discussion.findUnique({
-    select: { title: true },
-    where: { id: parseInt(params.id, 10) },
+    select: {
+      snapshots: {
+        select: { title: true },
+        orderBy: { time: "desc" },
+        take: 1,
+      },
+    },
+    where: { id },
   });
-  return { title: discussion?.title };
+  return { title: discussion?.snapshots[0].title };
 }
 
 export default async function Page({
@@ -20,27 +28,29 @@ export default async function Page({
   params,
 }: React.PropsWithChildren<{ params: { id: string } }>) {
   const id = parseInt(params.id, 10);
+  if (Number.isNaN(id)) notFound();
   const {
-    title,
-    forum,
-    author,
-    content,
     replyCount,
-    updatedAt,
+    snapshots: [{ title, forum, author, content, time: updatedAt }],
     ...discussion
-  } =
-    (await prisma.discussion.findUnique({
-      where: { id },
-      select: {
-        title: true,
-        forum: true,
-        time: true,
-        author: true,
-        content: true,
-        replyCount: true,
-        updatedAt: true,
+  } = (await prisma.discussion.findUnique({
+    where: { id },
+    select: {
+      time: true,
+      replyCount: true,
+      snapshots: {
+        select: {
+          time: true,
+          title: true,
+          forum: true,
+          author: true,
+          content: true,
+        },
+        orderBy: { time: "desc" },
+        take: 1,
       },
-    })) ?? notFound();
+    },
+  })) ?? notFound();
   const time = stringifyTime(discussion.time);
   return (
     <div className="row px-2 px-md-0">

@@ -82,10 +82,41 @@ export async function saveDiscussion(
   operations.push(
     prisma.discussion.upsert({
       where: { id },
-      create: { id, ...discussion },
-      update: discussion,
+      create: { id, time: discussion.time, replyCount: discussion.replyCount },
+      update: { time: discussion.time, replyCount: discussion.replyCount },
     })
   );
+
+  const lastSnapshot = await prisma.snapshot.findFirst({
+    where: { discussionId: id },
+    orderBy: { time: "desc" },
+  });
+  operations.push(
+    lastSnapshot &&
+      lastSnapshot.forum === discussion.forum &&
+      lastSnapshot.title === discussion.title &&
+      lastSnapshot.authorId === discussion.authorId &&
+      lastSnapshot.content === discussion.content
+      ? prisma.snapshot.update({
+          where: {
+            discussionId_time: {
+              discussionId: lastSnapshot.discussionId,
+              time: lastSnapshot.time,
+            },
+          },
+          data: { until: new Date() },
+        })
+      : prisma.snapshot.create({
+          data: {
+            discussionId: id,
+            title: discussion.title,
+            forum: discussion.forum,
+            authorId: discussion.authorId,
+            content: discussion.content,
+          },
+        })
+  );
+
   saveReplies(extractReplies(app));
   await prisma.$transaction(operations);
   if (id in emitters) emitters[id].emit("start");
