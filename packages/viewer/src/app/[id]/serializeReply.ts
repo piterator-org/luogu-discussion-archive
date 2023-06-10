@@ -21,7 +21,10 @@ export default async function serializeReply({
   content: string;
   time: Date;
 }) {
-  const usersMetioned = Object.fromEntries(
+  const usersMetioned = await prisma.user.findMany({
+    where: { id: { in: getUsersMentioned(content) } },
+  });
+  const mentioned = Object.fromEntries(
     (
       await prisma.user.findMany({
         where: { id: { in: getUsersMentioned(content) } },
@@ -39,24 +42,9 @@ export default async function serializeReply({
     element.setAttribute("target", "_blank");
     element.setAttribute("rel", "noopener noreferrer");
     if (isMention(element)) {
-      if (usersMetioned[getUserIdFromUrl(urlAbsolute)] !== undefined) {
-        element.classList.add("link-success");
-        // eslint-disable-next-line no-param-reassign
-        if (
-          element.innerHTML !==
-          usersMetioned[getUserIdFromUrl(urlAbsolute)].username
-        ) {
-          const originalUsername = document.createElement("span");
-          originalUsername.innerHTML = `(${element.innerHTML})`;
-          originalUsername.classList.add("text-warning");
-          // eslint-disable-next-line no-param-reassign
-          element.innerHTML =
-            usersMetioned[getUserIdFromUrl(urlAbsolute)].username;
-          element.append(originalUsername);
-        }
-      } else {
-        element.classList.add("link-danger");
-      }
+      const uid = getUserIdFromUrl(urlAbsolute);
+      if (mentioned[getUserIdFromUrl(urlAbsolute)])
+        element.setAttribute("data-uid", uid.toString());
       element.classList.add("text-decoration-none");
     }
   });
