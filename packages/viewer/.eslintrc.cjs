@@ -28,6 +28,9 @@ module.exports = {
         project: "tsconfig.json",
         tsconfigRootDir: __dirname,
       },
+      rules: {
+        "no-underscore-dangle": ["error", { allow: ["_count"] }],
+      },
     },
     {
       files: ["*.config.*", ".*rc.*"],

@@ -12,7 +12,7 @@ const NUM_DISCUSSIONS_HOME_PAGE = parseInt(
   10
 );
 const NUM_WATER_TANKS_HOME_PAGE = parseInt(
-  process.env.NUM_DISCUSSIONS_HOME_PAGE ?? "30",
+  process.env.NUM_DISCUSSIONS_HOME_PAGE ?? "40",
   10
 );
 const LIMIT_MILLISECONDS_HOT_DISCUSSION = parseInt(
@@ -51,21 +51,30 @@ export default async function Page() {
     take: NUM_DISCUSSIONS_HOME_PAGE,
   });
 
-  const waterTanks = await prisma.user.findMany({
-    include: {
-      _count: {
-        select: {
-          replies: true,
-        },
+  const replyCount = await prisma.reply.groupBy({
+    by: ["authorId"],
+    where: {
+      time: {
+        gte: new Date(new Date().getTime() - RANGE_MILLISECONDS_WATER_TANK),
       },
     },
-    orderBy: {
-      replies: {
-        _count: "desc",
-      },
-    },
+    _count: true,
+    orderBy: { _count: { id: "desc" } },
     take: NUM_WATER_TANKS_HOME_PAGE,
   });
+  const waterTankUsers = Object.fromEntries(
+    (
+      await prisma.user.findMany({
+        where: {
+          id: { in: replyCount.map((r) => r.authorId) },
+        },
+      })
+    ).map((u) => [u.id, u])
+  );
+  const waterTanks = replyCount.map((r) => ({
+    count: r._count,
+    user: waterTankUsers[r.authorId],
+  }));
 
   return (
     <>
@@ -140,16 +149,15 @@ export default async function Page() {
             <div className="rounded-4 shadow px-4 px-md-3x pt-3x pb-2x">
               <div className="mb-2 fs-4 fw-semibold">龙王榜（30 天）</div>
               <ul className="list-group">
-                {waterTanks.map((user) => (
+                {waterTanks.map((replies) => (
                   <li className="d-flex justify-content-between lh-lg">
                     <span
                       className="overflow-ellipsis"
                       style={{ maxWidth: "calc(100% - 4.5em)" }}
                     >
-                      <UserInfo user={user} />
+                      <UserInfo user={replies.user} />
                     </span>
-                    {/* eslint-disable-next-line no-underscore-dangle */}
-                    <span>{user._count.replies} 层</span>
+                    <span>{replies.count} 层</span>
                   </li>
                 ))}
               </ul>
