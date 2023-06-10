@@ -1,6 +1,14 @@
 @import "bootstrap/scss/functions";
 @import "bootstrap/scss/variables";
 
+$local-colors: (
+  indigo: #5468ff,
+  violet: #712cf9,
+  teal: #00b5ad,
+);
+
+$theme-colors: map-merge($theme-colors, $local-colors);
+
 $spacers: map-merge(
   $spacers,
   (
@@ -122,4 +130,8 @@ $box-shadow: 0 0.375rem 1rem rgba($black, 0.1);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }

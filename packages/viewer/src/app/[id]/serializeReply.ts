@@ -23,6 +23,13 @@ export default async function serializeReply({
 }) {
   const usersMetioned = await prisma.user.findMany({
     where: { id: { in: getUsersMentioned(content) } },
+    include: {
+      _count: {
+        select: {
+          replies: true,
+        },
+      },
+    },
   });
   const mentioned = Object.fromEntries(
     (
@@ -45,7 +52,12 @@ export default async function serializeReply({
       const uid = getUserIdFromUrl(urlAbsolute);
       if (mentioned[getUserIdFromUrl(urlAbsolute)])
         element.setAttribute("data-uid", uid.toString());
-      element.classList.add("text-decoration-none");
+      element.classList.add(
+        "text-decoration-none",
+        "link-teal",
+        "cursor-pointer"
+      );
+      element.removeAttribute("href");
     }
   });
   renderHljs(document.body);

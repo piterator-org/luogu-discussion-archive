@@ -38,7 +38,7 @@ export default function Reply({
             {reply.time}
           </span>
         </div>
-        <div className="reply-content pe-4 py-2">
+        <div className="reply-content pe-4 py-2 position-relative">
           <Content
             content={reply.content}
             usersMetioned={reply.usersMetioned}
