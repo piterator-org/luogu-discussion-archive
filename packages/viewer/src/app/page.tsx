@@ -8,7 +8,7 @@ import Link from "next/link";
 export const dynamic = "force-dynamic";
 
 const NUM_DISCUSSIONS_HOME_PAGE = parseInt(
-  process.env.NUM_DISCUSSIONS_HOME_PAGE ?? "12",
+  process.env.NUM_DISCUSSIONS_HOME_PAGE ?? "16",
   10
 );
 const NUM_WATER_TANKS_HOME_PAGE = parseInt(
@@ -137,7 +137,7 @@ export default async function Page() {
             </div>
           </div>
           <div className="col-12 col-md-4 col-xl-3">
-            <div className="rounded-4 shadow mb-4s px-3x pt-3x pb-2x">
+            <div className="rounded-4 shadow px-4 px-md-3x pt-3x pb-2x">
               <div className="mb-2 fs-4 fw-semibold">龙王榜（30 天）</div>
               <ul className="list-group">
                 {waterTanks.map((user) => (
