@@ -1,7 +1,9 @@
 import { notFound } from "next/navigation";
+import type { User } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { getDiscussionUrl, getForumName, getForumUrl } from "@/lib/luogu";
 import stringifyTime from "@/lib/time";
+import getUsersMentioned from "@/lib/mention";
 import UserInfo from "@/components/UserInfo";
 import "./markdown.css";
 import UpdateButton from "@/components/UpdateButton";
@@ -42,6 +44,15 @@ export default async function Page({
       },
     })) ?? notFound();
   const time = stringifyTime(discussion.time);
+  const usersMetioned = (
+    await prisma.user.findMany({
+      where: { id: { in: getUsersMentioned(content) } },
+    })
+  ).reduce((map: Record<number, User>, obj: User) => {
+    // eslint-disable-next-line no-param-reassign
+    map[obj.id] = obj;
+    return map;
+  }, {});
   return (
     <div className="row px-2 px-md-0">
       <div className="col-lg-4 col-md-5 col-12 order-md-last mb-4s">
@@ -103,7 +114,7 @@ export default async function Page({
         <div className="bg-body rounded-4 shadow mb-4s px-4 py-3 fs-2 fw-semibold d-none d-md-block">
           {title}
         </div>
-        <Reply reply={{ time, author, content }} />
+        <Reply reply={{ time, author, content, usersMetioned }} />
         {children}
       </div>
     </div>

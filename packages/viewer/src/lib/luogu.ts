@@ -23,3 +23,12 @@ export const getForumName = (forum: string) =>
   }[forum] ?? forum);
 
 export const judgementUrl = "https://www.luogu.com.cn/judgement";
+
+export const isUserUrl = (target: URL) =>
+  target.hostname === "www.luogu.com.cn" &&
+  ((target.protocol === "https:" && ["", "443"].includes(target.port)) ||
+    (target.protocol === "http:" && ["", "80"].includes(target.port))) &&
+  /^\/user\/\d+$/.test(target.pathname);
+
+export const getUserIdFromUrl = (target: URL) =>
+  parseInt(target.pathname.split("/")[2], 10);

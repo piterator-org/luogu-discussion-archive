@@ -18,8 +18,8 @@ export default function UserInfo({ user }: { user: User }) {
         <svg
           className="ms-1 position-relative"
           xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
+          width="1em"
+          height="1em"
           viewBox="0 0 16 16"
           fill={user.checkmark}
           style={{ top: "-.1em", left: "-.02em" }}
@@ -29,8 +29,8 @@ export default function UserInfo({ user }: { user: User }) {
       )}
       {user.badge && (
         <span
-          className={`ms-1 badge position-relative lg-bg-${user.color}`}
-          style={{ top: "-.15em", left: ".08em" }}
+          className={`ms-1 badge position-relative lg-bg-${user.color} d-inline-block`}
+          style={{ top: "-.15em", left: ".08em", marginRight: ".08em" }}
         >
           {user.badge}
         </span>
