@@ -1,10 +1,8 @@
 import { notFound } from "next/navigation";
-import type { User } from "@prisma/client";
 import prisma from "@/lib/prisma";
-import stringifyTime from "@/lib/time";
 import paginate from "@/lib/pagination";
-import getUsersMentioned from "@/lib/mention";
 import PageButtons from "@/components/PageButtons";
+import serializeReply from "../serializeReply";
 import Reply from "../Reply";
 
 const REPLIES_PER_PAGE = parseInt(process.env.REPLIES_PER_PAGE ?? "10", 10);
@@ -28,16 +26,7 @@ export default async function Page({
         })
       ).map(async (reply) => ({
         ...reply,
-        time: stringifyTime(reply.time),
-        usersMetioned: (
-          await prisma.user.findMany({
-            where: { id: { in: getUsersMentioned(reply.content) } },
-          })
-        ).reduce((map: Record<number, User>, obj: User) => {
-          // eslint-disable-next-line no-param-reassign
-          map[obj.id] = obj;
-          return map;
-        }, {}),
+        ...(await serializeReply(reply)),
       }))
     ) ?? notFound();
   const numPages = Math.ceil(

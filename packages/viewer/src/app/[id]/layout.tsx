@@ -1,12 +1,11 @@
 import { notFound } from "next/navigation";
-import type { User } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { getDiscussionUrl, getForumName, getForumUrl } from "@/lib/luogu";
 import stringifyTime from "@/lib/time";
-import getUsersMentioned from "@/lib/mention";
 import UserInfo from "@/components/UserInfo";
 import "./markdown.css";
 import UpdateButton from "@/components/UpdateButton";
+import serializeReply from "./serializeReply";
 import Reply from "./Reply";
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
@@ -33,8 +32,8 @@ export default async function Page({
   if (Number.isNaN(id)) notFound();
   const {
     replyCount,
+    time,
     snapshots: [{ title, forum, author, content, time: updatedAt }],
-    ...discussion
   } = (await prisma.discussion.findUnique({
     where: { id },
     select: {
@@ -53,16 +52,7 @@ export default async function Page({
       },
     },
   })) ?? notFound();
-  const time = stringifyTime(discussion.time);
-  const usersMetioned = (
-    await prisma.user.findMany({
-      where: { id: { in: getUsersMentioned(content) } },
-    })
-  ).reduce((map: Record<number, User>, obj: User) => {
-    // eslint-disable-next-line no-param-reassign
-    map[obj.id] = obj;
-    return map;
-  }, {});
+
   return (
     <div className="row px-2 px-md-0">
       <div className="col-lg-4 col-md-5 col-12 order-md-last mb-4s">
@@ -98,7 +88,7 @@ export default async function Page({
             </li>
             <li className="d-flex justify-content-between lh-lg">
               <span className="fw-semibold">发布时间</span>
-              <span className="text-muted">{time}</span>
+              <span className="text-muted">{stringifyTime(time)}</span>
             </li>
             <li className="d-flex justify-content-between lh-lg">
               <span className="fw-semibold">上次更新</span>
@@ -124,7 +114,12 @@ export default async function Page({
         <div className="bg-body rounded-4 shadow mb-4s px-4 py-3 fs-2 fw-semibold d-none d-md-block">
           {title}
         </div>
-        <Reply reply={{ time, author, content, usersMetioned }} />
+        <Reply
+          reply={{
+            author,
+            ...(await serializeReply({ content, time })),
+          }}
+        />
         {children}
       </div>
     </div>
