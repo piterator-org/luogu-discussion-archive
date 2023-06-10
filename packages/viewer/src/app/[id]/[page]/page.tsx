@@ -13,6 +13,19 @@ export default async function Page({
   params: { id: string; page: string };
 }) {
   const id = parseInt(params.id, 10);
+  const {
+    snapshots: [{ authorId }],
+  } =
+    (await prisma.discussion.findUnique({
+      where: { id },
+      select: {
+        snapshots: {
+          select: { authorId: true },
+          orderBy: { time: "desc" },
+          take: 1,
+        },
+      },
+    })) ?? notFound();
   const page = parseInt(params.page, 10);
   if (Number.isNaN(page)) notFound();
   const replies =
@@ -40,7 +53,7 @@ export default async function Page({
   return (
     <>
       {(await replies).map((reply) => (
-        <Reply reply={reply} key={reply.id} />
+        <Reply discussion={{ id, authorId }} reply={reply} key={reply.id} />
       ))}
       {numPages > 1 && (
         <div className="bg-body rounded-4 shadow my-4s px-4 py-3 py-md-4 text-center">

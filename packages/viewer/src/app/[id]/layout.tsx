@@ -116,6 +116,7 @@ export default async function Page({
           {title}
         </div>
         <Reply
+          discussion={{ id, authorId: author.id }}
           reply={{
             author,
             ...(await serializeReply({ content, time })),

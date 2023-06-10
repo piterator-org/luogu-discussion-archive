@@ -1,43 +1,64 @@
+"use client";
+
 import "highlight.js/styles/tokyo-night-dark.css";
+import { useState } from "react";
 import type { User } from "@prisma/client";
 import UserAvatar from "@/components/UserAvatar";
 import UserInfo from "@/components/UserInfo";
 import Content from "./Content";
+import ContextViewer from "./ContextViewer";
 
 export default function Reply({
+  discussion,
   reply,
 }: {
+  discussion: { id: number; authorId: number };
   reply: {
+    id?: number;
     time: string;
     author: User;
     content: string;
     usersMetioned: User[];
   };
 }) {
+  const [userId, setUserId] = useState<number | null>(null);
   return (
-    <div className="reply position-relative">
-      <UserAvatar className="reply-avatar" user={reply.author} />
-      <div className="reply-card bg-white rounded-4 shadow mb-4s">
-        <div className="reply-meta bg-light rounded-top-4 pe-4 py-2">
-          {/* <span className="font-monospace align-top text-body-tertiary me-1">@</span> */}
-          <UserInfo user={reply.author} />
-          <span className="float-end text-body-tertiary d-none d-md-inline">
-            {reply.time}
-          </span>
-        </div>
-        <div className="reply-content pe-4 py-2 position-relative">
-          <Content
-            content={reply.content}
-            usersMetioned={reply.usersMetioned}
-          />
-          <span
-            className="text-end text-body-tertiary d-block d-md-none"
-            style={{ fontSize: ".8rem" }}
-          >
-            {reply.time}
-          </span>
+    <>
+      {reply.id && userId && (
+        <ContextViewer
+          discussionId={discussion.id}
+          userId={userId}
+          replyId={reply.id}
+          key={userId}
+        />
+      )}
+      <div className="reply position-relative">
+        <UserAvatar className="reply-avatar" user={reply.author} />
+        <div className="reply-card bg-white rounded-4 shadow mb-4s">
+          <div className="reply-meta bg-light rounded-top-4 pe-4 py-2">
+            {/* <span className="font-monospace align-top text-body-tertiary me-1">@</span> */}
+            <UserInfo user={reply.author} />
+            <span className="float-end text-body-tertiary d-none d-md-inline">
+              {reply.time}
+            </span>
+          </div>
+          <div className="reply-content pe-4 py-2 position-relative">
+            <Content
+              discussionAuthor={discussion.authorId}
+              content={reply.content}
+              usersMetioned={reply.usersMetioned}
+              userId={userId}
+              setUserId={setUserId}
+            />
+            <span
+              className="text-end text-body-tertiary d-block d-md-none"
+              style={{ fontSize: ".8rem" }}
+            >
+              {reply.time}
+            </span>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

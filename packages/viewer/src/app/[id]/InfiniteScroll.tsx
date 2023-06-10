@@ -3,6 +3,7 @@
 import { useState } from "react";
 import useSWRInfinite from "swr/infinite";
 import type { User } from "@prisma/client";
+import fetcher from "@/lib/fetcher";
 import PageButtons from "@/components/PageButtons";
 import Reply from "./Reply";
 
@@ -17,14 +18,11 @@ type PageData = {
   nextCursor: number;
 };
 
-const fetcher = (...args: Parameters<typeof fetch>) =>
-  fetch(...args).then((res) => res.json());
-
 export default function InfiniteScroll({
-  id,
+  discussion,
   pagination,
 }: {
-  id: number;
+  discussion: { id: number; authorId: number };
   pagination: {
     numPages: number;
     pagesLocalAttachedFront: boolean;
@@ -37,10 +35,10 @@ export default function InfiniteScroll({
     if (previousPageData && !previousPageData.data) return null;
 
     // 在首页时，没有 `previousPageData`
-    if (pageIndex === 0) return `/${id}/replies?limit=10`;
+    if (pageIndex === 0) return `/${discussion.id}/replies?limit=10`;
 
     // 将游标添加到 API
-    return `/${id}/replies?cursor=${previousPageData.nextCursor}&limit=10`;
+    return `/${discussion.id}/replies?cursor=${previousPageData.nextCursor}&limit=10`;
   };
 
   const { data, size, setSize } = useSWRInfinite<PageData>(getKey, fetcher);
@@ -50,7 +48,9 @@ export default function InfiniteScroll({
   return (
     <>
       {data?.map((replies) =>
-        replies.data.map((reply) => <Reply reply={reply} key={reply.id} />)
+        replies.data.map((reply) => (
+          <Reply discussion={discussion} reply={reply} key={reply.id} />
+        ))
       )}
       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
       <div
@@ -84,7 +84,7 @@ export default function InfiniteScroll({
             ellipsisBack={!pagination.pagesLocalAttachedBack}
             numPages={pagination.numPages}
             pagesLocal={pagination.pagesLocal}
-            generatorUrl={(curPage: number) => `/${id}/${curPage}`}
+            generatorUrl={(curPage: number) => `/${discussion.id}/${curPage}`}
           />
         </div>
       )}
