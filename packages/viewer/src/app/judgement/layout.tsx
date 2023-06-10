@@ -5,6 +5,10 @@ import React from "react";
 
 export const dynamic = "force-dynamic";
 
+export function generateMetadata() {
+  return { title: "陶片放逐 - 洛谷帖子保存站" };
+}
+
 export default function Page({ children }: React.PropsWithChildren) {
   return (
     <div className="row px-2 px-md-0">

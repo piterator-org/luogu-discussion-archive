@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 import { getDiscussionUrl, getForumName, getForumUrl } from "@/lib/luogu";
 import stringifyTime from "@/lib/time";
 import UserInfo from "@/components/UserInfo";
-import "./markdown.css";
+import "@/components/markdown.css";
 import UpdateButton from "@/components/UpdateButton";
 import serializeReply from "./serializeReply";
 import Reply from "./Reply";
@@ -21,7 +21,8 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
     },
     where: { id },
   });
-  return { title: discussion?.snapshots[0].title };
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+  return { title: `「${discussion?.snapshots[0].title}」 - 洛谷帖子保存站` };
 }
 
 export default async function Page({

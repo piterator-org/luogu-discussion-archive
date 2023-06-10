@@ -1,5 +1,9 @@
 import SaveInput from "./SaveInput";
 
+export function generateMetadata() {
+  return { title: "保存帖子 - 洛谷帖子保存站" };
+}
+
 export default function Page() {
   return (
     <>

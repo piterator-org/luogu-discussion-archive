@@ -45,9 +45,9 @@ export default function NavBar() {
               </Link>
             </li>
             <li className="nav-item my-tiny my-md-0">
-              <a className="nav-link" href="/">
+              <Link className="nav-link" href="/about">
                 关于
-              </a>
+              </Link>
             </li>
           </ul>
           <form className="d-flex my-tiny my-md-0" role="search">

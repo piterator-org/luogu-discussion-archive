@@ -8,6 +8,10 @@ const NUM_DISCUSSIONS_TOP_CHARTS = parseInt(
   10
 );
 
+export function generateMetadata() {
+  return { title: "排行榜 - 洛谷帖子保存站" };
+}
+
 export default async function Page() {
   const mostReplies = await prisma.discussion.findMany({
     select: {
