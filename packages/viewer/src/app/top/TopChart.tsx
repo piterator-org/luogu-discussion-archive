@@ -1,8 +1,7 @@
-import { getUserUrl, getUserAvatarUrl } from "@/lib/luogu";
 import stringifyTime from "@/lib/time";
 import type { User } from "@prisma/client";
+import UserAvatar from "@/components/UserAvatar";
 import UserInfo from "@/components/UserInfo";
-import Image from "next/image";
 import Link from "next/link";
 
 export default function TopChart({
@@ -25,19 +24,10 @@ export default function TopChart({
     <>
       {discussions.map((discussion) => (
         <div className="entry position-relative">
-          <a
-            href={getUserUrl(discussion.snapshots[0].author.id)}
+          <UserAvatar
             className="entry-avatar"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              src={getUserAvatarUrl(discussion.snapshots[0].author.id)}
-              className="rounded-circle shadow"
-              fill
-              alt={discussion.snapshots[0].author.id.toString()}
-            />
-          </a>
+            user={discussion.snapshots[0].author}
+          />
           <div className="entry-card bg-white rounded-4 shadow mb-4s">
             <div className="entry-meta bg-light rounded-top-4 pe-4 py-2 overflow-ellipsis">
               <UserInfo user={discussion.snapshots[0].author} />

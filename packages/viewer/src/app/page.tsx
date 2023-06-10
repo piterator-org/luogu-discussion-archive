@@ -1,8 +1,7 @@
 import prisma from "@/lib/prisma";
-import { getUserUrl, getUserAvatarUrl } from "@/lib/luogu";
 import stringifyTime from "@/lib/time";
+import UserAvatar from "@/components/UserAvatar";
 import UserInfo from "@/components/UserInfo";
-import Image from "next/image";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -102,21 +101,10 @@ export default async function Page() {
                 {discussions.map((discussion) => (
                   <div className="col-12 col-lg-6">
                     <div className="reply position-relative">
-                      <a
-                        href={getUserUrl(discussion.snapshots[0].author.id)}
+                      <UserAvatar
                         className="reply-avatar"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <Image
-                          src={getUserAvatarUrl(
-                            discussion.snapshots[0].author.id
-                          )}
-                          className="rounded-circle shadow-sm"
-                          fill
-                          alt={discussion.snapshots[0].author.id.toString()}
-                        />
-                      </a>
+                        user={discussion.snapshots[0].author}
+                      />
                       <div className="reply-card bg-white rounded-4 shadow-sm mb-3x">
                         <div className="reply-meta bg-light rounded-top-4 pe-4 py-2 overflow-ellipsis">
                           <UserInfo user={discussion.snapshots[0].author} />

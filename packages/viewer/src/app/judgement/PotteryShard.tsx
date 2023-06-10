@@ -1,6 +1,5 @@
-import Image from "next/image";
 import type { User } from "@prisma/client";
-import { getUserUrl, getUserAvatarUrl } from "@/lib/luogu";
+import UserAvatar from "@/components/UserAvatar";
 import UserInfo from "@/components/UserInfo";
 
 export default function PotteryShard({
@@ -39,19 +38,10 @@ export default function PotteryShard({
             </svg>{" "}
             <UserInfo user={shard.user} />
           </span>
-          <a
-            href={getUserUrl(shard.user.id)}
+          <UserAvatar
             className="shard-avatar d-none d-md-block"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              src={getUserAvatarUrl(shard.user.id)}
-              className="rounded-circle shadow"
-              fill
-              alt={shard.user.id.toString()}
-            />
-          </a>
+            user={shard.user}
+          />
         </div>
       </div>
     </div>
