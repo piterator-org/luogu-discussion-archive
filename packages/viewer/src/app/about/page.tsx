@@ -1,9 +1,10 @@
-import prisma from "@/lib/prisma";
 import "@/components/markdown.css";
+import getCounterData from "@/lib/counter";
+import Counter from "@/components/Counter";
 
 export const metadata = { title: "关于 - 洛谷帖子保存站" };
 
-export default function Page() {
+export default async function Page() {
   return (
     <div className="pt-5 pb-3 pb-md-3x px-2 px-md-0">
       <div className="row justify-content-center">
@@ -25,16 +26,14 @@ export default function Page() {
                 不瞒大家说，我们极力推荐依然习惯使用旧版保存站（或是其镜像站）的用户使用你现在看到的新版本，必然是由我们对于自己所研发的产品的自信心作为坚实后盾的。
               </p>
               <p>简而言之，我们自认为新版本的优点有如下 6 项：</p>
-              <p>
-                <ol>
-                  <li>全新 UI：悦目者方可赏心。</li>
-                  <li>全新爬取逻辑：不书断代之史。</li>
-                  <li>陶片放逐保存：谪迁常伴于权力之更变。</li>
-                  <li>用户黑历史：稚嫩之言乃人之常有。</li>
-                  <li>历史版本：我们是正义史官！</li>
-                  <li>回复推断：无主的回复亦可不再突兀。</li>
-                </ol>
-              </p>
+              <ol>
+                <li>全新 UI：悦目者方可赏心。</li>
+                <li>全新爬取逻辑：不书断代之史。</li>
+                <li>陶片放逐保存：谪迁常伴于权力之更变。</li>
+                <li>用户黑历史：稚嫩之言乃人之常有。</li>
+                <li>历史版本：我们是正义史官！</li>
+                <li>回复推断：无主的回复亦可不再突兀。</li>
+              </ol>
               <p>
                 不过除此之外，私以为的优点还有不少，不过都是些没什么值得炫耀的小东西罢了。
               </p>
@@ -43,10 +42,11 @@ export default function Page() {
               </p>
               <blockquote>
                 <p>
-                  截至目前，lglg.top 已经保存了 {prisma.discussion.count()}{" "}
-                  个帖子，共计 {prisma.reply.count()} 层楼，当然，以及{" "}
-                  {prisma.judgement.count()} 块陶片和 {prisma.snapshot.count()}{" "}
-                  张帖子快照。
+                  截至目前，lglg.top{" "}
+                  <Counter
+                    fallbackData={await getCounterData()}
+                    refreshInterval={1000}
+                  />
                 </p>
               </blockquote>
               <p className="text-end">
