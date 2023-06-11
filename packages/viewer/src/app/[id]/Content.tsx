@@ -33,6 +33,7 @@ export default function Content({
     contentRef.current?.querySelectorAll("a[data-uid]").forEach((element) => {
       const uid = parseInt(element.getAttribute("data-uid") as string, 10);
       const tooltip = userRefs.current[uid] as HTMLDivElement;
+      if (!tooltip) return;
 
       function update() {
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -60,7 +61,8 @@ export default function Content({
             ? [
                 [
                   "click",
-                  () => {
+                  (event: Event) => {
+                    event.preventDefault();
                     hideTooltip();
                     if (userIdState[0] !== uid) userIdState[1](uid);
                     else userIdState[1](null);
@@ -72,8 +74,6 @@ export default function Content({
       ).forEach(([event, listener]) =>
         element.addEventListener(event, listener)
       );
-
-      if (userIdState) element.removeAttribute("href");
     });
   });
 

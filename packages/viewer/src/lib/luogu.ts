@@ -24,11 +24,19 @@ export const getForumName = (forum: string) =>
 
 export const judgementUrl = "https://www.luogu.com.cn/judgement";
 
-export const isUserUrl = (target: URL) =>
-  target.hostname === "www.luogu.com.cn" &&
-  ((target.protocol === "https:" && ["", "443"].includes(target.port)) ||
-    (target.protocol === "http:" && ["", "80"].includes(target.port))) &&
-  /^\/user\/\d+$/.test(target.pathname);
-
-export const getUserIdFromUrl = (target: URL) =>
-  parseInt(target.pathname.split("/")[2], 10);
+export function getUserIdFromUrl(target: URL) {
+  if (
+    target.hostname === "www.luogu.com.cn" &&
+    ((target.protocol === "https:" && ["", "443"].includes(target.port)) ||
+      (target.protocol === "http:" && ["", "80"].includes(target.port)))
+  ) {
+    const uid = parseInt(
+      (target.pathname.startsWith("/user/") && target.pathname.split("/")[2]) ||
+        ((target.pathname === "/space/show" &&
+          target.searchParams.get("uid")) as string),
+      10
+    );
+    return Number.isNaN(uid) ? null : uid;
+  }
+  return null;
+}
