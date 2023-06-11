@@ -40,11 +40,10 @@ export default function Page({
       <h1 className="mb-4x text-center">排行榜</h1>
       <select
         className="form-select form-select-lg d-block d-md-none border-0 rounded-3 shadow-sm mb-4m"
+        value={selected}
         onChange={({ target: { value } }) => setSelected(value)}
       >
-        <option value="most-replies" selected>
-          最高楼层
-        </option>
+        <option value="most-replies">最高楼层</option>
         <option value="most-recent">最新发布</option>
         <option value="most-clicked">最多点击</option>
       </select>

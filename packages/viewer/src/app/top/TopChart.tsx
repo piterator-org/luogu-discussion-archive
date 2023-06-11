@@ -23,7 +23,7 @@ export default function TopChart({
   return (
     <>
       {discussions.map((discussion) => (
-        <div className="entry position-relative">
+        <div className="entry position-relative" key={discussion.id}>
           <UserAvatar
             className="entry-avatar"
             user={discussion.snapshots[0].author}
