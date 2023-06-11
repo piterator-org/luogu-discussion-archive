@@ -18,20 +18,16 @@ export async function GET(
     select: { id: true, time: true, author: true, content: true },
     take: parseInt(limit ?? "10", 10),
   });
-  return NextResponse.json(
-    replies.length
-      ? {
-          data: await Promise.all(
-            replies.map(async (reply) => ({
-              ...reply,
-              ...(await serializeReply({
-                content: reply.content,
-                time: reply.time,
-              })),
-            }))
-          ),
-          nextCursor: replies[replies.length - 1].id,
-        }
-      : { data: null }
-  );
+  return NextResponse.json({
+    data: await Promise.all(
+      replies.map(async (reply) => ({
+        ...reply,
+        ...(await serializeReply({
+          content: reply.content,
+          time: reply.time,
+        })),
+      }))
+    ),
+    nextCursor: replies.length ? replies[replies.length - 1].id : null,
+  });
 }
