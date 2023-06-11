@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 import Image from "next/image";
 import { getUserAvatarUrl, getUserUrl } from "@/lib/luogu";
 
@@ -6,8 +7,7 @@ export default function UserAvatar({
   decoratorShadow,
   user: { id },
 }: {
-  className: string;
-  // eslint-disable-next-line react/require-default-props
+  className?: string;
   decoratorShadow?: string;
   user: { id: number };
 }) {

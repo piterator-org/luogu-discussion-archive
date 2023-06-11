@@ -3,9 +3,10 @@
 import "katex/dist/katex.css";
 import { useEffect, useRef } from "react";
 import renderMathInElement from "katex/contrib/auto-render";
-import { computePosition } from "@floating-ui/dom";
+import { computePosition, shift } from "@floating-ui/dom";
 import type { User } from "@prisma/client";
 import UserInfo from "@/components/UserInfo";
+import UserAvatar from "@/components/UserAvatar";
 
 export default function Content({
   content,
@@ -39,6 +40,7 @@ export default function Content({
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
         computePosition(element as HTMLElement, tooltip, {
           placement: "top",
+          middleware: [shift()],
         }).then(({ x, y }) =>
           Object.assign(tooltip.style, { left: `${x}px`, top: `${y}px` })
         );
@@ -95,6 +97,7 @@ export default function Content({
           style={{ display: "none" }}
         >
           <div className="bg-body rounded-4 shadow-sm px-3 py-2x mb-2">
+            <UserAvatar className="me-2" user={user} decoratorShadow="sm" />
             <UserInfo user={user} />
             {user.id === discussionAuthor ? (
               <span
