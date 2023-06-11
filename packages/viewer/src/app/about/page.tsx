@@ -1,9 +1,7 @@
 import prisma from "@/lib/prisma";
 import "@/components/markdown.css";
 
-export function generateMetadata() {
-  return { title: "关于 - 洛谷帖子保存站" };
-}
+export const metadata = { title: "关于 - 洛谷帖子保存站" };
 
 export default function Page() {
   return (

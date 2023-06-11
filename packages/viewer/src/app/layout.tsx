@@ -4,6 +4,8 @@ import { Inter } from "next/font/google";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
 
+export const dynamic = "force-dynamic";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {

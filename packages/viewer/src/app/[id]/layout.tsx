@@ -34,7 +34,7 @@ export default async function Page({
   const {
     replyCount,
     time,
-    snapshots: [{ title, forum, author, content, time: updatedAt }],
+    snapshots: [{ title, forum, author, content, until: updatedAt }],
   } = (await prisma.discussion.findUnique({
     where: { id },
     select: {
@@ -42,7 +42,7 @@ export default async function Page({
       replyCount: true,
       snapshots: {
         select: {
-          time: true,
+          until: true,
           title: true,
           forum: true,
           author: true,

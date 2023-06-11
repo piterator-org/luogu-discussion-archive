@@ -5,9 +5,7 @@ import React from "react";
 
 export const dynamic = "force-dynamic";
 
-export function generateMetadata() {
-  return { title: "陶片放逐 - 洛谷帖子保存站" };
-}
+export const metadata = { title: "陶片放逐 - 洛谷帖子保存站" };
 
 export default function Page({ children }: React.PropsWithChildren) {
   return (

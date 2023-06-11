@@ -23,9 +23,7 @@ const RANGE_MILLISECONDS_WATER_TANK = parseInt(
   10
 );
 
-export function generateMetadata() {
-  return { title: "发现 - 洛谷帖子保存站" };
-}
+export const metadata = { title: "发现 - 洛谷帖子保存站" };
 
 export default async function Page() {
   const discussions = await prisma.discussion.findMany({
