@@ -57,7 +57,6 @@ export default async function serializeReply({
         "link-teal",
         "cursor-pointer"
       );
-      element.removeAttribute("href");
     }
   });
   renderHljs(document.body);

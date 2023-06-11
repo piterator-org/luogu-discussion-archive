@@ -72,7 +72,7 @@ export default function Page({
         >
           <h4 className="pb-1 text-center d-none d-md-block mb-4s">最多点击</h4>
           <div className="rounded-4 shadow px-4 py-3">
-            <p className="my-5x text-center text-muted">即将上线</p>
+            <p className="my-5x text-center text-body-secondary">即将上线</p>
           </div>
         </div>
       </div>

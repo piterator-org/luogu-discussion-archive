@@ -23,12 +23,14 @@ export default function Reply({
 }) {
   const [userId, setUserId] = useState<number | null>(null);
   return (
-    <>
+    <div className={reply.id && userId ? "my-5m" : ""}>
       {reply.id && userId && (
         <ContextViewer
           discussionId={discussion.id}
           userId={userId}
           replyId={reply.id}
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          userMetioned={reply.usersMetioned.find((user) => user.id === userId)!}
           key={userId}
         />
       )}
@@ -36,8 +38,17 @@ export default function Reply({
         <UserAvatar className="reply-avatar" user={reply.author} />
         <div className="reply-card bg-white rounded-4 shadow mb-4s">
           <div className="reply-meta bg-light rounded-top-4 pe-4 py-2">
-            {/* <span className="font-monospace align-top text-body-tertiary me-1">@</span> */}
             <UserInfo user={reply.author} />
+            {reply.author.id === discussion.authorId ? (
+              <span
+                className="ms-1 badge position-relative bg-teal d-inline-block"
+                style={{ top: "-.15em", left: ".08em", marginRight: ".08em" }}
+              >
+                楼主
+              </span>
+            ) : (
+              ""
+            )}
             <span className="float-end text-body-tertiary d-none d-md-inline">
               {reply.time}
             </span>
@@ -47,8 +58,7 @@ export default function Reply({
               discussionAuthor={discussion.authorId}
               content={reply.content}
               usersMetioned={reply.usersMetioned}
-              userId={userId}
-              setUserId={setUserId}
+              userIdState={[userId, setUserId]}
             />
             <span
               className="text-end text-body-tertiary d-block d-md-none"
@@ -59,6 +69,6 @@ export default function Reply({
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

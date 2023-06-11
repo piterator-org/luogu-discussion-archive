@@ -54,7 +54,7 @@ export default function InfiniteScroll({
       )}
       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
       <div
-        className="bg-body rounded-4 shadow my-4s px-4 py-2 py-md-3 text-center link-primary text-decoration-none cursor-pointer"
+        className="bg-body rounded-4 shadow my-4s px-4 py-2x py-md-3 text-center link-primary text-decoration-none cursor-pointer"
         onClick={() => {
           // eslint-disable-next-line @typescript-eslint/no-floating-promises
           setSize(size + 1);

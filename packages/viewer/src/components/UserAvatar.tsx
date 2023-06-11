@@ -3,9 +3,12 @@ import { getUserAvatarUrl, getUserUrl } from "@/lib/luogu";
 
 export default function UserAvatar({
   className,
+  decoratorShadow,
   user: { id },
 }: {
   className: string;
+  // eslint-disable-next-line react/require-default-props
+  decoratorShadow?: string;
   user: { id: number };
 }) {
   return (
@@ -17,7 +20,9 @@ export default function UserAvatar({
     >
       <Image
         src={getUserAvatarUrl(id)}
-        className="rounded-circle shadow-sm"
+        className={`rounded-circle shadow${
+          decoratorShadow ? `-${decoratorShadow}` : ""
+        }`}
         width={64}
         height={64}
         alt={id.toString()}

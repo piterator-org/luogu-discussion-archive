@@ -7,7 +7,7 @@ import Link from "next/link";
 export const dynamic = "force-dynamic";
 
 const NUM_DISCUSSIONS_HOME_PAGE = parseInt(
-  process.env.NUM_DISCUSSIONS_HOME_PAGE ?? "16",
+  process.env.NUM_DISCUSSIONS_HOME_PAGE ?? "20",
   10
 );
 const NUM_WATER_TANKS_HOME_PAGE = parseInt(
@@ -15,7 +15,7 @@ const NUM_WATER_TANKS_HOME_PAGE = parseInt(
   10
 );
 const LIMIT_MILLISECONDS_HOT_DISCUSSION = parseInt(
-  process.env.NUM_DISCUSSIONS_HOME_PAGE ?? "15552000000",
+  process.env.NUM_DISCUSSIONS_HOME_PAGE ?? "23328000000",
   10
 );
 const RANGE_MILLISECONDS_WATER_TANK = parseInt(
@@ -74,7 +74,8 @@ export default async function Page() {
       })
     ).map((u) => [u.id, u])
   );
-  const waterTanks = replyCount.map((r) => ({
+  const waterTanks = replyCount.map((r, ind) => ({
+    rank: ind + 1,
     count: r._count,
     user: waterTankUsers[r.authorId],
   }));
@@ -107,6 +108,7 @@ export default async function Page() {
                     <div className="reply position-relative">
                       <UserAvatar
                         className="reply-avatar"
+                        decoratorShadow="sm"
                         user={discussion.snapshots[0].author}
                       />
                       <div className="reply-card bg-white rounded-4 shadow-sm mb-3x">
@@ -141,15 +143,21 @@ export default async function Page() {
             <div className="rounded-4 shadow px-4 px-md-3x pt-3x pb-2x">
               <div className="mb-2 fs-4 fw-semibold">龙王榜（30 天）</div>
               <ul className="list-group">
-                {waterTanks.map((replies) => (
+                {waterTanks.map((tank) => (
                   <li className="d-flex justify-content-between lh-lg">
                     <span
                       className="overflow-ellipsis"
                       style={{ maxWidth: "calc(100% - 4.5em)" }}
                     >
-                      <UserInfo user={replies.user} />
+                      <span
+                        className="text-body-tertiary d-inline-block"
+                        style={{ width: "1.75em" }}
+                      >
+                        {tank.rank}
+                      </span>
+                      <UserInfo user={tank.user} />
                     </span>
-                    <span>{replies.count} 层</span>
+                    <span className="text-body-secondary">{tank.count} 层</span>
                   </li>
                 ))}
               </ul>

@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 export default function Footer() {
   return (
     <footer className="py-3 py-md-4 mt-5 bg-body-tertiary">
-      <div className="container-md py-3 py-md-4 px-4 px-md-3 text-body-secondary">
+      <div className="container-lg py-3 py-md-4 px-4 px-md-3 text-body-secondary">
         <div className="row">
           <div className="col-lg-3 mb-3">
             <a

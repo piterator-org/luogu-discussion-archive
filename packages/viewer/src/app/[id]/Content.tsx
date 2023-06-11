@@ -11,14 +11,13 @@ export default function Content({
   content,
   discussionAuthor,
   usersMetioned,
-  userId,
-  setUserId,
+  userIdState,
 }: {
   content: string;
   discussionAuthor: number;
   usersMetioned: User[];
-  userId: number | null;
-  setUserId: (userId: number | null) => void;
+  // eslint-disable-next-line react/require-default-props
+  userIdState?: [number | null, (userId: number | null) => void];
 }) {
   const contentRef = useRef<HTMLDivElement>(null);
   const userRefs = useRef<Record<number, HTMLDivElement | null>>({});
@@ -57,18 +56,24 @@ export default function Content({
           ["mouseleave", hideTooltip],
           ["focus", showTooltip],
           ["blur", hideTooltip],
-          [
-            "click",
-            () => {
-              hideTooltip();
-              if (userId !== uid) setUserId(uid);
-              else setUserId(null);
-            },
-          ],
+          ...(userIdState
+            ? [
+                [
+                  "click",
+                  () => {
+                    hideTooltip();
+                    if (userIdState[0] !== uid) userIdState[1](uid);
+                    else userIdState[1](null);
+                  },
+                ],
+              ]
+            : []),
         ] as [string, () => void][]
       ).forEach(([event, listener]) =>
         element.addEventListener(event, listener)
       );
+
+      if (userIdState) element.removeAttribute("href");
     });
   });
 
@@ -91,7 +96,16 @@ export default function Content({
         >
           <div className="bg-body rounded-4 shadow-sm px-3 py-2x mb-2">
             <UserInfo user={user} />
-            {user.id === discussionAuthor ? " 楼主" : ""}
+            {user.id === discussionAuthor ? (
+              <span
+                className="ms-1 badge position-relative bg-teal d-inline-block"
+                style={{ top: "-.15em", left: ".08em", marginRight: ".08em" }}
+              >
+                楼主
+              </span>
+            ) : (
+              ""
+            )}
           </div>
         </div>
       ))}
