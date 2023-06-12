@@ -18,7 +18,9 @@ export default function Reply({
     time: string;
     author: User;
     content: string;
-    usersMetioned: User[];
+    usersMetioned: (User & {
+      numReplies: number;
+    })[];
   };
 }) {
   const [userId, setUserId] = useState<number | null>(null);
@@ -26,6 +28,7 @@ export default function Reply({
     <div className={reply.id && userId ? "my-5m" : undefined}>
       {reply.id && userId && (
         <ContextViewer
+          discussionAuthor={discussion.authorId}
           discussionId={discussion.id}
           userId={userId}
           replyId={reply.id}

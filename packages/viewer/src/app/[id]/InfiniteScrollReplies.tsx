@@ -14,7 +14,9 @@ type PageData = {
     time: string;
     author: User;
     content: string;
-    usersMetioned: User[];
+    usersMetioned: (User & {
+      numReplies: number;
+    })[];
   }[];
   nextCursor: number;
 };

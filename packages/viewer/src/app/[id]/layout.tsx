@@ -119,7 +119,7 @@ export default async function Page({
           discussion={{ id, authorId: author.id }}
           reply={{
             author,
-            ...(await serializeReply({ content, time })),
+            ...(await serializeReply(id, { content, time })),
           }}
         />
         {children}

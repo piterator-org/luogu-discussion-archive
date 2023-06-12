@@ -22,10 +22,7 @@ export async function GET(
     data: await Promise.all(
       replies.map(async (reply) => ({
         ...reply,
-        ...(await serializeReply({
-          content: reply.content,
-          time: reply.time,
-        })),
+        ...(await serializeReply(id, reply)),
       }))
     ),
     nextCursor: replies.length ? replies[replies.length - 1].id : null,

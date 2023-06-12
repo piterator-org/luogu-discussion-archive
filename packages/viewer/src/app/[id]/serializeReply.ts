@@ -3,6 +3,7 @@ import hljs from "highlight.js";
 import prisma from "@/lib/prisma";
 import { getUserIdFromUrl } from "@/lib/luogu";
 import stringifyTime from "@/lib/time";
+import { User } from "@prisma/client";
 
 function getMentionedUser(element: Element) {
   const href = element.getAttribute("href") as string;
@@ -22,13 +23,10 @@ function renderHljs(body: HTMLElement) {
     .forEach((element) => hljs.highlightElement(element));
 }
 
-export default async function serializeReply({
-  content,
-  time,
-}: {
-  content: string;
-  time: Date;
-}) {
+export default async function serializeReply(
+  discussionId: number,
+  { content, time }: { content: string; time: Date }
+) {
   const users: number[] = [];
 
   const { document } = new JSDOM(content).window;
@@ -51,9 +49,24 @@ export default async function serializeReply({
       // Invalid URL
     }
   });
-  const usersMetioned = await prisma.user.findMany({
-    where: { id: { in: users } },
+  const replyCount = await prisma.reply.groupBy({
+    by: ["authorId"],
+    where: { discussionId, authorId: { in: users } },
+    _count: true,
   });
+  const usersMetionedRaw = Object.fromEntries(
+    (
+      await prisma.user.findMany({
+        where: {
+          id: { in: replyCount.map((r) => r.authorId) },
+        },
+      })
+    ).map((u) => [u.id, u])
+  );
+  const usersMetioned = replyCount.map((user) => ({
+    ...usersMetionedRaw[user.authorId],
+    numReplies: user._count,
+  }));
   renderHljs(document.body);
   return {
     content: document.body.innerHTML,

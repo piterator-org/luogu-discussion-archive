@@ -39,7 +39,7 @@ export default async function Page({
         })
       ).map(async (reply) => ({
         ...reply,
-        ...(await serializeReply(reply)),
+        ...(await serializeReply(id, reply)),
       }))
     ) ?? notFound();
   const numPages = Math.ceil(

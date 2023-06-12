@@ -25,6 +25,9 @@ export async function GET(
         skip: offset - 1,
       }));
   if (reply)
-    return NextResponse.json({ ...reply, ...(await serializeReply(reply)) });
+    return NextResponse.json({
+      ...reply,
+      ...(await serializeReply(discussionId, reply)),
+    });
   return NextResponse.json({});
 }

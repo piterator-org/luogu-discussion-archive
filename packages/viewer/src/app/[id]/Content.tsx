@@ -16,7 +16,9 @@ export default function Content({
 }: {
   content: string;
   discussionAuthor: number;
-  usersMetioned: User[];
+  usersMetioned: (User & {
+    numReplies: number;
+  })[];
   // eslint-disable-next-line react/require-default-props
   userIdState?: [number | null, (userId: number | null) => void];
 }) {
@@ -97,18 +99,36 @@ export default function Content({
           style={{ display: "none" }}
         >
           <div className="bg-body rounded-4 shadow-sm px-3 py-2x mb-2">
-            <UserAvatar className="me-2" user={user} decoratorShadow="sm" />
-            <UserInfo user={user} />
-            {user.id === discussionAuthor ? (
-              <span
-                className="ms-1 badge position-relative bg-teal d-inline-block"
-                style={{ top: "-.15em", left: ".08em", marginRight: ".08em" }}
-              >
-                楼主
-              </span>
-            ) : (
-              ""
-            )}
+            <div className="d-flex me-auto">
+              <div>
+                <UserAvatar className="" user={user} decoratorShadow="sm" />
+              </div>
+              <div className="ms-2x mt-1x">
+                <div>
+                  <UserInfo user={user} />
+                  {user.id === discussionAuthor ? (
+                    <span
+                      className="ms-1 badge position-relative bg-teal d-inline-block"
+                      style={{
+                        top: "-.15em",
+                        left: ".08em",
+                        marginRight: ".08em",
+                      }}
+                    >
+                      楼主
+                    </span>
+                  ) : (
+                    ""
+                  )}
+                </div>
+                <div
+                  className="mt-2 text-body-tertiary"
+                  style={{ fontSize: ".8em" }}
+                >
+                  本帖共发言 {user.numReplies} 层
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       ))}

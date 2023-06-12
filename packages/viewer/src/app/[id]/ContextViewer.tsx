@@ -13,15 +13,19 @@ type Data = {
   authorId: number;
   time: string;
   content: string;
-  usersMetioned: User[];
+  usersMetioned: (User & {
+    numReplies: number;
+  })[];
 };
 
 export default function ContextViewer({
+  discussionAuthor,
   discussionId,
   userId,
   replyId,
   userMetioned,
 }: {
+  discussionAuthor: number;
   discussionId: number;
   userId: number;
   replyId: number;
@@ -73,7 +77,7 @@ export default function ContextViewer({
                 </span>
               )}
               <Content
-                discussionAuthor={(data as Data).authorId}
+                discussionAuthor={discussionAuthor}
                 content={(data as Data).content}
                 usersMetioned={(data as Data).usersMetioned}
               />
