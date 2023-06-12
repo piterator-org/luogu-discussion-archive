@@ -66,14 +66,11 @@ export default async function Page() {
   const waterTankUsers = Object.fromEntries(
     (
       await prisma.user.findMany({
-        where: {
-          id: { in: replyCount.map((r) => r.authorId) },
-        },
+        where: { id: { in: replyCount.map((r) => r.authorId) } },
       })
     ).map((u) => [u.id, u])
   );
-  const waterTanks = replyCount.map((r, ind) => ({
-    rank: ind + 1,
+  const waterTanks = replyCount.map((r) => ({
     count: r._count,
     user: waterTankUsers[r.authorId],
   }));
@@ -102,7 +99,7 @@ export default async function Page() {
             <div className="rounded-4 shadow mb-4s px-3x pt-3x">
               <div className="row">
                 {discussions.map((discussion) => (
-                  <div className="col-12 col-lg-6">
+                  <div className="col-12 col-lg-6" key={discussion.id}>
                     <div className="reply position-relative">
                       <UserAvatar
                         className="reply-avatar"
@@ -141,8 +138,11 @@ export default async function Page() {
             <div className="rounded-4 shadow px-4 px-md-3x pt-3x pb-2x">
               <div className="mb-2 fs-4 fw-semibold">龙王榜（30 天）</div>
               <ul className="list-group">
-                {waterTanks.map((tank) => (
-                  <li className="d-flex justify-content-between lh-lg">
+                {waterTanks.map((tank, i) => (
+                  <li
+                    className="d-flex justify-content-between lh-lg"
+                    key={tank.user.id}
+                  >
                     <span
                       className="overflow-ellipsis"
                       style={{ maxWidth: "calc(100% - 4.5em)" }}
@@ -151,7 +151,7 @@ export default async function Page() {
                         className="text-body-tertiary d-inline-block"
                         style={{ width: "1.75em" }}
                       >
-                        {tank.rank}
+                        {i + 1}
                       </span>
                       <UserInfo user={tank.user} />
                     </span>
