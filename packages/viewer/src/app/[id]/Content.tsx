@@ -4,9 +4,9 @@ import "katex/dist/katex.css";
 import { useEffect, useRef } from "react";
 import renderMathInElement from "katex/contrib/auto-render";
 import { computePosition, shift } from "@floating-ui/dom";
-import type { User } from "@prisma/client";
 import UserInfo from "@/components/UserInfo";
 import UserAvatar from "@/components/UserAvatar";
+import type { UserMetioned } from "./serialize-reply";
 
 export default function Content({
   content,
@@ -16,9 +16,7 @@ export default function Content({
 }: {
   content: string;
   discussionAuthor: number;
-  usersMetioned: (User & {
-    numReplies: number;
-  })[];
+  usersMetioned: UserMetioned[];
   // eslint-disable-next-line react/require-default-props
   userIdState?: [number | null, (userId: number | null) => void];
 }) {
@@ -125,7 +123,11 @@ export default function Content({
                   className="mt-2 text-body-tertiary"
                   style={{ fontSize: ".8em" }}
                 >
-                  本帖共发言 {user.numReplies} 层
+                  {user.numReplies ? (
+                    <>本帖共发言 {user.numReplies} 层</>
+                  ) : (
+                    "未在本帖发言"
+                  )}
                 </div>
               </div>
             </div>

@@ -6,6 +6,7 @@ import fetcher from "@/lib/fetcher";
 import UserInfo from "@/components/UserInfo";
 import type { User } from "@prisma/client";
 import Content from "./Content";
+import type { UserMetioned } from "./serialize-reply";
 
 type Data = {
   id: number;
@@ -13,9 +14,7 @@ type Data = {
   authorId: number;
   time: string;
   content: string;
-  usersMetioned: (User & {
-    numReplies: number;
-  })[];
+  usersMetioned: UserMetioned[];
 };
 
 export default function ContextViewer({
@@ -32,7 +31,7 @@ export default function ContextViewer({
   userMetioned: User;
 }) {
   const [pageIndex, setPageIndex] = useState(0);
-  const { data, isLoading } = useSWR<{ id: number }>(
+  const { data, isLoading } = useSWR<Data>(
     `/${discussionId}/context/${userId}?reply=${replyId}&offset=${pageIndex}`,
     fetcher
   );

@@ -1,8 +1,11 @@
 import { JSDOM } from "jsdom";
 import hljs from "highlight.js";
+import type { User } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { getUserIdFromUrl } from "@/lib/luogu";
 import stringifyTime from "@/lib/time";
+
+export type UserMetioned = User & { numReplies?: number };
 
 function getMentionedUser(element: Element) {
   const href = element.getAttribute("href") as string;
@@ -58,7 +61,7 @@ export default async function serializeReply(
       })
     ).map((u) => [u.authorId, u._count])
   );
-  const usersMetioned = (
+  const usersMetioned: UserMetioned[] = (
     await prisma.user.findMany({ where: { id: { in: users } } })
   ).map((u) => ({ ...u, numReplies: replyCount[u.id] }));
   renderHljs(document.body);

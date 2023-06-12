@@ -7,6 +7,7 @@ import UserAvatar from "@/components/UserAvatar";
 import UserInfo from "@/components/UserInfo";
 import Content from "./Content";
 import ContextViewer from "./ContextViewer";
+import type { UserMetioned } from "./serialize-reply";
 
 export default function Reply({
   discussion,
@@ -18,9 +19,7 @@ export default function Reply({
     time: string;
     author: User;
     content: string;
-    usersMetioned: (User & {
-      numReplies: number;
-    })[];
+    usersMetioned: UserMetioned[];
   };
 }) {
   const [userId, setUserId] = useState<number | null>(null);

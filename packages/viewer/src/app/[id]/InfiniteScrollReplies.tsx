@@ -7,6 +7,7 @@ import type { User } from "@prisma/client";
 import fetcher from "@/lib/fetcher";
 import PageButtons from "@/components/PageButtons";
 import Reply from "./Reply";
+import type { UserMetioned } from "./serialize-reply";
 
 type PageData = {
   data: {
@@ -14,9 +15,7 @@ type PageData = {
     time: string;
     author: User;
     content: string;
-    usersMetioned: (User & {
-      numReplies: number;
-    })[];
+    usersMetioned: UserMetioned[];
   }[];
   nextCursor: number;
 };
