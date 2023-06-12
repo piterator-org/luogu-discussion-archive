@@ -41,6 +41,7 @@ model Snapshot {
   content      String     @db.Text
 
   @@id([discussionId, time])
+  @@index([discussionId])
 }
 
 model Reply {
@@ -51,6 +52,8 @@ model Reply {
   author       User       @relation(fields: [authorId], references: [id])
   authorId     Int
   content      String     @db.Text
+
+  @@index([discussionId])
 }
 
 model Judgement {
