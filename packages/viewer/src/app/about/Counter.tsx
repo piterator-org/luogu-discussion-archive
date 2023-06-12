@@ -17,7 +17,7 @@ export default function Counter({
   fallbackData: Data | Promise<Data>;
   refreshInterval: number;
 }) {
-  const { data } = useSWR<Data>("/counter", fetcher, {
+  const { data } = useSWR<Data>("/about/counter", fetcher, {
     fallbackData: fallbackData as Data,
     refreshInterval,
   });

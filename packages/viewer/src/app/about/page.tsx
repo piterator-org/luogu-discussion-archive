@@ -1,6 +1,8 @@
 import "@/components/markdown.css";
-import getCounterData from "@/lib/counter";
-import Counter from "@/components/Counter";
+import getCounterData from "./get-counter-data";
+import Counter from "./Counter";
+
+export const dynamic = "force-dynamic";
 
 export const metadata = { title: "关于 - 洛谷帖子保存站" };
 

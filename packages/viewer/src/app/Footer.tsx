@@ -1,4 +1,4 @@
-export default function Footer({ children }: React.PropsWithChildren) {
+export default function Footer() {
   return (
     <footer className="py-3 py-md-4 mt-5 bg-body-tertiary">
       <div className="container-lg py-3 py-md-4 px-4 px-md-3 text-body-secondary">
@@ -16,7 +16,6 @@ export default function Footer({ children }: React.PropsWithChildren) {
                 全新的洛谷讨论保存站由 Piterator
                 打造，拥有更赏心悦目的界面、更稳定的爬取器、更方便的体验，我们总是在不断尝试。
               </li>
-              <li className="mb-2">{children}</li>
               <li className="mb-2">&copy; 2023 Piterator</li>
               <li className="mb-2">v0.0.1 内测版</li>
             </ul>

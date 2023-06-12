@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import getCounterData from "@/lib/counter";
+import getCounterData from "../get-counter-data";
 
 export const dynamic = "force-dynamic";
 

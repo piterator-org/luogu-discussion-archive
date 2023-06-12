@@ -26,6 +26,11 @@ export default function NavBar() {
           <ul className="navbar-nav me-auto mb-2 mb-md-0">
             <li className="nav-item my-tiny my-md-0">
               <Link className="nav-link" href="/">
+                保存帖子
+              </Link>
+            </li>
+            <li className="nav-item my-tiny my-md-0">
+              <Link className="nav-link" href="/explore">
                 发现
               </Link>
             </li>
@@ -37,11 +42,6 @@ export default function NavBar() {
             <li className="nav-item my-tiny my-md-0">
               <Link className="nav-link" href="/judgement">
                 陶片放逐
-              </Link>
-            </li>
-            <li className="nav-item my-tiny my-md-0">
-              <Link className="nav-link" href="/save">
-                保存帖子
               </Link>
             </li>
             <li className="nav-item my-tiny my-md-0">
