@@ -11,11 +11,11 @@ const NUM_DISCUSSIONS_HOME_PAGE = parseInt(
   10
 );
 const NUM_WATER_TANKS_HOME_PAGE = parseInt(
-  process.env.NUM_DISCUSSIONS_HOME_PAGE ?? "40",
+  process.env.NUM_DISCUSSIONS_HOME_PAGE ?? "30",
   10
 );
 const LIMIT_MILLISECONDS_HOT_DISCUSSION = parseInt(
-  process.env.NUM_DISCUSSIONS_HOME_PAGE ?? "23328000000",
+  process.env.NUM_DISCUSSIONS_HOME_PAGE ?? "604800000",
   10
 );
 const RANGE_MILLISECONDS_WATER_TANK = parseInt(
@@ -25,34 +25,49 @@ const RANGE_MILLISECONDS_WATER_TANK = parseInt(
 
 export const metadata = { title: "发现 - 洛谷帖子保存站" };
 
-export default async function Page() {
-  const discussions = await prisma.discussion.findMany({
+async function getDiscussions() {
+  const discussionReplyCount = await prisma.reply.groupBy({
+    by: ["discussionId"],
     where: {
       time: {
         gte: new Date(new Date().getTime() - LIMIT_MILLISECONDS_HOT_DISCUSSION),
       },
     },
-    select: {
-      id: true,
-      time: true,
-      replyCount: true,
-      snapshots: {
-        select: {
-          time: true,
-          title: true,
-          forum: true,
-          author: true,
-          content: true,
-        },
-        orderBy: { time: "desc" },
-        take: 1,
-      },
-    },
-    orderBy: { replyCount: "desc" },
+    _count: true,
+    orderBy: { _count: { id: "desc" } },
     take: NUM_DISCUSSIONS_HOME_PAGE,
   });
+  const discussions = Object.fromEntries(
+    (
+      await prisma.discussion.findMany({
+        where: { id: { in: discussionReplyCount.map((r) => r.discussionId) } },
+        select: {
+          id: true,
+          time: true,
+          replyCount: true,
+          snapshots: {
+            select: {
+              time: true,
+              title: true,
+              forum: true,
+              author: true,
+              content: true,
+            },
+            orderBy: { time: "desc" },
+            take: 1,
+          },
+        },
+      })
+    ).map((d) => [d.id, d])
+  );
+  return discussionReplyCount.map((r) => ({
+    ...discussions[r.discussionId],
+    recentReplyCount: r._count,
+  }));
+}
 
-  const replyCount = await prisma.reply.groupBy({
+async function getUsers() {
+  const userReplyCount = await prisma.reply.groupBy({
     by: ["authorId"],
     where: {
       time: {
@@ -63,18 +78,24 @@ export default async function Page() {
     orderBy: { _count: { id: "desc" } },
     take: NUM_WATER_TANKS_HOME_PAGE,
   });
-  const waterTankUsers = Object.fromEntries(
+  const users = Object.fromEntries(
     (
       await prisma.user.findMany({
-        where: { id: { in: replyCount.map((r) => r.authorId) } },
+        where: { id: { in: userReplyCount.map((r) => r.authorId) } },
       })
     ).map((u) => [u.id, u])
   );
-  const waterTanks = replyCount.map((r) => ({
+  return userReplyCount.map((r) => ({
     count: r._count,
-    user: waterTankUsers[r.authorId],
+    user: users[r.authorId],
   }));
+}
 
+export default async function Page() {
+  const [discussions, users] = await Promise.all([
+    getDiscussions(),
+    getUsers(),
+  ]);
   return (
     <>
       <div className="mt-6s px-3 px-md-0 mb-5s">
@@ -121,7 +142,8 @@ export default async function Page() {
                             className="text-body-tertiary"
                             style={{ fontSize: ".8rem" }}
                           >
-                            {discussion.replyCount} 层
+                            本周 {discussion.recentReplyCount} 层（共{" "}
+                            {discussion.replyCount} 层）
                             <span className="float-end">
                               {stringifyTime(discussion.time)}
                             </span>
@@ -138,7 +160,7 @@ export default async function Page() {
             <div className="rounded-4 shadow px-4 px-md-3x pt-3x pb-2x">
               <div className="mb-2 fs-4 fw-semibold">龙王榜（30 天）</div>
               <ul className="list-group">
-                {waterTanks.map((tank, i) => (
+                {users.map((tank, i) => (
                   <li
                     className="d-flex justify-content-between lh-lg"
                     key={tank.user.id}
