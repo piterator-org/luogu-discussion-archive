@@ -156,13 +156,10 @@ export default async function Page() {
                     key={tank.user.id}
                   >
                     <span
-                      className="overflow-ellipsis"
+                      className="text-body-tertiary overflow-ellipsis"
                       style={{ maxWidth: "calc(100% - 4.5em)" }}
                     >
-                      <span
-                        className="text-body-tertiary d-inline-block"
-                        style={{ width: "1.75em" }}
-                      >
+                      <span className="d-inline-block" style={{ width: "2em" }}>
                         {i + 1}
                       </span>
                       <UserInfo user={tank.user} />
