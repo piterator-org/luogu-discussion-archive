@@ -11,18 +11,13 @@ import Reply from "./Reply";
 export async function generateMetadata({ params }: { params: { id: string } }) {
   const id = parseInt(params.id, 10);
   if (Number.isNaN(id)) notFound();
-  const discussion = await prisma.discussion.findUnique({
-    select: {
-      snapshots: {
-        select: { title: true },
-        orderBy: { time: "desc" },
-        take: 1,
-      },
-    },
-    where: { id },
+  const snapshot = await prisma.snapshot.findFirst({
+    select: { title: true },
+    orderBy: { time: "desc" },
+    where: { discussionId: id },
   });
   // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-  return { title: `「${discussion?.snapshots[0].title}」 - 洛谷帖子保存站` };
+  return { title: `「${snapshot?.title}」 - 洛谷帖子保存站` };
 }
 
 export default async function Page({

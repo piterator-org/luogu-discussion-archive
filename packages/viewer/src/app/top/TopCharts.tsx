@@ -1,37 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import type { User } from "@prisma/client";
+import type { Discussion } from "@/lib/discussion";
 import TopChart from "./TopChart";
 
 export default function Page({
   mostReplies,
   mostRecent,
 }: {
-  mostReplies: {
-    id: number;
-    time: Date;
-    replyCount: number;
-    snapshots: {
-      time: Date;
-      title: string;
-      author: User;
-      forum: string;
-      content: string;
-    }[];
-  }[];
-  mostRecent: {
-    id: number;
-    time: Date;
-    replyCount: number;
-    snapshots: {
-      time: Date;
-      title: string;
-      author: User;
-      forum: string;
-      content: string;
-    }[];
-  }[];
+  mostReplies: Discussion[];
+  mostRecent: Discussion[];
 }) {
   const [selected, setSelected] = useState<string>("most-replies");
 
