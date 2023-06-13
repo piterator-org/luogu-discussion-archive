@@ -7,11 +7,11 @@ import Link from "next/link";
 export const dynamic = "force-dynamic";
 
 const NUM_DISCUSSIONS_HOME_PAGE = parseInt(
-  process.env.NUM_DISCUSSIONS_HOME_PAGE ?? "20",
+  process.env.NUM_DISCUSSIONS_HOME_PAGE ?? "50",
   10
 );
 const NUM_WATER_TANKS_HOME_PAGE = parseInt(
-  process.env.NUM_DISCUSSIONS_HOME_PAGE ?? "30",
+  process.env.NUM_DISCUSSIONS_HOME_PAGE ?? "100",
   10
 );
 const LIMIT_MILLISECONDS_HOT_DISCUSSION = parseInt(
