@@ -7,16 +7,22 @@ const REPLIES_PER_PAGE = parseInt(process.env.REPLIES_PER_PAGE ?? "10", 10);
 
 export default async function Page({ params }: { params: { id: string } }) {
   const id = parseInt(params.id, 10);
-  const { authorId } =
-    (await prisma.snapshot.findFirst({
-      select: { authorId: true },
-      where: { discussionId: id },
-      orderBy: { time: "desc" },
+  const {
+    snapshots: [{ authorId }],
+    _count: { replies },
+  } =
+    (await prisma.discussion.findUnique({
+      where: { id },
+      select: {
+        snapshots: {
+          select: { authorId: true },
+          orderBy: { time: "desc" },
+          take: 1,
+        },
+        _count: { select: { replies: true } },
+      },
     })) ?? notFound();
-  const numPages = Math.ceil(
-    (await prisma.reply.count({ where: { discussionId: id } })) /
-      REPLIES_PER_PAGE
-  );
+  const numPages = Math.ceil(replies / REPLIES_PER_PAGE);
   const { pagesLocalAttachedFront, pagesLocalAttachedBack, pagesLocal } =
     paginate(numPages, 1);
   return (

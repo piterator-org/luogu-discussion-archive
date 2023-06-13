@@ -13,46 +13,50 @@ export default async function Page({
   params: { id: string; page: string };
 }) {
   const id = parseInt(params.id, 10);
-  const {
-    snapshots: [{ authorId }],
-  } =
-    (await prisma.discussion.findUnique({
-      where: { id },
-      select: {
-        snapshots: {
-          select: { authorId: true },
-          orderBy: { time: "desc" },
-          take: 1,
-        },
-      },
-    })) ?? notFound();
   const page = parseInt(params.page, 10);
   if (Number.isNaN(page)) notFound();
-  const replies =
-    Promise.all(
-      (
-        await prisma.reply.findMany({
-          where: { discussionId: id },
-          select: { id: true, author: true, time: true, content: true },
-          skip: (page - 1) * REPLIES_PER_PAGE,
-          take: REPLIES_PER_PAGE,
-        })
-      ).map(async (reply) => ({
-        ...reply,
-        ...(await serializeReply(id, reply)),
-      }))
-    ) ?? notFound();
-  const numPages = Math.ceil(
-    (await prisma.reply.count({ where: { discussionId: id } })) /
-      REPLIES_PER_PAGE
-  );
-
+  const [
+    {
+      snapshots: [{ authorId }],
+      _count: { replies: numReplies },
+    },
+    replies,
+  ] = await Promise.all([
+    prisma.discussion
+      .findUnique({
+        where: { id },
+        select: {
+          snapshots: {
+            select: { authorId: true },
+            orderBy: { time: "desc" },
+            take: 1,
+          },
+          _count: { select: { replies: true } },
+        },
+      })
+      .then((d) => d ?? notFound()),
+    prisma.reply
+      .findMany({
+        where: { discussionId: id },
+        select: { id: true, author: true, time: true, content: true },
+        skip: (page - 1) * REPLIES_PER_PAGE,
+        take: REPLIES_PER_PAGE,
+      })
+      .then((r) =>
+        r.map(async (reply) => ({
+          ...reply,
+          ...(await serializeReply(id, reply)),
+        }))
+      )
+      .then((r) => Promise.all(r)),
+  ]);
+  const numPages = Math.ceil(numReplies / REPLIES_PER_PAGE);
   const { pagesLocalAttachedFront, pagesLocalAttachedBack, pagesLocal } =
     paginate(numPages, page);
 
   return (
     <>
-      {(await replies).map((reply) => (
+      {replies.map((reply) => (
         <Reply discussion={{ id, authorId }} reply={reply} key={reply.id} />
       ))}
       {numPages > 1 && (

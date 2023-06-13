@@ -30,6 +30,7 @@ export default async function Page({
     replyCount,
     time,
     snapshots: [{ title, forum, author, content, until: updatedAt }],
+    _count: { replies },
   } = (await prisma.discussion.findUnique({
     where: { id },
     select: {
@@ -46,6 +47,7 @@ export default async function Page({
         orderBy: { time: "desc" },
         take: 1,
       },
+      _count: { select: { replies: true } },
     },
   })) ?? notFound();
 
@@ -78,9 +80,7 @@ export default async function Page({
             </li>
             <li className="d-flex justify-content-between lh-lg">
               <span className="fw-semibold">已保存回复</span>
-              <span className="text-muted">
-                {prisma.reply.count({ where: { discussionId: id } })}
-              </span>
+              <span className="text-muted">{replies}</span>
             </li>
             <li className="d-flex justify-content-between lh-lg">
               <span className="fw-semibold">发布时间</span>
