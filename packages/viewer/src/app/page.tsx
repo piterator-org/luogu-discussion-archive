@@ -9,8 +9,8 @@ export default function Page() {
         <SaveInput />
       </div>
       <div className="mb-5x px-3 px-md-0 py-5">
-        <h2 className="pb-2 border-bottom">新版保存站的优点</h2>
-        <div className="row g-4 py-5 row-cols-1 row-cols-lg-3">
+        <h2 className="mb-4 text-center">新版保存站的优点</h2>
+        <div className="row g-4 py-5 row-cols-1 row-cols-md-3">
           <div className="feature col">
             <div className="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
               <svg

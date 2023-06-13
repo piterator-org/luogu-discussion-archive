@@ -99,9 +99,13 @@ $box-shadow: 0 0.375rem 1rem rgba($black, 0.1);
   .reply-context {
     padding-left: map-get($spacers, 4x);
   }
+
+  .reply-context {
+    margin-bottom: -1.8rem;
+  }
 }
 
-@include media-breakpoint-up(lg) {
+@include media-breakpoint-up(xl) {
   .entry {
     padding-top: 0;
   }
@@ -118,10 +122,6 @@ $box-shadow: 0 0.375rem 1rem rgba($black, 0.1);
   .entry-meta,
   .entry-content {
     padding-left: map-get($spacers, 4x);
-  }
-
-  .reply-context {
-    margin-bottom: -1rem;
   }
 }
 
