@@ -1,30 +1,15 @@
-"use client";
+import CounterClient from "./CounterClient";
+import getCounterData from "./get-counter-data";
 
-import fetcher from "@/lib/fetcher";
-import useSWR from "swr";
-
-interface Data {
-  discussions: number;
-  snapshots: number;
-  replies: number;
-  judgements: number;
-}
-
-export default function Counter({
-  fallbackData,
+export default async function Counter({
   refreshInterval,
 }: {
-  fallbackData: Data | Promise<Data>;
   refreshInterval: number;
 }) {
-  const { data } = useSWR<Data>("/about/counter", fetcher, {
-    fallbackData: fallbackData as Data,
-    refreshInterval,
-  });
   return (
-    <>
-      已经保存了 {data?.discussions} 个帖子（{data?.snapshots} 份快照）共{" "}
-      {data?.replies} 层楼。此外，还有 {data?.judgements} 块陶片。
-    </>
+    <CounterClient
+      fallbackData={await getCounterData()}
+      refreshInterval={refreshInterval}
+    />
   );
 }

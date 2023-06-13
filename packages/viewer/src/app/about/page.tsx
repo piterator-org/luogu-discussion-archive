@@ -1,12 +1,12 @@
 import "@/components/markdown.css";
-import getCounterData from "./get-counter-data";
+import { Suspense } from "react";
 import Counter from "./Counter";
 
 export const dynamic = "force-dynamic";
 
 export const metadata = { title: "关于 - 洛谷帖子保存站" };
 
-export default async function Page() {
+export default function Page() {
   return (
     <div className="pt-5 pb-3 pb-md-3x px-2 px-md-0">
       <div className="row justify-content-center">
@@ -44,11 +44,16 @@ export default async function Page() {
               </p>
               <blockquote>
                 <p>
-                  截至目前，lglg.top{" "}
-                  <Counter
-                    fallbackData={await getCounterData()}
-                    refreshInterval={1000}
-                  />
+                  <Suspense
+                    fallback={
+                      <>
+                        <span className="placeholder w-100" />
+                        <span className="placeholder w-100" />
+                      </>
+                    }
+                  >
+                    截至目前，lglg.top <Counter refreshInterval={1000} />
+                  </Suspense>
                 </p>
               </blockquote>
               <p className="text-end">

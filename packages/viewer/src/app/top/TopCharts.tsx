@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 export default function Page({ children }: { children: React.ReactNode[] }) {
-  const [selected, setSelected] = useState<string>("most-replies");
+  const [selected, setSelected] = useState<string>("most-replied");
 
   return (
     <div className="pt-5 pb-3 pb-md-3x px-2 px-md-0">
@@ -13,14 +13,14 @@ export default function Page({ children }: { children: React.ReactNode[] }) {
         value={selected}
         onChange={({ target: { value } }) => setSelected(value)}
       >
-        <option value="most-replies">最高楼层</option>
+        <option value="most-replied">最高楼层</option>
         <option value="most-recent">最新发布</option>
-        <option value="most-clicked">最多点击</option>
+        <option value="most-viewed">最多点击</option>
       </select>
       <div className="row g-md-4m row-cols-1 row-cols-md-3">
         <div
           className={`col d-md-block ${
-            selected !== "most-replies" ? "d-none" : ""
+            selected !== "most-replied" ? "d-none" : ""
           }`}
         >
           {children[0]}
@@ -34,7 +34,7 @@ export default function Page({ children }: { children: React.ReactNode[] }) {
         </div>
         <div
           className={`col d-md-block ${
-            selected !== "most-clicked" ? "d-none" : ""
+            selected !== "most-viewed" ? "d-none" : ""
           }`}
         >
           {children[2]}
