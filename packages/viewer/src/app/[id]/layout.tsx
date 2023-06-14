@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import prisma from "@/lib/prisma";
 import { getDiscussionUrl, getForumName, getForumUrl } from "@/lib/luogu";
@@ -8,7 +9,11 @@ import UpdateButton from "@/components/UpdateButton";
 import serializeReply from "./serialize-reply";
 import Reply from "./Reply";
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
   const id = parseInt(params.id, 10);
   if (Number.isNaN(id)) notFound();
   const snapshot = await prisma.snapshot.findFirst({
@@ -16,8 +21,9 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
     orderBy: { time: "desc" },
     where: { discussionId: id },
   });
-  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-  return { title: `「${snapshot?.title}」 - 洛谷帖子保存站` };
+  return {
+    title: `${snapshot ? `「${snapshot.title}」` : "404"} - 洛谷帖子保存站`,
+  };
 }
 
 export default async function Page({
