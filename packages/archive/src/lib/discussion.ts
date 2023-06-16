@@ -1,11 +1,10 @@
-import { EventEmitter, once } from "node:events";
+import { EventEmitter } from "node:events";
 import type { BaseLogger } from "pino";
 import type { PrismaClient, PrismaPromise, Reply } from "@prisma/client";
 import { parseApp, parseComment, parseUser } from "./parser";
 
 const PAGES_PER_SAVE = parseInt(process.env.PAGES_PER_SAVE ?? "128", 10);
 export const emitters: Record<number, EventEmitter> = {};
-export const metadata: Set<number> = new Set();
 
 export async function saveDiscussion(
   logger: BaseLogger,
@@ -158,19 +157,14 @@ export function startTask(
 ) {
   if (!(id in emitters)) {
     emitters[id] = new EventEmitter();
-    metadata.add(id);
-    once(emitters[id], "start")
-      .catch(() => {})
-      .finally(() => metadata.delete(id));
     saveDiscussion(logger, prisma, id)
+      .then(() => emitters[id].emit("done"))
       .catch((err) => {
         emitters[id].emit("error", err);
         logger.error(err);
       })
-      .finally(() => {
-        delete emitters[id];
-      });
+      .finally(() => delete emitters[id]);
+    return true;
   }
-  if (metadata.has(id)) return once(emitters[id], "start");
-  return Promise.resolve([]);
+  return false;
 }
