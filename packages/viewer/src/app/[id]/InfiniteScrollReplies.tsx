@@ -22,6 +22,16 @@ type PageData = {
 
 const REPLIES_PER_PAGE = parseInt(process.env.REPLIES_PER_PAGE ?? "10", 10);
 
+export const getKey =
+  (id: number) => (pageIndex: number, previousPageData: PageData) => {
+    // 已经到最后一页
+    if (previousPageData && !previousPageData.data.length) return null;
+    // 在首页时，没有 `previousPageData`
+    if (pageIndex === 0) return `/${id}/replies?limit=${REPLIES_PER_PAGE}`;
+    // 将游标添加到 API
+    return `/${id}/replies?cursor=${previousPageData.nextCursor}&limit=${REPLIES_PER_PAGE}`;
+  };
+
 export default function InfiniteScrollReplies({
   discussion,
   pagination,
@@ -34,17 +44,8 @@ export default function InfiniteScrollReplies({
     pagesLocal: number[];
   };
 }) {
-  const getKey = (pageIndex: number, previousPageData: PageData) => {
-    // 已经到最后一页
-    if (previousPageData && !previousPageData.data.length) return null;
-    // 在首页时，没有 `previousPageData`
-    if (pageIndex === 0)
-      return `/${discussion.id}/replies?limit=${REPLIES_PER_PAGE}`;
-    // 将游标添加到 API
-    return `/${discussion.id}/replies?cursor=${previousPageData.nextCursor}&limit=${REPLIES_PER_PAGE}`;
-  };
   const { data, size, setSize, isValidating } = useSWRInfinite<PageData>(
-    getKey,
+    getKey(discussion.id),
     fetcher
   );
   const [showPageButtons, setShowPageButtons] = useState<boolean>(true);
