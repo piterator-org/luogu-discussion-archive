@@ -1,7 +1,9 @@
 import { EventEmitter } from "node:events";
 import type { BaseLogger } from "pino";
+import type { BroadcastOperator } from "socket.io";
 import type { PrismaClient, PrismaPromise, Reply } from "@prisma/client";
 import { parseApp, parseComment, parseUser } from "./parser";
+import type { ServerToClientEvents } from "../plugins/socket.io";
 
 const PAGES_PER_SAVE = parseInt(process.env.PAGES_PER_SAVE ?? "128", 10);
 export const emitters: Record<number, EventEmitter> = {};
@@ -153,10 +155,14 @@ export async function saveDiscussion(
 export function startTask(
   logger: BaseLogger,
   prisma: PrismaClient,
+  room: BroadcastOperator<ServerToClientEvents, unknown>,
   id: number
 ) {
   if (!(id in emitters)) {
     emitters[id] = new EventEmitter();
+    emitters[id].on("start", () => room.volatile.emit("start"));
+    emitters[id].on("done", () => room.emit("success"));
+    emitters[id].on("error", (err: Error) => room.emit("failure", err.message));
     saveDiscussion(logger, prisma, id)
       .then(() => emitters[id].emit("done"))
       .catch((err) => {
@@ -164,7 +170,5 @@ export function startTask(
         logger.error(err);
       })
       .finally(() => delete emitters[id]);
-    return true;
   }
-  return false;
 }

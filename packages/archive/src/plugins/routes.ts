@@ -20,6 +20,7 @@ export default (function routes(fastify, options, done) {
     startTask(
       fastify.log.child({ reqId: request.id as string, target: id }),
       fastify.prisma,
+      fastify.io.to(request.params.id),
       id
     );
     once(emitters[id], "done")

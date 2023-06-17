@@ -19,8 +19,8 @@ const fastify = Fastify({
 /* eslint-disable @typescript-eslint/no-floating-promises */
 fastify.register(prismaPlugin);
 fastify.register(cors);
-fastify.register(routes);
 fastify.register(io);
+fastify.register(routes);
 /* eslint-enable @typescript-eslint/no-floating-promises */
 
 fastify

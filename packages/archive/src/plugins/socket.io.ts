@@ -2,9 +2,9 @@ import { FastifyPluginCallback } from "fastify";
 import fastifyPlugin from "fastify-plugin";
 import { Server } from "socket.io";
 import { instrument } from "@socket.io/admin-ui";
-import { emitters, startTask } from "../lib/discussion";
+import { startTask } from "../lib/discussion";
 
-interface ServerToClientEvents {
+export interface ServerToClientEvents {
   start: () => void;
   success: () => void;
   failure: (error: string) => void;
@@ -44,16 +44,9 @@ export default fastifyPlugin(((fastify, options, done) => {
   });
 
   fastify.io.on("connection", (socket) => {
-    socket.on("update", (id) => {
-      if (startTask(fastify.log, fastify.prisma, id)) {
-        const room = fastify.io.to(id.toString());
-        emitters[id].on("start", () => room.volatile.emit("start"));
-        emitters[id].on("done", () => room.emit("success"));
-        emitters[id].on("error", (err: Error) =>
-          room.emit("failure", err.message)
-        );
-      }
-    });
+    socket.on("update", (id) =>
+      startTask(fastify.log, fastify.prisma, fastify.io.to(id.toString()), id)
+    );
     socket.on("subscribe", (id) => socket.join(id.toString()));
     socket.on("unsubscribe", (id) => socket.leave(id.toString()));
   });
