@@ -108,7 +108,9 @@ export default async function Page({
             >
               查看原帖
             </a>
-            <UpdateButton target={params.id}>更新帖子</UpdateButton>
+            <UpdateButton target={params.id} key={params.id}>
+              更新帖子
+            </UpdateButton>
           </div>
         </div>
       </div>

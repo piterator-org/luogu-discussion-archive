@@ -1,6 +1,7 @@
 import { FastifyPluginCallback } from "fastify";
 import fastifyPlugin from "fastify-plugin";
 import { Server } from "socket.io";
+import { instrument } from "@socket.io/admin-ui";
 import { emitters, startTask } from "../lib/discussion";
 
 interface ServerToClientEvents {
@@ -22,7 +23,20 @@ declare module "fastify" {
 }
 
 export default fastifyPlugin(((fastify, options, done) => {
-  fastify.decorate("io", new Server(fastify.server));
+  fastify.decorate(
+    "io",
+    new Server(fastify.server, {
+      serveClient: false,
+      cors: {
+        origin: [process.env.VIEWER_HOST ?? "", "https://admin.socket.io"],
+        credentials: true,
+      },
+    })
+  );
+  instrument(fastify.io, {
+    auth: false,
+    mode: process.env.NODE_ENV as never,
+  });
   // eslint-disable-next-line @typescript-eslint/no-shadow
   fastify.addHook("onClose", (instance, done) => {
     instance.io.close();
@@ -30,8 +44,7 @@ export default fastifyPlugin(((fastify, options, done) => {
   });
 
   fastify.io.on("connection", (socket) => {
-    socket.on("update", async (id) => {
-      await socket.join(id.toString());
+    socket.on("update", (id) => {
       if (startTask(fastify.log, fastify.prisma, id)) {
         const room = fastify.io.to(id.toString());
         emitters[id].on("start", () => room.volatile.emit("start"));
