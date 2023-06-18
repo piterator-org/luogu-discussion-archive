@@ -11,12 +11,14 @@ export default function UpdateButton({
   children,
   target,
 }: React.PropsWithChildren<{ target: string }>) {
+  const id = parseInt(target, 10);
   const router = useRouter();
-  const [disabled, setDisabled] = useState<boolean>(false);
+  const [disabled, setDisabled] = useState(false);
+  const [error, setError] = useState("");
+  const toastRef = useRef<HTMLDivElement>(null);
   const socketRef = useRef<Socket | null>(null);
   const { mutate } = useSWRConfig();
 
-  const id = parseInt(target, 10);
   useEffect(() => {
     if (!socketRef.current)
       socketRef.current = io(process.env.NEXT_PUBLIC_ARCHIVE_HOST ?? "");
@@ -24,39 +26,81 @@ export default function UpdateButton({
       socketRef.current?.close();
     };
   }, []);
-
   useEffect(() => {
     const socket = socketRef.current;
     if (!Number.isNaN(id) && socket) {
+      socket.onAny(() => setError(""));
       socket.on("start", () => router.refresh());
       socket.on("success", async () => {
         router.refresh();
         await mutate(unstable_serialize(getKey(id)));
       });
+      socket.on("failure", setError);
       socket.emit("subscribe", id);
     }
   }, [id, mutate, router]);
 
+  const bootstrapToastRef = useRef<
+    typeof import("bootstrap/js/dist/toast").default | null
+  >(null);
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    import("bootstrap/js/dist/toast").then(({ default: Toast }) => {
+      bootstrapToastRef.current = Toast;
+    });
+  }, []);
+  useEffect(() => {
+    const Toast = bootstrapToastRef.current;
+    if (Toast && toastRef.current) {
+      const toastError = Toast.getOrCreateInstance(toastRef.current);
+      if (error) toastError.show();
+      else toastError.hide();
+    }
+  }, [error, disabled]);
+
   return (
-    <button
-      type="button"
-      className="btn btn-outline-primary shadow-sm ms-2"
-      onClick={() => {
-        setDisabled(true);
-        if (Number.isNaN(id) || !socketRef.current)
-          fetch(`${process.env.NEXT_PUBLIC_ARCHIVE_HOST ?? ""}/${target}`)
-            .then(() => router.refresh())
-            .finally(() => setDisabled(false));
-        else {
-          const socket = socketRef.current;
-          socket.on("success", () => setDisabled(false));
-          socket.on("failure", () => setDisabled(false));
-          socket.emit("update", id);
-        }
-      }}
-      disabled={disabled}
-    >
-      {children}
-    </button>
+    <>
+      <button
+        type="button"
+        className="btn btn-outline-primary shadow-sm ms-2"
+        onClick={() => {
+          setDisabled(true);
+          if (Number.isNaN(id) || !socketRef.current)
+            fetch(`${process.env.NEXT_PUBLIC_ARCHIVE_HOST ?? ""}/${target}`)
+              .then(() => router.refresh())
+              .finally(() => setDisabled(false));
+          else {
+            const socket = socketRef.current;
+            socket.on("success", () => setDisabled(false));
+            socket.on("failure", () => setDisabled(false));
+            socket.emit("update", id);
+          }
+        }}
+        disabled={disabled}
+      >
+        {children}
+      </button>
+      <div className="toast-container position-fixed bottom-0 end-0 p-3">
+        <div
+          className="toast text-bg-danger"
+          role="alert"
+          aria-live="assertive"
+          aria-atomic="true"
+          ref={toastRef}
+        >
+          <div className="toast-header">
+            <strong className="me-auto">出错啦！</strong>
+            <small>保存失败</small>
+            <button
+              type="button"
+              className="btn-close"
+              data-bs-dismiss="toast"
+              aria-label="Close"
+            />
+          </div>
+          <div className="toast-body">{error}</div>
+        </div>
+      </div>
+    </>
   );
 }
