@@ -51,23 +51,23 @@ export default async function serializeReply(
       // Invalid URL
     }
   });
-  // TODO: 下次要把这里改成 Promise.all
-  const replyCount = Object.fromEntries(
-    (
-      await prisma.reply.groupBy({
+  const [replyCount, usersMetioned] = await Promise.all([
+    prisma.reply
+      .groupBy({
         by: ["authorId"],
         where: { discussionId, authorId: { in: users } },
         _count: true,
       })
-    ).map((u) => [u.authorId, u._count])
-  );
-  const usersMetioned: UserMetioned[] = (
-    await prisma.user.findMany({ where: { id: { in: users } } })
-  ).map((u) => ({ ...u, numReplies: replyCount[u.id] }));
+      .then((r) => Object.fromEntries(r.map((u) => [u.authorId, u._count]))),
+    prisma.user.findMany({ where: { id: { in: users } } }),
+  ]);
   renderHljs(document.body);
   return {
     content: document.body.innerHTML,
     time: stringifyTime(time),
-    usersMetioned,
+    usersMetioned: usersMetioned.map((u) => ({
+      ...u,
+      numReplies: replyCount[u.id],
+    })) as UserMetioned[],
   };
 }

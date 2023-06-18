@@ -15,41 +15,38 @@ export default async function Page({
   const id = parseInt(params.id, 10);
   const page = parseInt(params.page, 10);
   if (Number.isNaN(page)) notFound();
-  const [
-    {
-      snapshots: [{ authorId }],
-      _count: { replies: numReplies },
-    },
+  const {
+    snapshots: [{ authorId }],
     replies,
-  ] = await Promise.all([
-    prisma.discussion
-      .findUnique({
-        where: { id },
-        select: {
-          snapshots: {
-            select: { authorId: true },
-            orderBy: { time: "desc" },
-            take: 1,
-          },
-          _count: { select: { replies: true } },
+    _count: { replies: numReplies },
+  } = await prisma.discussion
+    .findUnique({
+      where: { id },
+      select: {
+        snapshots: {
+          select: { authorId: true },
+          orderBy: { time: "desc" },
+          take: 1,
         },
-      })
-      .then((d) => d ?? notFound()),
-    prisma.reply
-      .findMany({
-        where: { discussionId: id },
-        select: { id: true, author: true, time: true, content: true },
-        skip: (page - 1) * REPLIES_PER_PAGE,
-        take: REPLIES_PER_PAGE,
-      })
-      .then((r) =>
-        r.map(async (reply) => ({
+        replies: {
+          select: { id: true, author: true, time: true, content: true },
+          orderBy: { id: "asc" },
+          skip: (page - 1) * REPLIES_PER_PAGE,
+          take: REPLIES_PER_PAGE,
+        },
+        _count: { select: { replies: true } },
+      },
+    })
+    .then((discussion) => discussion ?? notFound())
+    .then(async (discussion) => ({
+      ...discussion,
+      replies: await Promise.all(
+        discussion.replies.map(async (reply) => ({
           ...reply,
           ...(await serializeReply(id, reply)),
         }))
-      )
-      .then((r) => Promise.all(r)),
-  ]);
+      ),
+    }));
   const numPages = Math.ceil(numReplies / REPLIES_PER_PAGE);
   const { pagesLocalAttachedFront, pagesLocalAttachedBack, pagesLocal } =
     paginate(numPages, page);
