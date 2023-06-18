@@ -1,3 +1,10 @@
+declare global {
+  const VERSION: string;
+  const COMMITHASH: string;
+  const BRANCH: string;
+  const LASTCOMMITDATETIME: string;
+}
+
 export default function Footer() {
   return (
     <footer className="py-3 py-md-4 mt-5 bg-body-tertiary">
@@ -17,7 +24,9 @@ export default function Footer() {
                 打造，拥有更赏心悦目的界面、更稳定的爬取器、更方便的体验，我们总是在不断尝试。
               </li>
               <li className="mb-2">&copy; 2023 Piterator</li>
-              <li className="mb-2">v0.0.1 内测版</li>
+              <li className="mb-2">
+                {VERSION} @ {LASTCOMMITDATETIME}
+              </li>
             </ul>
           </div>
         </div>
