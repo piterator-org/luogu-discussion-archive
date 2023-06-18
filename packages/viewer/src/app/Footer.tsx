@@ -25,7 +25,10 @@ export default function Footer() {
               </li>
               <li className="mb-2">&copy; 2023 Piterator</li>
               <li className="mb-2">
-                {VERSION} @ {new Date(LASTCOMMITDATETIME).toLocaleString()}
+                {VERSION} @{" "}
+                {new Date(LASTCOMMITDATETIME).toLocaleString("zh", {
+                  hour12: false,
+                })}
               </li>
             </ul>
           </div>
