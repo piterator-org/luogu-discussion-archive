@@ -25,7 +25,7 @@ export default function Footer() {
               </li>
               <li className="mb-2">&copy; 2023 Piterator</li>
               <li className="mb-2">
-                {VERSION} @ {LASTCOMMITDATETIME}
+                {VERSION} @ {new Date(LASTCOMMITDATETIME).toLocaleString()}
               </li>
             </ul>
           </div>
