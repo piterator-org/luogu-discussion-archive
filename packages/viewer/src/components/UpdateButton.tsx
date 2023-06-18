@@ -82,14 +82,17 @@ export default function UpdateButton({
       </button>
       <div className="toast-container position-fixed bottom-0 end-0 p-3">
         <div
-          className="toast text-bg-danger"
+          className="toast text-bg-danger border-0 shadow"
           role="alert"
           aria-live="assertive"
           aria-atomic="true"
           ref={toastRef}
         >
-          <div className="toast-header">
-            <strong className="me-auto">出错啦！</strong>
+          <div className="toast-header text-secondary">
+            <span className="me-auto fw-medium">
+              被骇客<span style={{ color: "#7e42ec" }}>银</span>
+              <span style={{ color: "#3367ea" }}>狼</span>阻止的越权访问
+            </span>
             <small>保存失败</small>
             <button
               type="button"
