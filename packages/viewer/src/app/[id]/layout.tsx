@@ -6,8 +6,8 @@ import stringifyTime from "@/lib/time";
 import UserInfo from "@/components/UserInfo";
 import "@/components/markdown.css";
 import UpdateButton from "@/components/UpdateButton";
-import serializeReply from "./serialize-reply";
-import Reply from "./Reply";
+import serializeReply from "@/lib/serialize-reply";
+import Reply from "@/components/reply/Reply";
 
 export async function generateMetadata({
   params,

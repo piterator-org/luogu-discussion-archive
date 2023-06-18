@@ -4,9 +4,9 @@ import "katex/dist/katex.css";
 import { useEffect, useRef } from "react";
 import renderMathInElement from "katex/contrib/auto-render";
 import { computePosition, shift } from "@floating-ui/dom";
+import type { UserMetioned } from "@/lib/serialize-reply";
 import UserInfo from "@/components/UserInfo";
 import UserAvatar from "@/components/UserAvatar";
-import type { UserMetioned } from "./serialize-reply";
 
 export default function Content({
   content,

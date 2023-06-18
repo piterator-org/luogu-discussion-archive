@@ -4,10 +4,10 @@ import { useState } from "react";
 import useSWRInfinite from "swr/infinite";
 import InfiniteScroll from "react-infinite-scroll-component";
 import type { User } from "@prisma/client";
+import type { UserMetioned } from "@/lib/serialize-reply";
 import fetcher from "@/lib/fetcher";
 import PageButtons from "@/components/PageButtons";
-import Reply from "./Reply";
-import type { UserMetioned } from "./serialize-reply";
+import Reply from "@/components/reply/Reply";
 
 type PageData = {
   data: {

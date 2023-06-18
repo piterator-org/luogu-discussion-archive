@@ -3,11 +3,11 @@
 import "highlight.js/styles/tokyo-night-dark.css";
 import { useState } from "react";
 import type { User } from "@prisma/client";
+import type { UserMetioned } from "@/lib/serialize-reply";
 import UserAvatar from "@/components/UserAvatar";
 import UserInfo from "@/components/UserInfo";
 import Content from "./Content";
 import ContextViewer from "./ContextViewer";
-import type { UserMetioned } from "./serialize-reply";
 
 export default function Reply({
   discussion,

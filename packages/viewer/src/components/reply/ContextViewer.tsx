@@ -5,8 +5,8 @@ import useSWR from "swr";
 import fetcher from "@/lib/fetcher";
 import UserInfo from "@/components/UserInfo";
 import type { User } from "@prisma/client";
+import type { UserMetioned } from "@/lib/serialize-reply";
 import Content from "./Content";
-import type { UserMetioned } from "./serialize-reply";
 
 type Data = {
   id: number;

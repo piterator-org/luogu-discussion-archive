@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import serializeReply from "../../serialize-reply";
+import serializeReply from "@/lib/serialize-reply";
 
 // eslint-disable-next-line import/prefer-default-export
 export async function GET(
