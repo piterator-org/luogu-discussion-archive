@@ -14,7 +14,6 @@ export const selectDiscussion = {
       title: true,
       forum: true,
       author: true,
-      content: true,
     },
     orderBy: { time: "desc" as Prisma.SortOrder },
     take: 1,
