@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+// TODO: 改为使用 Socket.IO 连接
 export default function SaveInput() {
   const router = useRouter();
   const [url, setUrl] = useState<string>("");
@@ -10,9 +11,21 @@ export default function SaveInput() {
   const [error, setError] = useState<string>("");
 
   return (
-    <div
+    <form
       className="input-group input-group-lg mx-auto"
       style={{ maxWidth: "40em" }}
+      onSubmit={(event) => {
+        event.preventDefault();
+        setDisabled(true);
+        const id = url.split("?", 1)[0].split("/").reverse()[0];
+        fetch(`${process.env.NEXT_PUBLIC_ARCHIVE_HOST ?? ""}/${id}`)
+          .then(async (res) => {
+            if (res.ok) router.push(`/${id}`);
+            else setError(((await res.json()) as { error: string }).error);
+          })
+          .catch((e: Error) => setError(e.message))
+          .finally(() => setDisabled(false));
+      }}
     >
       <input
         className="form-control shadow"
@@ -27,22 +40,11 @@ export default function SaveInput() {
       />
       <button
         className={`btn btn-${error ? "danger" : "success"} shadow`}
-        type="button"
+        type="submit"
         disabled={disabled}
-        onClick={() => {
-          setDisabled(true);
-          const id = url.split("?", 1)[0].split("/").reverse()[0];
-          fetch(`${process.env.NEXT_PUBLIC_ARCHIVE_HOST ?? ""}/${id}`)
-            .then(async (res) => {
-              if (res.ok) router.push(`/${id}/1`);
-              else setError(((await res.json()) as { error: string }).error);
-            })
-            .catch((e: Error) => setError(e.message))
-            .finally(() => setDisabled(false));
-        }}
       >
         立即保存
       </button>
-    </div>
+    </form>
   );
 }
