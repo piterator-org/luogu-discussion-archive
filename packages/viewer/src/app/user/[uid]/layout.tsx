@@ -1,4 +1,5 @@
 import UserInput from "../UserInput";
+import TabNavigation from "./TabNavigation";
 
 export default function Layout({
   children,
@@ -7,6 +8,7 @@ export default function Layout({
   return (
     <>
       <UserInput initialValue={params.uid} />
+      <TabNavigation uid={params.uid} />
       {children}
     </>
   );

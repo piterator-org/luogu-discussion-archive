@@ -1,11 +1,15 @@
-import { notFound } from "next/navigation";
+import { NextResponse, type NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
 import { selectDiscussion } from "@/lib/discussion";
 import serializeReply from "@/lib/serialize-reply";
 
-export default async function Page({ params }: { params: { uid: string } }) {
+// eslint-disable-next-line import/prefer-default-export
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { uid: string } }
+) {
   const uid = parseInt(params.uid, 10);
-  if (Number.isNaN(uid)) notFound();
+  const cursor = request.nextUrl.searchParams.get("cursor");
   const discussions = await prisma.discussion
     .findMany({
       select: {
@@ -17,6 +21,7 @@ export default async function Page({ params }: { params: { uid: string } }) {
           { replies: { some: { authorId: uid } } },
           { snapshots: { some: { authorId: uid } } },
         ],
+        id: { lt: cursor ? parseInt(cursor, 10) : undefined },
       },
       orderBy: { id: "desc" },
     })
@@ -33,6 +38,10 @@ export default async function Page({ params }: { params: { uid: string } }) {
         }))
       )
     );
-  // eslint-disable-next-line react/jsx-no-useless-fragment
-  return <pre>{JSON.stringify(discussions)}</pre>;
+  return NextResponse.json({
+    data: discussions,
+    nextCursor: discussions.length
+      ? discussions[discussions.length - 1].id
+      : null,
+  });
 }
