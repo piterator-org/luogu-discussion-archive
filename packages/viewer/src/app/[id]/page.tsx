@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import prisma from "@/lib/prisma";
 import paginate from "@/lib/pagination";
-import InfiniteScrollReplies from "./InfiniteScrollReplies";
+import InfiniteScrollReplies from "@/components/replies/InfiniteScrollReplies";
 
 const REPLIES_PER_PAGE = parseInt(process.env.REPLIES_PER_PAGE ?? "10", 10);
 

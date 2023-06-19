@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
 import prisma from "@/lib/prisma";
 import paginate from "@/lib/pagination";
-import PageButtons from "@/components/PageButtons";
+import PageButtons from "@/components/replies/PageButtons";
 import serializeReply from "@/lib/serialize-reply";
-import Reply from "@/components/reply/Reply";
+import Reply from "@/components/replies/Reply";
 
 const REPLIES_PER_PAGE = parseInt(process.env.REPLIES_PER_PAGE ?? "10", 10);
 

@@ -7,7 +7,7 @@ import UserInfo from "@/components/UserInfo";
 import "@/components/markdown.css";
 import UpdateButton from "@/components/UpdateButton";
 import serializeReply from "@/lib/serialize-reply";
-import Reply from "@/components/reply/Reply";
+import Reply from "@/components/replies/Reply";
 
 export async function generateMetadata({
   params,

@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { io, type Socket } from "socket.io-client";
 import { useSWRConfig } from "swr";
 import { unstable_serialize } from "swr/infinite";
-import { getKey } from "@/app/[id]/InfiniteScrollReplies";
+import { getKey } from "./replies/InfiniteScrollReplies";
 
 export default function UpdateButton({
   children,

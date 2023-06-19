@@ -6,8 +6,9 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import type { User } from "@prisma/client";
 import type { UserMetioned } from "@/lib/serialize-reply";
 import fetcher from "@/lib/fetcher";
-import PageButtons from "@/components/PageButtons";
-import Reply from "@/components/reply/Reply";
+import Spinner from "@/components/Spinner";
+import PageButtons from "./PageButtons";
+import Reply from "./Reply";
 
 type PageData = {
   data: {
@@ -67,13 +68,7 @@ export default function InfiniteScrollReplies({
         )}
       </InfiniteScroll>
 
-      {isValidating && (
-        <div className="mt-5 text-center">
-          <div className="spinner-border text-secondary" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
-        </div>
-      )}
+      {isValidating && <Spinner className="mt-5" />}
 
       {showPageButtons && !isValidating && pagination.numPages > 1 && (
         <>

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import prisma from "@/lib/prisma";
 import serializeReply from "@/lib/serialize-reply";
-import Reply from "@/components/reply/Reply";
+import Reply from "@/components/replies/Reply";
 
 export default async function Page({ params }: { params: { uid: string } }) {
   const uid = parseInt(params.uid, 10);

@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import prisma from "@/lib/prisma";
 import paginate from "@/lib/pagination";
-import PageButtons from "@/components/PageButtons";
+import PageButtons from "@/components/replies/PageButtons";
 import PotteryShard from "../PotteryShard";
 
 const SHARDS_PER_PAGE = parseInt(process.env.SHARDS_PER_PAGE ?? "10", 10);
