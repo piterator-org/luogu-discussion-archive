@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
 import { selectDiscussion } from "@/lib/discussion";
 import serializeReply from "@/lib/serialize-reply";
+import { NUM_PER_PAGE } from "../../constants";
 
 // eslint-disable-next-line import/prefer-default-export
 export async function GET(
@@ -24,6 +25,7 @@ export async function GET(
         id: { lt: cursor ? parseInt(cursor, 10) : undefined },
       },
       orderBy: { id: "desc" },
+      take: NUM_PER_PAGE,
     })
     .then((d) =>
       Promise.all(
