@@ -33,6 +33,11 @@ export default function UserDiscussions({ uid }: { uid: string }) {
         loader
         style={{ overflow: "inherit" }}
         scrollThreshold="1024px"
+        endMessage={
+          isValidating || (
+            <p className="my-4x text-center text-body-tertiary">没有更多了哦</p>
+          )
+        }
       >
         {data?.map(({ data: discussions }) =>
           discussions.map((discussion) => (
@@ -60,7 +65,6 @@ export default function UserDiscussions({ uid }: { uid: string }) {
             </DiscussionEntry>
           ))
         )}
-        <p className="my-4x text-center text-body-tertiary">没有更多了哦</p>
       </InfiniteScroll>
       {isValidating && <Spinner />}
     </>
