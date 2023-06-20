@@ -2,7 +2,7 @@ import { JSDOM } from "jsdom";
 import hljs from "highlight.js";
 import type { User } from "@prisma/client";
 import prisma from "@/lib/prisma";
-import { getUserIdFromUrl } from "@/lib/luogu";
+import { getUserIdFromUrl, getUserUrl } from "@/lib/luogu";
 import stringifyTime from "@/lib/time";
 
 export type UserMetioned = User & { numReplies?: number };
@@ -46,6 +46,7 @@ export default async function serializeReply(
         users.push(uid);
         element.setAttribute("data-uid", uid.toString());
         element.classList.add("text-decoration-none", "link-teal");
+        element.setAttribute("href", getUserUrl(uid));
       }
     } catch (e) {
       // Invalid URL

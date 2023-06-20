@@ -8,7 +8,7 @@ export const metadata = { title: "关于 - 洛谷帖子保存站" };
 
 export default function Page() {
   return (
-    <div className="pt-5 pb-3 pb-md-3x px-2 px-md-0">
+    <div className="pt-4x pb-3 pb-md-3x px-2 px-md-0">
       <div className="row justify-content-center">
         <div className="col-12 col-md-10 col-lg-8 col-xl-7 col-xxl-6">
           <div className="rounded-4 shadow p-3 p-md-3x">

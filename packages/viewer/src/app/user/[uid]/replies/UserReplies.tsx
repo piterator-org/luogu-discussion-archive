@@ -51,19 +51,28 @@ export default function UserReplies({ uid }: { uid: string }) {
         {data?.map(({ data: replies }) =>
           replies.map((reply) => (
             <div key={reply.id}>
-              <Link href={`/${reply.discussion.id}`}>
-                {reply.discussion.snapshots[0].title}
-              </Link>
               <Reply
                 reply={reply}
                 discussion={{
                   id: reply.discussion.id,
                   authorId: reply.discussion.snapshots[0].authorId,
                 }}
-              />
+              >
+                <div className="mt-2 fw-medium text-body-tertiary">
+                  于帖子{" "}
+                  <Link
+                    className="text-decoration-none"
+                    href={`/${reply.discussion.id}`}
+                  >
+                    {reply.discussion.snapshots[0].title}
+                  </Link>
+                  ：
+                </div>
+              </Reply>
             </div>
           ))
         )}
+        <p className="my-4x text-center text-body-tertiary">没有更多了哦</p>
       </InfiniteScroll>
       {isValidating && <Spinner />}
     </>

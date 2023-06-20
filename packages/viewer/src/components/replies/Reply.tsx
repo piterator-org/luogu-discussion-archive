@@ -12,7 +12,8 @@ import ContextViewer from "./ContextViewer";
 export default function Reply({
   discussion,
   reply,
-}: {
+  children,
+}: React.PropsWithChildren<{
   discussion: { id: number; authorId: number };
   reply: {
     id?: number;
@@ -21,7 +22,7 @@ export default function Reply({
     content: string;
     usersMetioned: UserMetioned[];
   };
-}) {
+}>) {
   const [userId, setUserId] = useState<number | null>(null);
   return (
     <div className={reply.id && userId ? "my-5m" : undefined}>
@@ -56,6 +57,7 @@ export default function Reply({
             </span>
           </div>
           <div className="reply-content pe-4 py-2 position-relative">
+            {children}
             <Content
               discussionAuthor={discussion.authorId}
               content={reply.content}

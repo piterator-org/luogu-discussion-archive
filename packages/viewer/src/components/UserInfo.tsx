@@ -2,11 +2,18 @@ import "./luogu3.css";
 import type { User } from "@prisma/client";
 import { getUserUrl } from "@/lib/luogu";
 
-export default function UserInfo({ user }: { user: User }) {
+export default function UserInfo({
+  user,
+  href,
+}: {
+  user: User;
+  // eslint-disable-next-line react/require-default-props
+  href?: string;
+}) {
   return (
     <>
       <a
-        href={getUserUrl(user.id)}
+        href={href ?? getUserUrl(user.id)}
         className={`lg-fg-${user.color}`}
         style={{ textDecorationLine: "none" }}
         target="_blank"

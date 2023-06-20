@@ -5,6 +5,7 @@ $local-colors: (
   indigo: #5468ff,
   violet: #712cf9,
   teal: #00b5ad,
+  orange: #f2711c,
 );
 
 $theme-colors: map-merge($theme-colors, $local-colors);
@@ -52,12 +53,14 @@ $box-shadow: 0 0.375rem 1rem rgba($black, 0.1);
 @import "bootstrap/scss/bootstrap";
 
 .reply,
-.entry {
+.entry,
+.entry-md {
   padding-top: 0.75rem;
 }
 
 .reply-avatar,
-.entry-avatar {
+.entry-avatar,
+.entry-md-avatar {
   position: absolute;
   left: 0.8rem;
   top: -0.3rem;
@@ -66,14 +69,16 @@ $box-shadow: 0 0.375rem 1rem rgba($black, 0.1);
 }
 
 .reply-meta,
-.reply-context,
-.entry-meta {
+.entry-meta,
+.entry-md-meta,
+.reply-context {
   padding-left: 5.45rem;
 }
 
 .reply-content,
-.reply-context,
-.entry-content {
+.entry-content,
+.entry-md-content,
+.reply-context {
   padding-left: map-get($spacers, 4);
 }
 
@@ -82,22 +87,27 @@ $box-shadow: 0 0.375rem 1rem rgba($black, 0.1);
 }
 
 @include media-breakpoint-up(md) {
-  .reply {
+  .reply,
+  .entry-md {
     padding-top: 0;
   }
 
-  .reply-avatar {
+  .reply-avatar,
+  .entry-md-avatar {
     left: 0;
     top: 0.5rem;
   }
 
   .reply-card,
+  .entry-md-card,
   .reply-context {
     margin-left: 3rem;
   }
 
   .reply-meta,
   .reply-content,
+  .entry-md-meta,
+  .entry-md-content,
   .reply-context {
     padding-left: map-get($spacers, 4x);
   }
@@ -150,4 +160,58 @@ $box-shadow: 0 0.375rem 1rem rgba($black, 0.1);
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.timeline {
+  position: relative;
+  margin-left: 2.2rem;
+  margin-top: 1.6rem;
+  margin-bottom: 2rem;
+}
+
+.timeline::before {
+  content: "";
+  width: 0.15rem;
+  height: calc(100% + 2rem);
+  background-color: #eeedee;
+  box-sizing: border-box;
+  position: absolute;
+  top: -1rem;
+  left: -1.6rem;
+}
+
+.timeline-node {
+  position: relative;
+}
+
+.timeline-connect::before {
+  content: "";
+  border: 0.15rem solid #eeedee;
+  border-radius: 100%;
+  width: 0.6rem;
+  height: 0.6rem;
+  background-color: #fff;
+  box-sizing: border-box;
+  position: absolute;
+  top: 1rem;
+  left: -1.825rem;
+}
+
+.timeline-connect::after {
+  content: "";
+  width: 1.32rem;
+  height: 0.15rem;
+  background-color: #eeedee;
+  box-sizing: border-box;
+  position: absolute;
+  top: 1.225rem;
+  left: -1.325rem;
+}
+
+summary {
+  list-style: none;
+}
+
+details[open] summary .open-hide {
+  display: none;
 }

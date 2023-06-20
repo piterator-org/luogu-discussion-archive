@@ -3,8 +3,10 @@ export const getDiscussionUrl = (discussion: number, page?: number) =>
     page !== undefined ? `?page=${page}` : ""
   }`;
 
-export const getUserUrl = (user: number) =>
-  `https://www.luogu.com.cn/user/${user}`;
+export const getUserUrl = (user: number) => `/user/${user}`;
+
+export const getUserRealUrl = (user: number) =>
+  `https://cdn.luogu.com.cn/user/${user}`;
 
 export const getUserAvatarUrl = (user: number) =>
   `https://cdn.luogu.com.cn/upload/usericon/${user}.png`;
