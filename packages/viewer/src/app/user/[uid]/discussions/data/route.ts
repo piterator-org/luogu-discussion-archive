@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
-import { selectDiscussion } from "@/lib/discussion";
+import { selectDiscussionWithContent } from "@/lib/discussion";
 import { NUM_PER_PAGE } from "../../constants";
 
 // eslint-disable-next-line import/prefer-default-export
@@ -11,7 +11,7 @@ export async function GET(
   const uid = parseInt(params.uid, 10);
   const cursor = request.nextUrl.searchParams.get("cursor");
   const discussions = await prisma.discussion.findMany({
-    select: selectDiscussion,
+    select: selectDiscussionWithContent,
     where: {
       snapshots: { some: { authorId: uid } },
       id: { lt: cursor ? parseInt(cursor, 10) : undefined },

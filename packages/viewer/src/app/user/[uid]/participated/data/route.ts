@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
-import { selectDiscussion } from "@/lib/discussion";
+import { selectDiscussionWithContent } from "@/lib/discussion";
 import serializeReply from "@/lib/serialize-reply";
 import { NUM_PER_PAGE } from "../../constants";
 
@@ -14,7 +14,7 @@ export async function GET(
   const discussions = await prisma.discussion
     .findMany({
       select: {
-        ...selectDiscussion,
+        ...selectDiscussionWithContent,
         replies: { where: { authorId: uid }, orderBy: { id: "asc" } },
       },
       where: {

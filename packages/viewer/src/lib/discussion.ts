@@ -19,3 +19,15 @@ export const selectDiscussion = {
     take: 1,
   },
 };
+
+export type DiscussionWithContent = Prisma.DiscussionGetPayload<{
+  select: typeof selectDiscussion;
+}>;
+
+export const selectDiscussionWithContent = {
+  ...selectDiscussion,
+  snapshots: {
+    ...selectDiscussion.snapshots,
+    select: { ...selectDiscussion.snapshots.select, content: true },
+  },
+};

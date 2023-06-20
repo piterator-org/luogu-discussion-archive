@@ -2,14 +2,14 @@
 
 import useSWRInfinite from "swr/infinite";
 import InfiniteScroll from "react-infinite-scroll-component";
-import type { Discussion } from "@/lib/discussion";
+import type { DiscussionWithContent } from "@/lib/discussion";
 import stringifyTime from "@/lib/time";
 import fetcher from "@/lib/fetcher";
 import Spinner from "@/components/Spinner";
 import DiscussionEntry from "@/components/DiscussionEntry";
 
 interface PageData {
-  data: Discussion[];
+  data: DiscussionWithContent[];
   nextCursor: number;
 }
 

@@ -4,6 +4,7 @@ import Link from "next/link";
 import useSWRInfinite from "swr/infinite";
 import InfiniteScroll from "react-infinite-scroll-component";
 import type { User } from "@prisma/client";
+import type { DiscussionWithContent } from "@/lib/discussion";
 import type { UserMetioned } from "@/lib/serialize-reply";
 import UserAvatar from "@/components/UserAvatar";
 import UserInfo from "@/components/UserInfo";
@@ -14,16 +15,7 @@ import Spinner from "@/components/Spinner";
 import { NUM_MAX_REPLIES_SHOWED_DEFAULT } from "../constants";
 
 interface PageData {
-  data: {
-    id: number;
-    time: Date;
-    snapshots: {
-      time: Date;
-      title: string;
-      author: User;
-      forum: string;
-    }[];
-    replyCount: number;
+  data: (DiscussionWithContent & {
     replies: {
       content: string;
       time: string;
@@ -32,7 +24,7 @@ interface PageData {
       discussionId: number;
       authorId: number;
     }[];
-  }[];
+  })[];
   nextCursor: number;
 }
 
