@@ -21,8 +21,8 @@ hljs.configure({ languages: ["cpp"] });
 
 function renderHljs(body: HTMLElement) {
   body
-    .querySelectorAll("code")
-    .forEach((element) => hljs.highlightElement(element));
+    .querySelectorAll("pre > code")
+    .forEach((element) => hljs.highlightElement(element as HTMLElement));
 }
 
 export default async function serializeReply(
