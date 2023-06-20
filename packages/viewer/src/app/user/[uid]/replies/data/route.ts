@@ -38,10 +38,7 @@ export async function GET(
     .then((r) =>
       r.map(async (reply) => ({
         ...reply,
-        ...(await serializeReply(
-          reply.discussion.snapshots[0].authorId,
-          reply
-        )),
+        ...(await serializeReply(reply.discussion.id, reply)),
       }))
     )
     .then((r) => Promise.all(r));
