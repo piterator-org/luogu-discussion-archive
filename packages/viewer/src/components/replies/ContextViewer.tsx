@@ -42,10 +42,10 @@ export default function ContextViewer({
           {/* eslint-disable-next-line no-nested-ternary */}
           {isLoading ? (
             <div
-              className="text-center text-body-secondary"
-              style={{ height: "5.375em", paddingTop: "2.1875em" }}
+              className="text-body-secondary mb-2 d-flex"
+              style={{ minHeight: "5.375em", alignItems: "center" }}
             >
-              加载中
+              <div>加载中</div>
             </div>
           ) : Object.keys(data ?? {}).length ? (
             <div>
@@ -83,10 +83,13 @@ export default function ContextViewer({
             </div>
           ) : (
             <div
-              className="text-center text-body-secondary"
-              style={{ height: "5.375em", paddingTop: "2.1875em" }}
+              className="text-body-secondary mb-2 d-flex"
+              style={{ minHeight: "5.375em", alignItems: "center" }}
             >
-              空空如也
+              <div>
+                空空如也，真好奇 <UserInfo user={userMetioned} />{" "}
+                到底说过些什么呢？
+              </div>
             </div>
           )}
         </div>
