@@ -1,14 +1,23 @@
-import prisma from "@/lib/prisma";
+"use client";
 
-export default async function UserStatistics({ uid }: { uid: number }) {
+import useSWR from "swr";
+import fetcher from "@/lib/fetcher";
+
+function Placeholder() {
+  return <span className="placeholder" style={{ width: "1.5em" }} />;
+}
+
+export default function UserStatistics({ uid }: { uid: number }) {
+  const { data, isLoading } = useSWR<{ discussions: number; replies: number }>(
+    `/user/${uid}/statistics`,
+    fetcher
+  );
   return (
     <>
       <span className="fw-medium">发帖</span>{" "}
-      {await prisma.discussion.count({
-        where: { snapshots: { some: { authorId: uid } } },
-      })}{" "}
-      条<span className="fw-medium ms-2x">回帖</span>{" "}
-      {await prisma.reply.count({ where: { authorId: uid } })} 层
+      {isLoading ? <Placeholder /> : data?.discussions} 条
+      <span className="fw-medium ms-2x">回帖</span>{" "}
+      {isLoading ? <Placeholder /> : data?.replies} 层
     </>
   );
 }

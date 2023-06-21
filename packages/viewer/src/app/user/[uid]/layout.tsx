@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import prisma from "@/lib/prisma";
@@ -38,15 +37,7 @@ export default async function Layout({
             <UserInfo user={user} href={getUserRealUrl(user.id)} />
           </div>
           <div className="mb-3 text-secondary">
-            <Suspense
-              fallback={
-                <p aria-hidden="true">
-                  <span className="placeholder col-6" />
-                </p>
-              }
-            >
-              <UserStatistics uid={user.id} />
-            </Suspense>
+            <UserStatistics uid={user.id} />
           </div>
           <div>
             <a
