@@ -12,7 +12,7 @@ export default function UserInfo({
   href?: string;
 }) {
   return (
-    <>
+    <span className="text-nowrap">
       {href === undefined ? (
         <Link
           href={getUserUrl(user.id)}
@@ -53,6 +53,6 @@ export default function UserInfo({
           {user.badge}
         </span>
       )}
-    </>
+    </span>
   );
 }
