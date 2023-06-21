@@ -1,10 +1,11 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-
-export const metadata = { title: "404 - 洛谷帖子保存站" };
+import { useParams, usePathname } from "next/navigation";
+import UpdateButton from "@/components/UpdateButton";
 
 export default function Page() {
+  const pathname = usePathname();
+  const params = useParams();
   return (
     <div className="my-screen-middle">
       <div className="mx-auto" style={{ width: "max-content" }}>
@@ -40,8 +41,13 @@ export default function Page() {
           style={{ maxWidth: "calc(16em + .6vw)" }}
         >
           <span className="text-body-secondary">lglg.top</span>
-          <span className="fw-light text-body-tertiary">{usePathname()}</span>
+          <span className="fw-light text-body-tertiary">{pathname}</span>
         </div>
+        {Number.isNaN(parseInt(pathname.slice(1), 10)) || (
+          <div className="mt-2">
+            <UpdateButton target={params.id}>保存帖子</UpdateButton>
+          </div>
+        )}
       </div>
     </div>
   );
