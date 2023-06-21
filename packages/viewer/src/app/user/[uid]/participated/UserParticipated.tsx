@@ -14,7 +14,11 @@ import Spinner from "@/components/Spinner";
 import { NUM_MAX_REPLIES_SHOWED_DEFAULT } from "../constants";
 
 interface PageData {
-  data: (DiscussionWithContent & { time: string } & {
+  data: (DiscussionWithContent & {
+    content: string;
+    time: string;
+    usersMetioned: UserMetioned[];
+  } & {
     replies: {
       content: string;
       time: string;
@@ -55,7 +59,7 @@ export default function UserParticipated({
         scrollThreshold="1024px"
         endMessage={
           isValidating || (
-            <p className="my-4x text-center text-body-tertiary">没有更多了哦</p>
+            <p className="mt-4x text-center text-body-tertiary">没有更多了哦</p>
           )
         }
       >
@@ -132,8 +136,8 @@ export default function UserParticipated({
                       </summary>
                       <Content
                         discussionAuthor={discussion.snapshots[0].author.id}
-                        content={discussion.snapshots[0].content}
-                        usersMetioned={[]}
+                        content={discussion.content}
+                        usersMetioned={discussion.usersMetioned}
                       />
                     </details>
                   ) : undefined}

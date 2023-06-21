@@ -34,7 +34,7 @@ export default function UserDiscussions({ uid }: { uid: string }) {
         scrollThreshold="1024px"
         endMessage={
           isValidating || (
-            <p className="my-4x text-center text-body-tertiary">没有更多了哦</p>
+            <p className="mt-4x text-center text-body-tertiary">没有更多了哦</p>
           )
         }
       >
