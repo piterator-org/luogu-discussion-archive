@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Discussion } from "@/lib/discussion";
+import { ReactNode } from "react";
 import UserAvatar from "./UserAvatar";
 import UserInfo from "./UserInfo";
 
@@ -8,6 +9,7 @@ export default function DiscussionEntry({
   decoratorShadow,
   decoratorBreakpoint,
   ellipsis,
+  metaBottom,
   children,
 }: React.PropsWithChildren<{
   discussion: Discussion;
@@ -15,6 +17,7 @@ export default function DiscussionEntry({
   decoratorShadow?: string;
   decoratorBreakpoint?: string;
   ellipsis?: boolean;
+  metaBottom: ReactNode;
 }>) {
   return (
     <div>
@@ -58,11 +61,12 @@ export default function DiscussionEntry({
             >
               {discussion.snapshots[0].title}
             </Link>
+            {children}
             <div
               className={`text-body-tertiary${ellipsis ? "" : " mt-1"}`}
               style={{ fontSize: ".8rem" }}
             >
-              {children}
+              {metaBottom}
             </div>
           </div>
         </div>
