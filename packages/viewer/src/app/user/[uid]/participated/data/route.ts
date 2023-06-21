@@ -31,6 +31,10 @@ export async function GET(
       Promise.all(
         d.map(async (discussion) => ({
           ...discussion,
+          ...(await serializeReply(discussion.id, {
+            content: discussion.snapshots[0].content,
+            time: discussion.time,
+          })),
           replies: await Promise.all(
             discussion.replies.map(async (reply) => ({
               ...reply,

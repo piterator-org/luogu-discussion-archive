@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
 import { selectDiscussionWithContent } from "@/lib/discussion";
+import serializeReply from "@/lib/serialize-reply";
 import { NUM_PER_PAGE } from "../../constants";
 
 // eslint-disable-next-line import/prefer-default-export
@@ -20,7 +21,15 @@ export async function GET(
     take: NUM_PER_PAGE,
   });
   return NextResponse.json({
-    data: discussions,
+    data: await Promise.all(
+      discussions.map(async (discussion) => ({
+        ...discussion,
+        ...(await serializeReply(discussion.id, {
+          content: discussion.snapshots[0].content,
+          time: discussion.time,
+        })),
+      }))
+    ),
     nextCursor: discussions.length
       ? discussions[discussions.length - 1].id
       : null,
