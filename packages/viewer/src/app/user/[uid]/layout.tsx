@@ -33,7 +33,7 @@ export default async function Layout({
             />
           </a>
           <div className="mb-3" style={{ fontSize: "1.1em" }}>
-            <UserInfo user={user} href={getUserAvatarUrl(user.id)} />
+            <UserInfo user={user} href={getUserRealUrl(user.id)} />
           </div>
           <div className="mb-3 text-secondary">
             <span className="fw-medium">发帖</span>{" "}
@@ -53,7 +53,7 @@ export default async function Layout({
           <div>
             <a
               className="btn btn-outline-primary shadow-sm"
-              href={getUserAvatarUrl(user.id)}
+              href={getUserRealUrl(user.id)}
               target="_blank"
               rel="noopener noreferrer"
             >

@@ -1,6 +1,7 @@
 import "./luogu3.css";
 import type { User } from "@prisma/client";
 import { getUserUrl } from "@/lib/luogu";
+import Link from "next/link";
 
 export default function UserInfo({
   user,
@@ -12,15 +13,25 @@ export default function UserInfo({
 }) {
   return (
     <>
-      <a
-        href={href ?? getUserUrl(user.id)}
-        className={`lg-fg-${user.color}`}
-        style={{ textDecorationLine: "none" }}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {user.username}
-      </a>
+      {href === undefined ? (
+        <Link
+          href={getUserUrl(user.id)}
+          className={`lg-fg-${user.color}`}
+          style={{ textDecorationLine: "none" }}
+        >
+          {user.username}
+        </Link>
+      ) : (
+        <a
+          href={href}
+          className={`lg-fg-${user.color}`}
+          style={{ textDecorationLine: "none" }}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {user.username}
+        </a>
+      )}
       {user.checkmark && (
         <svg
           className="ms-1 position-relative"

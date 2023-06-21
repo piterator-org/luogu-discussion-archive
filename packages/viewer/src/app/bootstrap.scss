@@ -218,5 +218,9 @@ details summary::-webkit-details-marker {
 }
 
 details[open] summary .open-hide {
-  display: none;
+  display: none !important;
+}
+
+details[open] summary .open-show-inline {
+  display: inline !important;
 }

@@ -92,6 +92,52 @@ export default function UserParticipated({
                   >
                     {discussion.snapshots[0].title}
                   </Link>
+                  {discussion.snapshots[0].author.id === user.id ? (
+                    <details className="my-2">
+                      <summary>
+                        <span
+                          className="link-secondary"
+                          style={{ fontSize: ".9rem" }}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="1em"
+                            height="1em"
+                            fill="currentColor"
+                            className="bi bi-journal-bookmark me-1"
+                            viewBox="0 0 16 16"
+                            style={{ position: "relative", top: "-.1125em" }}
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M6 8V1h1v6.117L8.743 6.07a.5.5 0 0 1 .514 0L11 7.117V1h1v7a.5.5 0 0 1-.757.429L9 7.083 6.757 8.43A.5.5 0 0 1 6 8z"
+                            />
+                            <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z" />
+                            <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z" />{" "}
+                          </svg>
+                          <span className="open-hide">查看</span>
+                          <span className="d-none open-show-inline">隐藏</span>
+                          正文
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="1em"
+                            height="1em"
+                            fill="currentColor"
+                            className="bi bi-three-dots ms-1 open-hide"
+                            viewBox="0 0 16 16"
+                            style={{ position: "relative", top: "-.1125em" }}
+                          >
+                            <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
+                          </svg>
+                        </span>
+                      </summary>
+                      <Content
+                        discussionAuthor={discussion.snapshots[0].author.id}
+                        content={discussion.snapshots[0].content}
+                        usersMetioned={[]}
+                      />
+                    </details>
+                  ) : undefined}
                   {discussion.replies.length ? (
                     <details
                       className="my-2"

@@ -21,7 +21,7 @@ export const selectDiscussion = {
 };
 
 export type DiscussionWithContent = Prisma.DiscussionGetPayload<{
-  select: typeof selectDiscussion;
+  select: typeof selectDiscussionWithContent;
 }>;
 
 export const selectDiscussionWithContent = {
