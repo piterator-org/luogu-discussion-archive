@@ -1,9 +1,11 @@
-import prisma from "@/lib/prisma";
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import Image from "next/image";
+import prisma from "@/lib/prisma";
 import { getUserAvatarUrl, getUserRealUrl } from "@/lib/luogu";
 import UserInfo from "@/components/UserInfo";
 import TabNavigation from "./TabNavigation";
+import UserStatistics from "./UserStatistics";
 
 export const metadata = { title: "用户黑历史 - 洛谷帖子保存站" };
 
@@ -36,19 +38,15 @@ export default async function Layout({
             <UserInfo user={user} href={getUserRealUrl(user.id)} />
           </div>
           <div className="mb-3 text-secondary">
-            <span className="fw-medium">发帖</span>{" "}
-            {await prisma.discussion.count({
-              where: {
-                snapshots: { some: { authorId: user.id } },
-              },
-            })}{" "}
-            条<span className="fw-medium ms-2x">回帖</span>{" "}
-            {await prisma.reply.count({
-              where: {
-                authorId: user.id,
-              },
-            })}{" "}
-            层
+            <Suspense
+              fallback={
+                <p aria-hidden="true">
+                  <span className="placeholder col-6" />
+                </p>
+              }
+            >
+              <UserStatistics uid={user.id} />
+            </Suspense>
           </div>
           <div>
             <a
