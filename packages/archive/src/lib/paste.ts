@@ -63,6 +63,23 @@ export default async function savePaste(
   const json = (await response.json()) as
     | { code: 403 | 404; currentData: LuoguError }
     | { code: 200; currentData: { paste: Paste } };
+  const snapshot = await prisma.pasteSnapshot.findFirst({
+    where: { pasteId: id },
+    orderBy: { time: "desc" },
+  });
+  if (json.code === 403 && snapshot) {
+    await (snapshot.public
+      ? prisma.pasteSnapshot.create({
+          data: { pasteId: id, public: false, data: null },
+        })
+      : prisma.pasteSnapshot.update({
+          where: {
+            pasteId_time: { pasteId: snapshot.pasteId, time: snapshot.time },
+          },
+          data: { until: new Date() },
+        }));
+    return;
+  }
   if (json.code !== 200) throw Error(json.currentData.errorMessage);
   const { paste } = json.currentData;
   const user = {
@@ -71,10 +88,6 @@ export default async function savePaste(
     checkmark: getCheckmark(paste.user.ccfLevel),
     badge: paste.user.badge,
   };
-  const snapshot = await prisma.pasteSnapshot.findFirst({
-    where: { pasteId: paste.id },
-    orderBy: { time: "desc" },
-  });
   await prisma.$transaction([
     prisma.user.upsert({
       where: { id: paste.user.uid },
@@ -98,7 +111,7 @@ export default async function savePaste(
           data: { until: new Date() },
         })
       : prisma.pasteSnapshot.create({
-          data: { pasteId: paste.id, data: paste.data },
+          data: { pasteId: paste.id, public: paste.public, data: paste.data },
         }),
   ]);
 }

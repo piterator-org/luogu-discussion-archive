@@ -12,7 +12,8 @@ CREATE TABLE "PasteSnapshot" (
     "pasteId" CHAR(8) NOT NULL,
     "time" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "until" TIMESTAMP(3) NOT NULL,
-    "data" TEXT NOT NULL,
+    "public" BOOLEAN NOT NULL,
+    "data" TEXT,
 
     CONSTRAINT "PasteSnapshot_pkey" PRIMARY KEY ("pasteId","time")
 );

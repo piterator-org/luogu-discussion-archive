@@ -58,7 +58,8 @@ model PasteSnapshot {
   pasteId String   @db.Char(8)
   time    DateTime @default(now())
   until   DateTime @updatedAt
-  data    String
+  public  Boolean
+  data    String?
 
   @@id([pasteId, time])
 }
