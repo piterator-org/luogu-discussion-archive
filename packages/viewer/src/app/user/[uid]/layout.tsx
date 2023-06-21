@@ -3,6 +3,7 @@ import Image from "next/image";
 import prisma from "@/lib/prisma";
 import { getUserAvatarUrl, getUserRealUrl } from "@/lib/luogu";
 import UserInfo from "@/components/UserInfo";
+import "@/components/markdown.css";
 import TabNavigation from "./TabNavigation";
 import UserStatistics from "./UserStatistics";
 
