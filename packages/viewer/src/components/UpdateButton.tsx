@@ -88,7 +88,7 @@ export default function UpdateButton({
           aria-atomic="true"
           ref={toastRef}
         >
-          <div className="toast-header text-secondary">
+          <div className="toast-header text-secondary border-0">
             <span className="me-auto fw-medium">
               被骇客<span style={{ color: "#7e42ec" }}>银</span>
               <span style={{ color: "#3367ea" }}>狼</span>阻止的越权访问
