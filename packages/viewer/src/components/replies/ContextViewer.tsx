@@ -42,10 +42,10 @@ export default function ContextViewer({
           {/* eslint-disable-next-line no-nested-ternary */}
           {isLoading ? (
             <div
-              className="text-center text-body-secondary"
-              style={{ height: "5.375em", paddingTop: "2.1875em" }}
+              className="text-body-secondary mb-2 d-flex"
+              style={{ minHeight: "5.375em", alignItems: "center" }}
             >
-              加载中
+              <div>加载中</div>
             </div>
           ) : Object.keys(data ?? {}).length ? (
             <div>
