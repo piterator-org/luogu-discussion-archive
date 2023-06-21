@@ -2,6 +2,7 @@ import { once } from "node:events";
 import type { FastifyPluginCallback } from "fastify";
 import { emitters, startTask } from "../lib/discussion";
 import saveJudgements from "../lib/judgement";
+import savePaste from "../lib/paste";
 
 export default (function routes(fastify, options, done) {
   fastify.get("/", () => ({ tasks: Object.keys(emitters) }));
@@ -14,6 +15,22 @@ export default (function routes(fastify, options, done) {
       .then(() => reply.code(201).send({}))
       .catch((err: Error) => reply.code(500).send({ error: err.message }));
   });
+
+  fastify.get<{ Params: { id: string } }>(
+    "/paste/:id([a-z\\d+]{8})",
+    (request, reply) => {
+      savePaste(
+        fastify.log.child({
+          reqId: request.id as string,
+          target: request.params.id,
+        }),
+        fastify.prisma,
+        request.params.id
+      )
+        .then(() => reply.code(201).send({}))
+        .catch((err: Error) => reply.code(500).send({ error: err.message }));
+    }
+  );
 
   fastify.get<{ Params: { id: string } }>("/:id(\\d+)", (request, reply) => {
     const id = parseInt(request.params.id, 10);
