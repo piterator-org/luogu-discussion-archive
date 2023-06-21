@@ -109,7 +109,7 @@ export default function UserParticipated({
                             fill="currentColor"
                             className="bi bi-journal-bookmark me-1"
                             viewBox="0 0 16 16"
-                            style={{ position: "relative", top: "-.1125em" }}
+                            style={{ position: "relative", top: "-.11em" }}
                           >
                             <path
                               fillRule="evenodd"

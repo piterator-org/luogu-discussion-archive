@@ -10,7 +10,8 @@ import { getKey } from "./replies/InfiniteScrollReplies";
 export default function UpdateButton({
   children,
   target,
-}: React.PropsWithChildren<{ target: string }>) {
+  className,
+}: React.PropsWithChildren<{ target: string; className?: string }>) {
   const id = parseInt(target, 10);
   const router = useRouter();
   const [disabled, setDisabled] = useState(false);
@@ -62,7 +63,7 @@ export default function UpdateButton({
     <>
       <button
         type="button"
-        className="btn btn-outline-primary shadow-sm ms-2"
+        className={`btn btn-outline-primary shadow-sm ${className ?? ""}`}
         onClick={() => {
           setDisabled(true);
           if (Number.isNaN(id) || !socketRef.current)

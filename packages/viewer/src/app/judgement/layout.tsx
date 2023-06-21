@@ -28,7 +28,9 @@ export default function Page({ children }: React.PropsWithChildren) {
             >
               查看原网页
             </a>
-            <UpdateButton target="judgement">更新陶片放逐</UpdateButton>
+            <UpdateButton className="ms-2" target="judgement">
+              更新陶片放逐
+            </UpdateButton>
           </div>
         </div>
       </div>
