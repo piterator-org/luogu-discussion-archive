@@ -62,7 +62,7 @@ export default function NavBar() {
               type="submit"
               disabled
             >
-              搜索
+              即将上线
             </button>
           </form>
         </div>
