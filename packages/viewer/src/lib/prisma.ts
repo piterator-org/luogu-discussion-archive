@@ -10,8 +10,7 @@ const globalForPrisma = global as unknown as { prisma: PrismaClient };
 
 const prisma = globalForPrisma.prisma ?? new PrismaClient();
 
-// eslint-disable-next-line @typescript-eslint/no-floating-promises
-prisma.$connect();
+prisma.$connect().catch(() => {});
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
