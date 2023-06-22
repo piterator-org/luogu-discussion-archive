@@ -66,7 +66,7 @@ export default function UpdateButton({
         className={`btn btn-outline-primary shadow-sm ${className ?? ""}`}
         onClick={() => {
           setDisabled(true);
-          if (Number.isNaN(id) || !socketRef.current)
+          if (Number.isNaN(id) || !socketRef.current?.connected)
             fetch(`${process.env.NEXT_PUBLIC_ARCHIVE_HOST ?? ""}/${target}`)
               .then(() => router.refresh())
               .finally(() => setDisabled(false));
