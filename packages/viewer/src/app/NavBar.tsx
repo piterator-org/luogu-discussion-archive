@@ -54,11 +54,13 @@ export default function NavBar() {
             <input
               className="form-control border-0 shadow-sm me-2"
               type="search"
+              disabled
               placeholder="帖子关键词、发布者"
             />
             <button
               className="btn btn-outline-success shadow-sm text-nowrap"
               type="submit"
+              disabled
             >
               搜索
             </button>
