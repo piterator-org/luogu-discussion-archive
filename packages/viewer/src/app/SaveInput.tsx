@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { getDiscussionId } from "@/lib/luogu";
 
 // TODO: 改为使用 Socket.IO 连接
 export default function SaveInput() {
@@ -17,7 +18,7 @@ export default function SaveInput() {
       onSubmit={(event) => {
         event.preventDefault();
         setDisabled(true);
-        const id = url.split("?", 1)[0].split("/").reverse()[0];
+        const id = getDiscussionId(url);
         fetch(`${process.env.NEXT_PUBLIC_ARCHIVE_HOST ?? ""}/${id}`)
           .then(async (res) => {
             if (res.ok) router.push(`/${id}`);
