@@ -16,13 +16,13 @@
   "dependencies": {
     "@fastify/cors": "^8.3.0",
     "@logtail/pino": "^0.4.0",
-    "@prisma/client": "^4.16.0",
+    "@prisma/client": "^4.16.1",
     "@socket.io/admin-ui": "^0.5.1",
     "fastify": "^4.18.0",
     "fastify-plugin": "^4.5.0",
     "jsdom": "^22.1.0",
     "pino": "^8.14.1",
-    "socket.io": "^4.6.2"
+    "socket.io": "^4.7.0"
   },
   "devDependencies": {
     "@types/jsdom": "^21.1.1",
