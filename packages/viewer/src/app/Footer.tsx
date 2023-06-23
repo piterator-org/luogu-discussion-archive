@@ -27,7 +27,7 @@ export default function Footer() {
               <li className="mb-2">
                 {VERSION} @{" "}
                 {new Date(LASTCOMMITDATETIME).toLocaleString("zh", {
-                  hour12: false,
+                  timeZone: "Asia/Shanghai",
                 })}
               </li>
             </ul>
