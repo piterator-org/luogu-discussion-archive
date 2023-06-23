@@ -48,9 +48,11 @@ jobs:
         with:
           name: luogu-discussion-archive
           path: packages/archive/dist/
+          retention-days: 1
 
       - name: Upload luogu-discussion-viewer
         uses: actions/upload-artifact@v3
         with:
           name: luogu-discussion-viewer
           path: packages/viewer/.next/
+          retention-days: 1
