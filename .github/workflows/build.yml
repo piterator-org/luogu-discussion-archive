@@ -12,9 +12,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Create .env.local
-        run: echo $ENV_LOCAL > packages/viewer/.env.local
+      - name: Create configuration files
+        run: |
+          echo $NPMRC > .npmrc
+          echo $ENV_LOCAL > packages/viewer/.env.local
         env:
+          NPMRC: |
+            node-linker=hoisted
           ENV_LOCAL: ${{ vars.ENV_LOCAL }}
 
       - uses: pnpm/action-setup@v2
