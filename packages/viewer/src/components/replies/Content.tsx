@@ -1,6 +1,7 @@
 "use client";
 
 import "katex/dist/katex.css";
+import "highlight.js/styles/tokyo-night-dark.css";
 import { useEffect, useRef } from "react";
 import renderMathInElement from "katex/contrib/auto-render";
 import { computePosition, shift } from "@floating-ui/dom";

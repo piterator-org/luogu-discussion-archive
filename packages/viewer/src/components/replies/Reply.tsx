@@ -1,6 +1,5 @@
 "use client";
 
-import "highlight.js/styles/tokyo-night-dark.css";
 import { useState } from "react";
 import type { User } from "@prisma/client";
 import type { UserMetioned } from "@/lib/serialize-reply";
