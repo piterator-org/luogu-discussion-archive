@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect } from "react";
 
 export default function NavBar() {
@@ -12,7 +13,17 @@ export default function NavBar() {
     <nav className="navbar navbar-expand-md sticky-top bg-body shadow-sm">
       <div className="container-lg d-flex my-1 px-3x px-md-container-default">
         <Link className="navbar-brand" href="/">
-          LgLg.top
+          <div
+            className="position-relative"
+            style={{ width: "5.5121146772em", height: "1.5em" }}
+          >
+            <Image
+              src="/piterator-x-exlg.svg"
+              alt="Logo"
+              fill
+              className="d-inline-block align-text-top"
+            />
+          </div>
         </Link>
         <button
           className="navbar-toggler border-0 shadow-sm"
