@@ -4,6 +4,7 @@ import cors from "@fastify/cors";
 import prismaPlugin from "./plugins/prisma";
 import routes from "./plugins/routes";
 import io from "./plugins/socket.io";
+import cron from "./plugins/cron";
 
 const fastify = Fastify({
   logger: process.env.SOURCE_TOKEN
@@ -13,7 +14,7 @@ const fastify = Fastify({
           options: { sourceToken: process.env.SOURCE_TOKEN },
         })
       )
-    : true,
+    : { level: "debug" },
 });
 
 /* eslint-disable @typescript-eslint/no-floating-promises */
@@ -21,6 +22,7 @@ fastify.register(prismaPlugin);
 fastify.register(cors);
 fastify.register(io);
 fastify.register(routes);
+fastify.register(cron);
 /* eslint-enable @typescript-eslint/no-floating-promises */
 
 fastify

@@ -1,5 +1,6 @@
 import type { BaseLogger } from "pino";
 import type { PrismaClient } from "@prisma/client";
+import { getReponse } from "./parser";
 
 type Color = "Gray" | "Blue" | "Green" | "Orange" | "Red" | "Purple";
 
@@ -53,13 +54,10 @@ export default async function savePaste(
   prisma: PrismaClient,
   id: string
 ) {
-  const url = `https://www.luogu.com.cn/paste/${id}?_contentOnly`;
-  const response = await fetch(url);
-  logger.info(
-    { url, status: response.status, statusText: response.statusText },
-    "fetch"
+  const response = await getReponse(
+    logger,
+    `https://www.luogu.com.cn/paste/${id}?_contentOnly`
   );
-  if (!response.ok) throw Error(response.statusText);
   const json = (await response.json()) as
     | { code: 403 | 404; currentData: LuoguError }
     | { code: 200; currentData: { paste: Paste } };
