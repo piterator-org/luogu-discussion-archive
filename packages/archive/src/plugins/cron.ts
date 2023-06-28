@@ -10,10 +10,10 @@ const AUTO_SAVE_INTERVAL = 20000;
 export default fastifyPlugin(
   function cron(fastify, options, done) {
     const save: () => Promise<unknown> = () =>
-      (async () => [
-        ...(await getDiscussionList(fastify.log, 1)),
-        ...(await getDiscussionList(fastify.log, 2)),
-      ])()
+      (async (after) => [
+        ...(await getDiscussionList(fastify.log, 1, after)),
+        ...(await getDiscussionList(fastify.log, 2, after)),
+      ])(Math.floor(new Date().getTime() / 1000) - 86400)
         .then((discussions) => {
           return discussions.reduce(
             (promise: Promise<unknown>, id) =>

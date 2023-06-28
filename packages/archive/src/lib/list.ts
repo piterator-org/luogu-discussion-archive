@@ -25,7 +25,7 @@ interface LegacyDiscussList {
         ReplyTime: number;
         Content: string;
         _instance: "Luogu\\Model\\Discuss\\PostReply";
-      };
+      } | null;
       RepliesCount: number;
       _instance: "Luogu\\Model\\Discuss\\Post";
     }[];
@@ -34,7 +34,8 @@ interface LegacyDiscussList {
 
 export default async function getDiscussionList(
   logger: BaseLogger,
-  page: number
+  page: number,
+  after: number
 ) {
   const response = await getReponse(
     logger,
@@ -43,5 +44,7 @@ export default async function getDiscussionList(
   const {
     data: { result },
   } = (await response.json()) as LegacyDiscussList;
-  return result.filter((post) => post.Top < 5).map((post) => post.PostID);
+  return result
+    .filter((post) => post.SubmitTime >= after)
+    .map((post) => post.PostID);
 }
