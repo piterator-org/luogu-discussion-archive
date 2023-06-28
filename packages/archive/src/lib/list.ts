@@ -1,4 +1,5 @@
 import type { BaseLogger } from "pino";
+import type { PrismaClient } from "@prisma/client";
 import { getReponse } from "./parser";
 
 interface LegacyDiscussList {
@@ -34,6 +35,7 @@ interface LegacyDiscussList {
 
 export default async function getDiscussionList(
   logger: BaseLogger,
+  prisma: PrismaClient,
   page: number,
   after: number
 ) {
@@ -44,7 +46,32 @@ export default async function getDiscussionList(
   const {
     data: { result },
   } = (await response.json()) as LegacyDiscussList;
+  const saved = Object.fromEntries(
+    (
+      await prisma.discussion.findMany({
+        select: {
+          id: true,
+          replies: { select: { time: true }, orderBy: { id: "desc" }, take: 1 },
+        },
+        where: {
+          id: {
+            in: result
+              .filter((post) => post.SubmitTime < after)
+              .map((post) => post.PostID),
+          },
+        },
+      })
+    ).map(({ id, replies }) => [id, replies[0]?.time])
+  );
   return result
-    .filter((post) => post.SubmitTime >= after)
+    .filter(
+      (post) =>
+        post.SubmitTime >= after ||
+        !(post.PostID in saved) ||
+        (post.LatestReply &&
+          (!saved[post.PostID] ||
+            Math.floor(saved[post.PostID].getTime() / 60000) !==
+              Math.floor(post.LatestReply.ReplyTime / 60)))
+    )
     .map((post) => post.PostID);
 }

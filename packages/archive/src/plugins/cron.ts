@@ -11,8 +11,8 @@ export default fastifyPlugin(
   function cron(fastify, options, done) {
     const save: () => Promise<unknown> = () =>
       (async (after) => [
-        ...(await getDiscussionList(fastify.log, 1, after)),
-        ...(await getDiscussionList(fastify.log, 2, after)),
+        ...(await getDiscussionList(fastify.log, fastify.prisma, 1, after)),
+        ...(await getDiscussionList(fastify.log, fastify.prisma, 2, after)),
       ])(Math.floor(new Date().getTime() / 1000) - 86400)
         .then((discussions) => {
           return discussions.reduce(
