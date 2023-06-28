@@ -43,5 +43,5 @@ export default async function getDiscussionList(
   const {
     data: { result },
   } = (await response.json()) as LegacyDiscussList;
-  return result.map((post) => post.PostID);
+  return result.filter((post) => post.Top < 5).map((post) => post.PostID);
 }
