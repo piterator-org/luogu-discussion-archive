@@ -24,7 +24,10 @@ export default function Reply({
 }>) {
   const [userId, setUserId] = useState<number | null>(null);
   return (
-    <div className={reply.id && userId ? "my-5m" : undefined}>
+    <div
+      className={reply.id && userId ? "my-5m" : undefined}
+      id={(reply.id ?? 0).toString()}
+    >
       {reply.id && userId && (
         <ContextViewer
           discussionAuthor={discussion.authorId}
