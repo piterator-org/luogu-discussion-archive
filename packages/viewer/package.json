@@ -9,8 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@floating-ui/dom": "^1.4.2",
-    "@prisma/client": "^4.16.1",
+    "@floating-ui/dom": "^1.4.3",
+    "@prisma/client": "^4.16.2",
     "bootstrap": "^5.3.0",
     "highlight.js": "^11.8.0",
     "jsdom": "^22.1.0",
@@ -39,8 +39,8 @@
     "eslint-plugin-react": "^7.32.2",
     "git-revision-webpack-plugin": "^5.0.0",
     "sass": "^1.63.6",
-    "typescript": "^5.1.5",
-    "webpack": "^5.88.0"
+    "typescript": "^5.1.6",
+    "webpack": "^5.88.1"
   },
   "optionalDependencies": {
     "sharp": "^0.32.1"
