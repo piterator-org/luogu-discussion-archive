@@ -44,7 +44,7 @@ export default async function Page({ params }: { params: { rid: string } }) {
   // return redirect(`/${discussionId}/${pages}#${params.rid}`);
   return (
     <div className="row px-2 px-md-0">
-      <div className="col-md-9 col-12 mt-3 mb-3x mx-auto">
+      <div className="col-xl-9 col-lg-10 col-md-11 col-12 mt-3 mb-3x mx-auto">
         <div className="pb-3 mb-4x position-relative">
           <div className="bg-white rounded-4 shadow">
             <div className="px-4 pt-2 pb-4 position-relative">
@@ -85,7 +85,10 @@ export default async function Page({ params }: { params: { rid: string } }) {
           >
             <div>
               <UserInfo user={reply.author} />
-              <span className="float-end text-body-tertiary d-none d-md-inline">
+              <span
+                className="float-end text-body-tertiary d-none d-md-inline"
+                style={{ marginRight: ".8em" }}
+              >
                 {reply.time}
               </span>
             </div>
