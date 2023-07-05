@@ -204,31 +204,29 @@ export default function UserParticipated({
                                   <span className="d-none d-md-inline">
                                     {reply.time}
                                   </span>
-                                  {reply.id !== undefined ? (
-                                    <Link
-                                      href={`/r/${reply.id}`}
-                                      className="ms-2 link-secondary position-relative"
-                                      style={{ fontSize: ".8em", top: "-.2em" }}
+                                  <Link
+                                    href={`/r/${reply.id}`}
+                                    className="ms-2 link-secondary position-relative"
+                                    style={{ fontSize: ".8em", top: "-.2em" }}
+                                  >
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      width="1em"
+                                      height="1em"
+                                      fill="currentColor"
+                                      className="bi bi-box-arrow-up-right"
+                                      viewBox="0 0 16 16"
                                     >
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="1em"
-                                        height="1em"
-                                        fill="currentColor"
-                                        className="bi bi-box-arrow-up-right"
-                                        viewBox="0 0 16 16"
-                                      >
-                                        <path
-                                          fillRule="evenodd"
-                                          d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"
-                                        />
-                                        <path
-                                          fillRule="evenodd"
-                                          d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"
-                                        />
-                                      </svg>
-                                    </Link>
-                                  ) : undefined}
+                                      <path
+                                        fillRule="evenodd"
+                                        d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"
+                                      />
+                                      <path
+                                        fillRule="evenodd"
+                                        d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"
+                                      />
+                                    </svg>
+                                  </Link>
                                 </span>
                               </div>
                               <div className="px-4 py-2 position-relative">
