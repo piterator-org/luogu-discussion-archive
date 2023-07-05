@@ -1,4 +1,5 @@
 /* eslint-disable react/require-default-props */
+import Link from "next/link";
 import Image from "next/image";
 import { getUserAvatarUrl, getUserUrl } from "@/lib/luogu";
 
@@ -12,12 +13,7 @@ export default function UserAvatar({
   user: { id: number };
 }) {
   return (
-    <a
-      href={getUserUrl(id)}
-      className={className}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
+    <Link href={getUserUrl(id)} className={className}>
       <Image
         src={getUserAvatarUrl(id)}
         className={`rounded-circle shadow${
@@ -27,6 +23,6 @@ export default function UserAvatar({
         height={64}
         alt={id.toString()}
       />
-    </a>
+    </Link>
   );
 }

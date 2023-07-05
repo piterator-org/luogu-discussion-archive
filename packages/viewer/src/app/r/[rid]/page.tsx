@@ -49,7 +49,7 @@ export default async function Page({ params }: { params: { rid: string } }) {
       <div className="col-xl-9 col-lg-10 col-md-11 col-12 mt-3 mb-3x mx-auto">
         <div className="pb-3 mb-4x position-relative">
           <div className="bg-white rounded-4 shadow">
-            <div className="px-md-4x px-4 pt-md-3x pt-2x pb-md-4l pb-4 position-relative">
+            <div className="px-md-4x px-4 pt-md-3x pt-2x pb-md-4x pb-4 position-relative">
               <Content
                 discussionAuthor={reply.discussion.snapshots[0].authorId}
                 content={reply.content}
@@ -67,11 +67,7 @@ export default async function Page({ params }: { params: { rid: string } }) {
             className="position-absolute"
             style={{ bottom: "-1.6em", left: ".8em" }}
           >
-            <a
-              href={getUserUrl(reply.author.id)}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <Link href={getUserUrl(reply.author.id)}>
               <Image
                 src={getUserAvatarUrl(reply.author.id)}
                 className="rounded-circle shadow"
@@ -79,7 +75,7 @@ export default async function Page({ params }: { params: { rid: string } }) {
                 height={72}
                 alt={reply.author.id.toString()}
               />
-            </a>
+            </Link>
           </div>
           <div
             className="ps-6 position-absolute reply-meta-bottom"
