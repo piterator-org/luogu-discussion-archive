@@ -7,6 +7,8 @@ import UserInfo from "@/components/UserInfo";
 import serializeReply from "@/lib/serialize-reply";
 import { getUserAvatarUrl, getUserUrl } from "@/lib/luogu";
 
+export const metadata = { title: "金玉良言 - 洛谷帖子保存站" };
+
 const REPLIES_PER_PAGE = parseInt(process.env.REPLIES_PER_PAGE ?? "10", 10);
 
 export default async function Page({ params }: { params: { rid: string } }) {
