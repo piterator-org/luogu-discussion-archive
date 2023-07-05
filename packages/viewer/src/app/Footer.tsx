@@ -46,7 +46,15 @@ export default function Footer() {
                 </a>
               </li>
               <li className="mb-2">
-                {VERSION} @{" "}
+                <a
+                  className="link-secondary text-decoration-none"
+                  href={`https://github.com/piterator-org/luogu-discussion-archive/commit/${COMMITHASH}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {VERSION}
+                </a>{" "}
+                @{" "}
                 {new Date(LASTCOMMITDATETIME).toLocaleString("zh", {
                   timeZone: "Asia/Shanghai",
                 })}
