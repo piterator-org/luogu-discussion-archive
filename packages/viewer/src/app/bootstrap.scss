@@ -224,3 +224,13 @@ details[open] summary .open-hide {
 details[open] summary .open-show-inline {
   display: inline !important;
 }
+
+.reply-meta-bottom {
+  bottom: -1.5em;
+}
+
+@include media-breakpoint-up(md) {
+  .reply-meta-bottom {
+    bottom: -2.8em;
+  }
+}

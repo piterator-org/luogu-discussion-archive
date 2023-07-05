@@ -45,12 +45,12 @@
 .markdown ul > li::before {
   content: "→";
   position: absolute;
-  left: -1.2em;
+  left: -1.4em;
   color: #dad9da;
   transition: ease-in-out color 0.1s;
 }
 
-.markdown ul > li:hover:before {
+.markdown ul > li:hover::before {
   color: #6c757d;
 }
 
@@ -226,7 +226,13 @@
 }
 
 .markdown code {
-  font-family: "Fira Code", Consolas, monospace;
+  font-family: "Fira Code", Menlo, Monaco, "Courier New", Consolas, monospace;
   tab-size: 4;
   border-radius: 0.9em;
 }
+
+/* .markdown p > img:only-child {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+} */
