@@ -1,11 +1,10 @@
 import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import Content from "@/components/replies/Content";
 import UserInfo from "@/components/UserInfo";
+import UserAvatar from "@/components/UserAvatar";
 import serializeReply from "@/lib/serialize-reply";
-import { getUserAvatarUrl, getUserUrl } from "@/lib/luogu";
 
 export const metadata = { title: "金玉良言 - 洛谷帖子保存站" };
 
@@ -67,15 +66,7 @@ export default async function Page({ params }: { params: { rid: string } }) {
             className="position-absolute"
             style={{ bottom: "-1.6em", left: ".8em" }}
           >
-            <Link href={getUserUrl(reply.author.id)}>
-              <Image
-                src={getUserAvatarUrl(reply.author.id)}
-                className="rounded-circle shadow"
-                width={72}
-                height={72}
-                alt={reply.author.id.toString()}
-              />
-            </Link>
+            <UserAvatar user={reply.author} size={72} />
           </div>
           <div
             className="ps-6 position-absolute reply-meta-bottom"

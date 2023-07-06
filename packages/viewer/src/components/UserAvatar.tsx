@@ -6,10 +6,12 @@ import { getUserAvatarUrl, getUserUrl } from "@/lib/luogu";
 export default function UserAvatar({
   className,
   decoratorShadow,
+  size = 64,
   user: { id },
 }: {
   className?: string;
   decoratorShadow?: string;
+  size?: number;
   user: { id: number };
 }) {
   return (
@@ -19,8 +21,8 @@ export default function UserAvatar({
         className={`rounded-circle shadow${
           decoratorShadow ? `-${decoratorShadow}` : ""
         }`}
-        width={64}
-        height={64}
+        width={size}
+        height={size}
         alt={id.toString()}
       />
     </Link>
