@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@fastify/cors": "^8.3.0",
-    "@logtail/pino": "^0.4.0",
+    "@logtail/pino": "^0.4.2",
     "@prisma/client": "^4.16.2",
     "@socket.io/admin-ui": "^0.5.1",
     "fastify": "^4.19.2",
@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "@types/jsdom": "^21.1.1",
-    "@typescript-eslint/eslint-plugin": "^5.61.0",
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
     "eslint": "^8.44.0",
     "eslint-config-airbnb-typescript": "^17.0.0",
     "typescript": "^5.1.6"
