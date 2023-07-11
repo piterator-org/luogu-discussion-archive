@@ -1,7 +1,6 @@
 import prisma from "@/lib/prisma";
 import { NextResponse, type NextRequest } from "next/server";
 
-// eslint-disable-next-line import/prefer-default-export
 export async function GET(
   request: NextRequest,
   { params }: { params: { uid: string } }

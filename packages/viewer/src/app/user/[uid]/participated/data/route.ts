@@ -4,7 +4,6 @@ import { selectDiscussionWithContent } from "@/lib/discussion";
 import serializeReply from "@/lib/serialize-reply";
 import { NUM_PER_PAGE } from "../../constants";
 
-// eslint-disable-next-line import/prefer-default-export
 export async function GET(
   request: NextRequest,
   { params }: { params: { uid: string } }

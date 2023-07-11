@@ -33,6 +33,10 @@ module.exports = {
       },
     },
     {
+      files: ["route.ts", "route.tsx"],
+      rules: { "import/prefer-default-export": "off" },
+    },
+    {
       files: ["*.config.*", ".*rc.*"],
       rules: {
         "import/no-extraneous-dependencies": [

@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import serializeReply from "@/lib/serialize-reply";
 
-// eslint-disable-next-line import/prefer-default-export
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
