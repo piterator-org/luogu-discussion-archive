@@ -7,7 +7,7 @@ export default function Page({ children }: { children: React.ReactNode[] }) {
 
   return (
     <div className="pt-5 pb-3 pb-md-3x px-2 px-md-0">
-      <h1 className="mb-4x text-center">排行榜</h1>
+      <h1 className="mb-4x text-center">索引</h1>
       <select
         className="form-select form-select-lg d-block d-md-none border-0 rounded-3 shadow-sm mb-4m"
         value={selected}

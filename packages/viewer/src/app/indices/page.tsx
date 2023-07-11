@@ -7,7 +7,7 @@ import MostViewed from "./MostViewed";
 
 export const dynamic = "force-dynamic";
 
-export const metadata = { title: "排行榜 - 洛谷帖子保存站" };
+export const metadata = { title: "索引 - 洛谷帖子保存站" };
 
 export default function Page() {
   return (
