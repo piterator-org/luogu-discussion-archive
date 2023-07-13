@@ -1,4 +1,3 @@
-import { getUserAvatarUrl } from "@/lib/luogu";
 import type getReplyRaw from "../../get-reply-raw";
 
 export default (
@@ -63,14 +62,15 @@ export default (
       }
       #content {
         margin-left: 3rem;
+        position: relative;
       }
       #content::before {
         content: "“";
         font-family: "Source Han Sans";
         font-size: 5.5rem;
         position: absolute;
-        top: .1rem;
-        left: 0;
+        top: -2rem;
+        left: -3rem;
         color: #eeedee;
       }
     </style>
