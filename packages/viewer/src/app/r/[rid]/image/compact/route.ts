@@ -1,9 +1,9 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { notFound } from "next/navigation";
 import { serializeReplyNoninteractive } from "@/lib/serialize-reply";
-import getReplyRaw from "../get-reply-raw";
-import generateImage from "./generate-image";
-import templateDefault from "./template-default";
+import getReplyRaw from "../../get-reply-raw";
+import generateImage from "../generate-image";
+import templateCompact from "./template-compact";
 
 export async function GET(
   request: NextRequest,
@@ -17,7 +17,7 @@ export async function GET(
     ...(await serializeReplyNoninteractive(replyRaw)),
   };
   return new NextResponse(
-    await generateImage(reply, templateDefault, {
+    await generateImage(reply, templateCompact, {
       width: Number(request.nextUrl.searchParams.get("width") ?? "840"),
     })
   );
