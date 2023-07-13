@@ -18,7 +18,8 @@
     "husky": "^8.0.3",
     "lint-staged": "^13.2.3",
     "prettier": "^2.8.8",
-    "prisma": "^4.16.2"
+    "prisma": "^4.16.2",
+    "puppeteer": "^20.8.1"
   },
   "engines": {
     "pnpm": "^8.6.0"
