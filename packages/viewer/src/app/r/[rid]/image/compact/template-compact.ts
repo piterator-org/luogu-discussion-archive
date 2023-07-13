@@ -69,9 +69,11 @@ export default (
         font-family: "Source Han Sans";
         font-size: 5.5rem;
         position: absolute;
-        top: -2rem;
+        top: -2.4rem;
         left: -3rem;
         color: #eeedee;
+        height: .75em;
+        overflow-y: hidden;
       }
     </style>
     <body
@@ -84,7 +86,7 @@ export default (
         padding: 0;
       "
     >
-      <div>
+      <div style="margin-top: .1em;">
         <span style="white-space: nowrap;">
           <span
             class="lg-fg-${reply.author.color}"
