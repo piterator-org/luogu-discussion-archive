@@ -47,7 +47,7 @@ export default function InfiniteScrollReplies({
 }) {
   const { data, size, setSize, isValidating } = useSWRInfinite<PageData>(
     getKey(discussion.id),
-    fetcher
+    fetcher,
   );
   const [showPageButtons, setShowPageButtons] = useState<boolean>(true);
 
@@ -61,10 +61,11 @@ export default function InfiniteScrollReplies({
         style={{ overflow: "inherit" }}
         scrollThreshold="1024px"
       >
-        {data?.map((replies) =>
-          replies.data?.map((reply) => (
-            <Reply discussion={discussion} reply={reply} key={reply.id} />
-          ))
+        {data?.map(
+          (replies) =>
+            replies.data?.map((reply) => (
+              <Reply discussion={discussion} reply={reply} key={reply.id} />
+            )),
         )}
       </InfiniteScroll>
 

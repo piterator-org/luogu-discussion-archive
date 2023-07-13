@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { uid: string } }
+  { params }: { params: { uid: string } },
 ) {
   const uid = parseInt(params.uid, 10);
   const [discussions, replies] = await Promise.all([

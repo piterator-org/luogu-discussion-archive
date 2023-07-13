@@ -37,11 +37,11 @@ export default async function getDiscussionList(
   logger: BaseLogger,
   prisma: PrismaClient,
   page: number,
-  after: number
+  after: number,
 ) {
   const response = await getReponse(
     logger,
-    `https://www.luogu.com.cn/api/discuss?page=${page}`
+    `https://www.luogu.com.cn/api/discuss?page=${page}`,
   );
   const {
     data: { result },
@@ -61,7 +61,7 @@ export default async function getDiscussionList(
           },
         },
       })
-    ).map(({ id, replies }) => [id, replies[0]?.time])
+    ).map(({ id, replies }) => [id, replies[0]?.time]),
   );
   return result
     .filter(
@@ -71,7 +71,7 @@ export default async function getDiscussionList(
         (post.LatestReply &&
           (!saved[post.PostID] ||
             Math.floor(saved[post.PostID].getTime() / 60000) !==
-              Math.floor(post.LatestReply.ReplyTime / 60)))
+              Math.floor(post.LatestReply.ReplyTime / 60))),
     )
     .map((post) => post.PostID);
 }

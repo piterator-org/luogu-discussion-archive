@@ -3,11 +3,11 @@ import UserInfo from "@/components/UserInfo";
 
 const NUM_WATER_TANKS_HOME_PAGE = parseInt(
   process.env.NUM_DISCUSSIONS_HOME_PAGE ?? "100",
-  10
+  10,
 );
 const RANGE_MILLISECONDS_WATER_TANK = parseInt(
   process.env.RANGE_MILLISECONDS_WATER_TANK ?? "2592000000",
-  10
+  10,
 );
 
 export default async function Users() {
@@ -27,7 +27,7 @@ export default async function Users() {
       await prisma.user.findMany({
         where: { id: { in: userReplyCount.map((r) => r.authorId) } },
       })
-    ).map((u) => [u.id, u])
+    ).map((u) => [u.id, u]),
   );
   return (
     <ul className="list-group">

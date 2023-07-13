@@ -7,7 +7,7 @@ import templateDefault from "./template-default";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { rid: string } }
+  { params }: { params: { rid: string } },
 ) {
   const id = parseInt(params.rid, 10);
   if (Number.isNaN(id)) notFound();
@@ -19,6 +19,6 @@ export async function GET(
   return new NextResponse(
     await generateImage(reply, templateDefault, {
       width: Number(request.nextUrl.searchParams.get("width") ?? "840"),
-    })
+    }),
   );
 }

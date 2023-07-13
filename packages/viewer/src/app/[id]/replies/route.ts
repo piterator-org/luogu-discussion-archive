@@ -4,7 +4,7 @@ import serializeReply from "@/lib/serialize-reply";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   const id = parseInt(params.id, 10);
   const cursor = request.nextUrl.searchParams.get("cursor");
@@ -22,7 +22,7 @@ export async function GET(
       replies.map(async (reply) => ({
         ...reply,
         ...(await serializeReply(id, reply)),
-      }))
+      })),
     ),
     nextCursor: replies.length ? replies[replies.length - 1].id : null,
   });

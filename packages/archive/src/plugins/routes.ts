@@ -10,7 +10,7 @@ export default (function routes(fastify, options, done) {
   fastify.get("/judgement", (request, reply) => {
     saveJudgements(
       fastify.log.child({ reqId: request.id as string, target: "judgement" }),
-      fastify.prisma
+      fastify.prisma,
     )
       .then(() => reply.code(201).send({}))
       .catch((err: Error) => reply.code(500).send({ error: err.message }));
@@ -25,11 +25,11 @@ export default (function routes(fastify, options, done) {
           target: request.params.id,
         }),
         fastify.prisma,
-        request.params.id
+        request.params.id,
       )
         .then(() => reply.code(201).send({}))
         .catch((err: Error) => reply.code(500).send({ error: err.message }));
-    }
+    },
   );
 
   fastify.get<{ Params: { id: string } }>("/:id(\\d+)", (request, reply) => {
@@ -38,7 +38,7 @@ export default (function routes(fastify, options, done) {
       fastify.log.child({ reqId: request.id as string, target: id }),
       fastify.prisma,
       fastify.io.to(request.params.id),
-      id
+      id,
     );
     once(emitters[id], "done")
       .then(() => reply.code(201).send({}))

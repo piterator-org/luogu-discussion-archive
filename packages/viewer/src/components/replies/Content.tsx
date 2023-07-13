@@ -43,7 +43,7 @@ export default function Content({
           placement: "top",
           middleware: [shift()],
         }).then(({ x, y }) =>
-          Object.assign(tooltip.style, { left: `${x}px`, top: `${y}px` })
+          Object.assign(tooltip.style, { left: `${x}px`, top: `${y}px` }),
         );
       }
       function showTooltip() {
@@ -75,7 +75,7 @@ export default function Content({
             : []),
         ] as [string, () => void][]
       ).forEach(([event, listener]) =>
-        element.addEventListener(event, listener)
+        element.addEventListener(event, listener),
       );
     });
   });

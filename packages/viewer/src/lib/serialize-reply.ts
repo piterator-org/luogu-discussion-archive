@@ -27,7 +27,7 @@ function renderHljs(body: HTMLElement) {
 
 export default async function serializeReply(
   discussionId: number,
-  { content, time }: { content: string; time: Date }
+  { content, time }: { content: string; time: Date },
 ) {
   const users: number[] = [];
 
@@ -38,7 +38,7 @@ export default async function serializeReply(
     try {
       const urlAbsolute = new URL(
         element.getAttribute("href") as string,
-        "https://www.luogu.com.cn/discuss/"
+        "https://www.luogu.com.cn/discuss/",
       );
       element.setAttribute("href", urlAbsolute.href);
       const uid = getMentionedUser(element);
@@ -93,7 +93,7 @@ export async function serializeReplyNoninteractive({
     try {
       const urlAbsolute = new URL(
         element.getAttribute("href") as string,
-        "https://www.luogu.com.cn/discuss/"
+        "https://www.luogu.com.cn/discuss/",
       );
       element.setAttribute("href", urlAbsolute.href);
       const uid = getMentionedUser(element);
@@ -109,7 +109,7 @@ export async function serializeReplyNoninteractive({
         if (
           new URL(
             element.textContent as string,
-            "https://www.luogu.com.cn/discuss/"
+            "https://www.luogu.com.cn/discuss/",
           ).href !== urlAbsolute.href
         ) {
           links.add(urlAbsolute.href);

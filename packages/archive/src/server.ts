@@ -12,7 +12,7 @@ const fastify = Fastify({
         pino.transport<{ sourceToken: string }>({
           target: "@logtail/pino",
           options: { sourceToken: process.env.SOURCE_TOKEN },
-        })
+        }),
       )
     : { level: "debug" },
 });

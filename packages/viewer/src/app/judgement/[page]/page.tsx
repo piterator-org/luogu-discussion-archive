@@ -17,7 +17,7 @@ export default async function Page({ params }: { params: { page: string } }) {
     })) ?? notFound();
 
   const numPages = Math.ceil(
-    (await prisma.judgement.count()) / SHARDS_PER_PAGE
+    (await prisma.judgement.count()) / SHARDS_PER_PAGE,
   );
 
   const { pagesLocalAttachedFront, pagesLocalAttachedBack, pagesLocal } =

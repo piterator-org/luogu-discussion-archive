@@ -31,7 +31,7 @@ export default fastifyPlugin(((fastify, options, done) => {
         origin: [process.env.VIEWER_HOST ?? "", "https://admin.socket.io"],
         credentials: true,
       },
-    })
+    }),
   );
   instrument(fastify.io, {
     auth: false,
@@ -45,7 +45,7 @@ export default fastifyPlugin(((fastify, options, done) => {
 
   fastify.io.on("connection", (socket) => {
     socket.on("update", (id) =>
-      startTask(fastify.log, fastify.prisma, fastify.io.to(id.toString()), id)
+      startTask(fastify.log, fastify.prisma, fastify.io.to(id.toString()), id),
     );
     socket.on("subscribe", (id) => socket.join(id.toString()));
     socket.on("unsubscribe", (id) => socket.leave(id.toString()));
