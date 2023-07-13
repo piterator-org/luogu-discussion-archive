@@ -2,7 +2,9 @@ import { NextResponse, type NextRequest } from "next/server";
 import { notFound } from "next/navigation";
 import puppeteer from "puppeteer";
 import type renderMathInElement from "katex/contrib/auto-render";
-import { autoRender, katex, style } from "./katex";
+import katex from "katex/dist/katex.min?raw";
+import autoRender from "katex/dist/contrib/auto-render.min?raw";
+import katexStyles from "katex/dist/katex.min.css?raw";
 
 const browser = await puppeteer.launch();
 
@@ -21,9 +23,9 @@ export async function GET(
       </body>
     </html>`);
 
-  await page.addScriptTag({ content: katex as string });
-  await page.addScriptTag({ content: autoRender as string });
-  await page.addStyleTag({ content: style as string });
+  await page.addScriptTag({ content: katex });
+  await page.addScriptTag({ content: autoRender });
+  await page.addStyleTag({ content: katexStyles });
   await page.evaluate(() =>
     (
       window as typeof window & {
