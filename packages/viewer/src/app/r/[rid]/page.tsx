@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import "@/components/markdown.css";
 import Content from "@/components/replies/Content";
 import UserInfo from "@/components/UserInfo";
 import UserAvatar from "@/components/UserAvatar";
