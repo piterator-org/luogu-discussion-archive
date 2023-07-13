@@ -1,10 +1,12 @@
 import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import "@/components/markdown.css";
 import Content from "@/components/replies/Content";
 import UserInfo from "@/components/UserInfo";
 import UserAvatar from "@/components/UserAvatar";
 import serializeReply from "@/lib/serialize-reply";
+import getReplyRaw from "./get-reply-raw";
 
 export const metadata = { title: "金玉良言 - 洛谷帖子保存站" };
 
@@ -13,26 +15,7 @@ const REPLIES_PER_PAGE = parseInt(process.env.REPLIES_PER_PAGE ?? "10", 10);
 export default async function Page({ params }: { params: { rid: string } }) {
   const id = parseInt(params.rid, 10);
   if (Number.isNaN(id)) notFound();
-  const replyRaw =
-    (await prisma.reply.findUnique({
-      select: {
-        id: true,
-        author: true,
-        time: true,
-        content: true,
-        discussion: {
-          select: {
-            id: true,
-            snapshots: {
-              select: { title: true, authorId: true },
-              orderBy: { time: "desc" },
-              take: 1,
-            },
-          },
-        },
-      },
-      where: { id },
-    })) ?? notFound();
+  const replyRaw = await getReplyRaw(id);
   const reply = {
     ...replyRaw,
     ...(await serializeReply(replyRaw.discussion.id, replyRaw)),

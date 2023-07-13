@@ -17,11 +17,23 @@ const nextConfig = {
         ),
       })
     );
+
+    // https://webpack.js.org/guides/asset-modules/#replacing-inline-loader-syntax
+    config.module.rules.forEach((rule) => {
+      // eslint-disable-next-line no-param-reassign
+      if (!rule.resourceQuery) rule.resourceQuery = { not: [/raw/] };
+    });
+    config.module.rules.push({
+      resourceQuery: /raw/,
+      type: "asset/source",
+    });
     return config;
   },
+
   images: {
     remotePatterns: [{ protocol: "https", hostname: "cdn.luogu.com.cn" }],
   },
+
   output: "standalone",
 };
 

@@ -16,12 +16,16 @@ export default function Page() {
           style={{ maxWidth: "40em" }}
         >
           <input
-            className="form-control shadow"
+            className="form-control shadow rounded-start-4 border-0"
             autoComplete="off"
             placeholder="帖子关键词、发布者"
             disabled
           />
-          <button className="btn btn-primary shadow" type="button" disabled>
+          <button
+            className="btn btn-primary shadow rounded-end-4"
+            type="button"
+            disabled
+          >
             即将上线
           </button>
         </div>
