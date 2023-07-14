@@ -5,11 +5,11 @@ import DiscussionEntry from "@/components/DiscussionEntry";
 
 const NUM_DISCUSSIONS_HOME_PAGE = parseInt(
   process.env.NUM_DISCUSSIONS_HOME_PAGE ?? "50",
-  10
+  10,
 );
 const LIMIT_MILLISECONDS_HOT_DISCUSSION = parseInt(
   process.env.NUM_DISCUSSIONS_HOME_PAGE ?? "604800000",
-  10
+  10,
 );
 
 export default async function Discussions() {
@@ -30,7 +30,7 @@ export default async function Discussions() {
         select: selectDiscussion,
         where: { id: { in: discussionReplyCount.map((r) => r.discussionId) } },
       })
-    ).map((d) => [d.id, d])
+    ).map((d) => [d.id, d]),
   );
   discussionReplyCount.map((r) => ({
     ...discussions[r.discussionId],

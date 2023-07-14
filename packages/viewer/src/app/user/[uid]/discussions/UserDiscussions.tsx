@@ -26,7 +26,7 @@ export default function UserDiscussions({ uid }: { uid: string }) {
         : `/user/${uid}/discussions/data${
             pageIndex ? `?cursor=${previousPageData.nextCursor}` : ""
           }`,
-    fetcher
+    fetcher,
   );
 
   return (
@@ -75,7 +75,7 @@ export default function UserDiscussions({ uid }: { uid: string }) {
                 usersMetioned={discussion.usersMetioned}
               />
             </DiscussionEntry>
-          ))
+          )),
         )}
       </InfiniteScroll>
       {isValidating && <Spinner />}

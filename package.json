@@ -14,11 +14,12 @@
     "eslint": "^8.44.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-prettier": "^5.0.0",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.3",
-    "prettier": "^2.8.8",
-    "prisma": "^4.16.2"
+    "prettier": "^3.0.0",
+    "prisma": "^4.16.2",
+    "puppeteer": "^20.8.2"
   },
   "engines": {
     "pnpm": "^8.6.0"

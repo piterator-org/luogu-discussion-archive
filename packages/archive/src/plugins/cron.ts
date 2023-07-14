@@ -20,11 +20,11 @@ export default fastifyPlugin(
                   fastify.log,
                   fastify.prisma,
                   i + 1,
-                  Math.floor(new Date().getTime() / 1000) - 86400
-                )
-              )
+                  Math.floor(new Date().getTime() / 1000) - 86400,
+                ),
+              ),
             ),
-          Promise.resolve([])
+          Promise.resolve([]),
         )
         .then((discussions) => {
           return discussions.reduce(
@@ -36,14 +36,14 @@ export default fastifyPlugin(
                     fastify.log,
                     fastify.prisma,
                     fastify.io.to(id.toString()),
-                    id
+                    id,
                   );
                   return once(emitters[id], "done");
                 })
                 .catch((err) => fastify.log.error(err))
                 .then(() => fastify.log.debug({ targrt: id }, "finished"))
                 .then(() => delay(500)),
-            Promise.resolve()
+            Promise.resolve(),
           );
         })
         .catch((err) => fastify.log.error(err))
@@ -51,11 +51,11 @@ export default fastifyPlugin(
           setTimeout(() => {
             // eslint-disable-next-line @typescript-eslint/no-floating-promises
             save();
-          }, AUTO_SAVE_INTERVAL)
+          }, AUTO_SAVE_INTERVAL),
         );
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     save();
     done();
   } as FastifyPluginCallback,
-  { decorators: { fastify: ["prisma", "io"] } }
+  { decorators: { fastify: ["prisma", "io"] } },
 );

@@ -12,7 +12,7 @@ export async function saveDiscussion(
   logger: BaseLogger,
   prisma: PrismaClient,
   id: number,
-  maxPages = PAGES_PER_SAVE
+  maxPages = PAGES_PER_SAVE,
 ) {
   let operations: PrismaPromise<unknown>[] = [];
 
@@ -27,20 +27,20 @@ export async function saveDiscussion(
         where: { id: user.id },
         create: user,
         update: user,
-      })
+      }),
     );
     return { authorId: user.id, ...parseComment(element) };
   }
 
   const extractReplies = (app: HTMLElement) =>
     Array.from(
-      app.querySelectorAll("article.am-comment-primary > div.am-comment-main")
+      app.querySelectorAll("article.am-comment-primary > div.am-comment-main"),
     ).map((element) => ({
       id: parseInt(
         element
           .querySelector(".am-comment-hd a[data-report-id]")!
           .getAttribute("data-report-id")!,
-        10
+        10,
       ),
       discussionId: id,
       ...extractComment(element),
@@ -50,18 +50,18 @@ export async function saveDiscussion(
     title: app.querySelector("div.lg-toolbar > h1")!.textContent!,
     forum: app
       .querySelector(
-        'ul.lg-summary-list > li > span > a[href^="/discuss/lists?forumname="]'
+        'ul.lg-summary-list > li > span > a[href^="/discuss/lists?forumname="]',
       )!
       .getAttribute("href")!
       .slice("/discuss/lists?forumname=".length),
     ...extractComment(
-      app.querySelector("article.am-comment-danger > div.am-comment-main")!
+      app.querySelector("article.am-comment-danger > div.am-comment-main")!,
     ),
     replyCount: parseInt(
       app
         .querySelector("article.am-comment-danger")!
         .getAttribute("data-reply-count")!,
-      10
+      10,
     ),
   });
   /* eslint-enable @typescript-eslint/no-non-null-assertion */
@@ -73,7 +73,7 @@ export async function saveDiscussion(
           where: { id: reply.id },
           create: reply,
           update: reply,
-        })
+        }),
       );
     });
   }
@@ -85,7 +85,7 @@ export async function saveDiscussion(
       where: { id },
       create: { id, time: discussion.time, replyCount: discussion.replyCount },
       update: { time: discussion.time, replyCount: discussion.replyCount },
-    })
+    }),
   );
 
   const lastSnapshot = await prisma.snapshot.findFirst({
@@ -115,7 +115,7 @@ export async function saveDiscussion(
             authorId: discussion.authorId,
             content: discussion.content,
           },
-        })
+        }),
   );
 
   saveReplies(extractReplies(app));
@@ -125,8 +125,8 @@ export async function saveDiscussion(
   operations = [];
   const pages = Math.max(
     ...Array.from(app.querySelectorAll("[data-ci-pagination-page]")).map((e) =>
-      parseInt(e.getAttribute("data-ci-pagination-page") as string, 10)
-    )
+      parseInt(e.getAttribute("data-ci-pagination-page") as string, 10),
+    ),
   );
   if (pages > 1) {
     const { id: lastReply } = (
@@ -139,7 +139,7 @@ export async function saveDiscussion(
     for (let i = Math.min(pages, maxPages); i > 0; i -= 1) {
       const replies = extractReplies(
         // eslint-disable-next-line no-await-in-loop
-        await fetchPage(i)
+        await fetchPage(i),
       );
       saveReplies(replies);
       if (replies[replies.length - 1].id <= lastReply) break;
@@ -156,7 +156,7 @@ export function startTask(
   logger: BaseLogger,
   prisma: PrismaClient,
   room: BroadcastOperator<ServerToClientEvents, unknown>,
-  id: number
+  id: number,
 ) {
   if (!(id in emitters)) {
     emitters[id] = new EventEmitter();

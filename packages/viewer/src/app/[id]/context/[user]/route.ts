@@ -4,7 +4,7 @@ import serializeReply from "@/lib/serialize-reply";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string; user: string } }
+  { params }: { params: { id: string; user: string } },
 ) {
   const discussionId = parseInt(params.id, 10);
   const authorId = parseInt(params.user, 10);

@@ -44,7 +44,7 @@ export default async function Page({
         discussion.replies.map(async (reply) => ({
           ...reply,
           ...(await serializeReply(id, reply)),
-        }))
+        })),
       ),
     }));
   const numPages = Math.ceil(numReplies / REPLIES_PER_PAGE);

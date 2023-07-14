@@ -10,7 +10,7 @@ function Placeholder() {
 export default function UserStatistics({ uid }: { uid: number }) {
   const { data, isLoading } = useSWR<{ discussions: number; replies: number }>(
     `/user/${uid}/statistics`,
-    fetcher
+    fetcher,
   );
   return (
     <>

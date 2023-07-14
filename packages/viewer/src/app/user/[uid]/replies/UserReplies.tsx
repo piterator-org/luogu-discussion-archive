@@ -35,7 +35,7 @@ export default function UserReplies({ uid }: { uid: string }) {
         : `/user/${uid}/replies/data${
             pageIndex ? `?cursor=${previousPageData.nextCursor}` : ""
           }`,
-    fetcher
+    fetcher,
   );
 
   return (
@@ -75,7 +75,7 @@ export default function UserReplies({ uid }: { uid: string }) {
                 </div>
               </Reply>
             </div>
-          ))
+          )),
         )}
       </InfiniteScroll>
       {isValidating && <Spinner />}

@@ -13,9 +13,9 @@ const nextConfig = {
         COMMITHASH: JSON.stringify(gitRevisionPlugin.commithash()),
         BRANCH: JSON.stringify(gitRevisionPlugin.branch()),
         LASTCOMMITDATETIME: JSON.stringify(
-          gitRevisionPlugin.lastcommitdatetime()
+          gitRevisionPlugin.lastcommitdatetime(),
         ),
-      })
+      }),
     );
 
     // https://webpack.js.org/guides/asset-modules/#replacing-inline-loader-syntax

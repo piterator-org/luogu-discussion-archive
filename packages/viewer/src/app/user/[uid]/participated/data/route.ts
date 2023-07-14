@@ -6,7 +6,7 @@ import { NUM_PER_PAGE } from "../../constants";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { uid: string } }
+  { params }: { params: { uid: string } },
 ) {
   const uid = parseInt(params.uid, 10);
   const cursor = request.nextUrl.searchParams.get("cursor");
@@ -38,10 +38,10 @@ export async function GET(
             discussion.replies.map(async (reply) => ({
               ...reply,
               ...(await serializeReply(discussion.id, reply)),
-            }))
+            })),
           ),
-        }))
-      )
+        })),
+      ),
     );
   return NextResponse.json({
     data: discussions,

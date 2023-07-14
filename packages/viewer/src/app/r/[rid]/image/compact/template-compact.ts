@@ -4,7 +4,7 @@ export default (
   reply: Omit<Awaited<ReturnType<typeof getReplyRaw>>, "time"> & {
     time: string;
   },
-  { width }: { width: number }
+  { width }: { width: number },
 ) => `<!DOCTYPE html>
   <html>
     <style>

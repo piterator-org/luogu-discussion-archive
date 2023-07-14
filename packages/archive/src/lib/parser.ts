@@ -9,7 +9,7 @@ export async function getReponse(logger: BaseLogger, url: string, retries = 1) {
   });
   logger.info(
     { retries, url, status: response.status, statusText: response.statusText },
-    "fetch"
+    "fetch",
   );
   if (response.status > 500) {
     if (retries) {
@@ -25,14 +25,14 @@ export async function getReponse(logger: BaseLogger, url: string, retries = 1) {
 export async function parseApp(
   logger: BaseLogger,
   url: string,
-  retries = 1
+  retries = 1,
 ): Promise<HTMLElement> {
   const response = await getReponse(logger, url, retries);
   const { document } = new JSDOM(await response.text()).window;
   const app = document.getElementById("app-old");
   if (!app)
     throw Error(
-      document.querySelector("div")?.textContent?.trim() ?? undefined
+      document.querySelector("div")?.textContent?.trim() ?? undefined,
     );
   return app;
 }
@@ -55,10 +55,12 @@ export const parseComment = (element: Element) => ({
       Array.from(element.querySelector(".am-comment-meta")!.childNodes)
         .filter((node) => node.nodeType === node.TEXT_NODE)
         .map((node) =>
-          /^\d{4}(-\d{2}){2} \d{2}(:\d{2}){1,2}$/.exec(node.textContent!.trim())
+          /^\d{4}(-\d{2}){2} \d{2}(:\d{2}){1,2}$/.exec(
+            node.textContent!.trim(),
+          ),
         )
         .filter((node) => node)[0]![0]
-    }+8`
+    }+8`,
   ),
   content: element.querySelector(".am-comment-bd")!.innerHTML.trim(),
 });

@@ -6,7 +6,7 @@ import { NUM_PER_PAGE } from "../../constants";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { uid: string } }
+  { params }: { params: { uid: string } },
 ) {
   const uid = parseInt(params.uid, 10);
   const cursor = request.nextUrl.searchParams.get("cursor");
@@ -27,7 +27,7 @@ export async function GET(
           content: discussion.snapshots[0].content,
           time: discussion.time,
         })),
-      }))
+      })),
     ),
     nextCursor: discussions.length
       ? discussions[discussions.length - 1].id

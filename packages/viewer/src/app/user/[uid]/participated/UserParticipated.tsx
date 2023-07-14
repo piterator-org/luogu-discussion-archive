@@ -45,7 +45,7 @@ export default function UserParticipated({
         : `/user/${uid}/participated/data${
             pageIndex ? `?cursor=${previousPageData.nextCursor}` : ""
           }`,
-    fetcher
+    fetcher,
   );
 
   return (
@@ -293,7 +293,7 @@ export default function UserParticipated({
                 </div>
               </div>
             </div>
-          ))
+          )),
         )}
       </InfiniteScroll>
       {isValidating && <Spinner />}

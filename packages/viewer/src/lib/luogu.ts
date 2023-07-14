@@ -22,7 +22,7 @@ export const getForumName = (forum: string) =>
     relevantaffairs: "灌水区",
     service: "反馈、申请、工单专版",
     miaomiaowu: "小黑屋",
-  }[forum] ?? forum);
+  })[forum] ?? forum;
 
 export const judgementUrl = "https://www.luogu.com.cn/judgement";
 
@@ -37,7 +37,7 @@ export function getUserIdFromUrl(target: URL) {
     (target.pathname.startsWith("/user/") && target.pathname.split("/")[2]) ||
       ((target.pathname === "/space/show" &&
         target.searchParams.get("uid")) as string),
-    10
+    10,
   );
   return Number.isNaN(uid) ? null : uid;
 }
@@ -51,6 +51,6 @@ export function getDiscussionId(s: string) {
     (url.pathname === "/discuss/show" && url.searchParams.get("postid")) ||
       ((url.pathname.startsWith("/discuss/") &&
         url.pathname.split("/")[2]) as string),
-    10
+    10,
   );
 }

@@ -21,9 +21,9 @@ export default async (
       width,
     }: {
       width: number;
-    }
+    },
   ) => string,
-  { width }: { width?: number }
+  { width }: { width?: number },
 ) => {
   const page = await browser.newPage();
   await page.setViewport({
@@ -48,7 +48,7 @@ export default async (
         { left: "$$", right: "$$", display: true },
         { left: "$", right: "$", display: false },
       ],
-    })
+    }),
   );
 
   const screenshot = await page.screenshot({

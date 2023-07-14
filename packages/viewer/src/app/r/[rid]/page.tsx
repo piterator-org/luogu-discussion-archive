@@ -23,7 +23,7 @@ export default async function Page({ params }: { params: { rid: string } }) {
   const pages = Math.ceil(
     (await prisma.reply.count({
       where: { id: { lte: id }, discussionId: reply.discussion.id },
-    })) / REPLIES_PER_PAGE
+    })) / REPLIES_PER_PAGE,
   );
   // return redirect(`/${discussionId}/${pages}#${params.rid}`);
   return (

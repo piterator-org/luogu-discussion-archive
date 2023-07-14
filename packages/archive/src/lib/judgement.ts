@@ -4,7 +4,7 @@ import { parseApp, parseComment, parseUser } from "./parser";
 
 export default async function saveJudgements(
   logger: BaseLogger,
-  prisma: PrismaClient
+  prisma: PrismaClient,
 ) {
   const operations: PrismaPromise<unknown>[] = [];
 
@@ -18,7 +18,7 @@ export default async function saveJudgements(
           where: { id: user.id },
           create: user,
           update: user,
-        })
+        }),
       );
 
       const judgement = { userId: user.id, ...parseComment(element) };
@@ -27,7 +27,7 @@ export default async function saveJudgements(
           where: { time_userId: { time: judgement.time, userId: user.id } },
           create: judgement,
           update: judgement,
-        })
+        }),
       );
     });
 

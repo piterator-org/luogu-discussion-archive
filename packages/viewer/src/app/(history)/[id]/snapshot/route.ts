@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   const discussionId = parseInt(params.id, 10);
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

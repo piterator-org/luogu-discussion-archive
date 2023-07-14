@@ -33,7 +33,7 @@ export default function ContextViewer({
   const [pageIndex, setPageIndex] = useState(0);
   const { data, isLoading } = useSWR<Data>(
     `/${discussionId}/context/${userId}?reply=${replyId}&offset=${pageIndex}`,
-    fetcher
+    fetcher,
   );
   return (
     <div className="reply-context bg-body rounded-top-4 shadow pe-4 pt-3x pb-4x">
