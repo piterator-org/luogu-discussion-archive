@@ -17,7 +17,7 @@ export async function generateMetadata({
       select: { username: true },
       where: { id: parseInt(params.uid, 10) },
     })) ?? notFound();
-  return { title: `「${username}」的黑历史 - 洛谷帖子保存站` };
+  return { title: `@${username} 的黑历史 - 洛谷帖子保存站` };
 }
 
 export default async function Layout({
