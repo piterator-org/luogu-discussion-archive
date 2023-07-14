@@ -4,9 +4,9 @@ export default (
   reply: Omit<Awaited<ReturnType<typeof getReplyRaw>>, "time"> & {
     time: string;
   },
-  { width }: { width: number },
+  { width }: { width: number }
 ) => `<!DOCTYPE html>
-  <html>
+  <html lang="zh-CN">
     <style>
       * {
         box-sizing: border-box;
@@ -66,13 +66,13 @@ export default (
       }
       #content::before {
         content: "“";
-        font-family: "Source Han Sans";
-        font-size: 5.5rem;
+        font-family: "Helvetica Neue";
+        font-size: 6.6rem;
         position: absolute;
-        top: -2.4rem;
-        left: -3rem;
+        top: -2.3rem;
+        left: -3.3rem;
         color: #eeedee;
-        height: .75em;
+        height: .55em;
         overflow-y: hidden;
       }
       .markdown code {
