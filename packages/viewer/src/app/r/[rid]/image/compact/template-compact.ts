@@ -75,12 +75,20 @@ export default (
         height: .75em;
         overflow-y: hidden;
       }
+      .markdown code {
+        font-family:
+          "Fira Code", Menlo, Monaco, "Courier New", Consolas, monospace,
+          "Source Han Sans SC", "Source Han Sans TW", "Source Han Sans HK",
+          "Source Han Sans JP", "Source Han Sans KR";
+      }
     </style>
     <body
       style="
-        font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
+        font-family: 'SF Pro Display', 'Segoe UI', Roboto, 'Helvetica Neue',
           'Noto Sans', 'Liberation Sans', Arial, sans-serif, 'Apple Color Emoji',
-          'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+          'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+          'Source Han Sans SC', 'Source Han Sans TW', 'Source Han Sans HK',
+          'Source Han Sans JP', 'Source Han Sans KR';
         width: ${width}px;
         margin: 0;
         padding: 0;
