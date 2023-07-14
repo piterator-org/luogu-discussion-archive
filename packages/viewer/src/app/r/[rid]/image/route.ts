@@ -18,7 +18,10 @@ export async function GET(
   };
   return new NextResponse(
     await generateImage(reply, templateDefault, {
-      width: Number(request.nextUrl.searchParams.get("width") ?? "840"),
-    }),
+      width: Math.max(
+        600,
+        Number(request.nextUrl.searchParams.get("width") ?? "840")
+      ),
+    })
   );
 }

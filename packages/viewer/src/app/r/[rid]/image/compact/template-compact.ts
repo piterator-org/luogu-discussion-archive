@@ -1,4 +1,3 @@
-import { getUserAvatarUrl } from "@/lib/luogu";
 import type getReplyRaw from "../../get-reply-raw";
 
 export default (
@@ -63,28 +62,39 @@ export default (
       }
       #content {
         margin-left: 3rem;
+        position: relative;
       }
       #content::before {
         content: "“";
         font-family: "Source Han Sans";
         font-size: 5.5rem;
         position: absolute;
-        top: .1rem;
-        left: 0;
+        top: -2.4rem;
+        left: -3rem;
         color: #eeedee;
+        height: .75em;
+        overflow-y: hidden;
+      }
+      .markdown code {
+        font-family:
+          "Fira Code", Menlo, Monaco, "Courier New", Consolas, monospace,
+          "Source Han Sans SC", "Source Han Sans TW", "Source Han Sans HK",
+          "Source Han Sans JP", "Source Han Sans KR";
       }
     </style>
     <body
       style="
-        font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
+        font-family: 'SF Pro Display', 'Segoe UI', Roboto, 'Helvetica Neue',
           'Noto Sans', 'Liberation Sans', Arial, sans-serif, 'Apple Color Emoji',
-          'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+          'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+          'Source Han Sans SC', 'Source Han Sans TW', 'Source Han Sans HK',
+          'Source Han Sans JP', 'Source Han Sans KR';
         width: ${width}px;
         margin: 0;
         padding: 0;
       "
     >
-      <div>
+      <div style="margin-top: .1em;">
         <span style="white-space: nowrap;">
           <span
             class="lg-fg-${reply.author.color}"
