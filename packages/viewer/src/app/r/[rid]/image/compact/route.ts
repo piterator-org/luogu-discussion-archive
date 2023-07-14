@@ -20,8 +20,8 @@ export async function GET(
     await generateImage(reply, templateCompact, {
       width: Math.max(
         600,
-        Number(request.nextUrl.searchParams.get("width") ?? "840")
+        Number(request.nextUrl.searchParams.get("width") ?? "840"),
       ),
-    })
+    }),
   );
 }
