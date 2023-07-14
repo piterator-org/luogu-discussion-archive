@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
 import GoogleAnalytics from "./GoogleAnalytics";
+import MicrosoftClarity from "./MicrosoftClarity";
 
 export const metadata = {
   title: "洛谷帖子保存站",
@@ -20,6 +21,11 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
               measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}
             />
           </Suspense>
+        )}
+        {process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID && (
+          <MicrosoftClarity
+            projectId={process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID}
+          />
         )}
         <NavBar />
         <div className="container-lg" style={{ marginTop: "2rem" }}>
