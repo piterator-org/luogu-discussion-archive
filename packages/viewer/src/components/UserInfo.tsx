@@ -16,16 +16,14 @@ export default function UserInfo({
       {href === undefined ? (
         <Link
           href={getUserUrl(user.id)}
-          className={`lg-fg-${user.color}`}
-          style={{ textDecorationLine: "none" }}
+          className={`text-decoration-none lg-fg-${user.color}`}
         >
           {user.username}
         </Link>
       ) : (
         <a
           href={href}
-          className={`lg-fg-${user.color}`}
-          style={{ textDecorationLine: "none" }}
+          className={`text-decoration-none lg-fg-${user.color}`}
           target="_blank"
           rel="noopener noreferrer"
         >

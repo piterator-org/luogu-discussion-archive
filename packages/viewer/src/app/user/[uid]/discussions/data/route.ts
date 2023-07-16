@@ -14,6 +14,7 @@ export async function GET(
     select: selectDiscussionWithContent,
     where: {
       snapshots: { some: { authorId: uid } },
+      takedown: { is: null },
       id: { lt: cursor ? parseInt(cursor, 10) : undefined },
     },
     orderBy: { id: "desc" },

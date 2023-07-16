@@ -21,6 +21,7 @@ export async function GET(
           { replies: { some: { authorId: uid } } },
           { snapshots: { some: { authorId: uid } } },
         ],
+        takedown: { is: null },
         id: { lt: cursor ? parseInt(cursor, 10) : undefined },
       },
       orderBy: { id: "desc" },

@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
@@ -12,23 +12,25 @@ datasource db {
 }
 
 model User {
-  id         Int         @id
-  username   String      @db.VarChar
-  color      String      @db.VarChar
-  checkmark  String?     @db.Char(7)
-  badge      String?     @db.VarChar
-  snapshots  Snapshot[]
-  replies    Reply[]
-  pastes     Paste[]
-  judgements Judgement[]
+  id                  Int                  @id
+  username            String               @db.VarChar
+  color               String               @db.VarChar
+  checkmark           String?              @db.Char(7)
+  badge               String?              @db.VarChar
+  snapshots           Snapshot[]
+  replies             Reply[]
+  pastes              Paste[]
+  judgements          Judgement[]
+  discussionTakedowns DiscussionTakedown[]
 }
 
 model Discussion {
-  id         Int        @id
-  time       DateTime   @db.Timestamp(0)
+  id         Int                 @id
+  time       DateTime            @db.Timestamp(0)
   snapshots  Snapshot[]
   replyCount Int
   replies    Reply[]
+  takedown   DiscussionTakedown?
 }
 
 model Snapshot {
@@ -44,6 +46,26 @@ model Snapshot {
 
   @@id([discussionId, time])
   @@index([discussionId])
+}
+
+model Reply {
+  id           Int        @id
+  discussion   Discussion @relation(fields: [discussionId], references: [id])
+  discussionId Int
+  time         DateTime   @db.Timestamp(0)
+  author       User       @relation(fields: [authorId], references: [id])
+  authorId     Int
+  content      String     @db.Text
+
+  @@index([discussionId])
+}
+
+model DiscussionTakedown {
+  discussion   Discussion @relation(fields: [discussionId], references: [id])
+  discussionId Int        @id
+  reason       String
+  submitter    User       @relation(fields: [submitterId], references: [id])
+  submitterId  Int
 }
 
 model Paste {
@@ -63,18 +85,6 @@ model PasteSnapshot {
   data    String?
 
   @@id([pasteId, time])
-}
-
-model Reply {
-  id           Int        @id
-  discussion   Discussion @relation(fields: [discussionId], references: [id])
-  discussionId Int
-  time         DateTime   @db.Timestamp(0)
-  author       User       @relation(fields: [authorId], references: [id])
-  authorId     Int
-  content      String     @db.Text
-
-  @@index([discussionId])
 }
 
 model Judgement {

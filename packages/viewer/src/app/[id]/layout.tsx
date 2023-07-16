@@ -17,12 +17,16 @@ export async function generateMetadata({
   const id = parseInt(params.id, 10);
   if (Number.isNaN(id)) notFound();
   const snapshot = await prisma.snapshot.findFirst({
-    select: { title: true },
+    select: { title: true, discussion: { select: { takedown: true } } },
     orderBy: { time: "desc" },
     where: { discussionId: id },
   });
   return {
-    title: `${snapshot ? `「${snapshot.title}」` : "404"} - 洛谷帖子保存站`,
+    title: `${
+      snapshot && !snapshot.discussion.takedown
+        ? `「${snapshot.title}」`
+        : "404"
+    } - 洛谷帖子保存站`,
   };
 }
 
@@ -37,6 +41,7 @@ export default async function Page({
     time,
     snapshots: [{ title, forum, author, content, until: updatedAt }],
     _count: { replies },
+    takedown,
   } = (await prisma.discussion.findUnique({
     where: { id },
     select: {
@@ -53,9 +58,20 @@ export default async function Page({
         orderBy: { time: "desc" },
         take: 1,
       },
+      takedown: { select: { reason: true, submitter: true } },
       _count: { select: { replies: true } },
     },
   })) ?? notFound();
+
+  if (takedown)
+    return (
+      <>
+        <p>{takedown.reason}</p>
+        <p>
+          由 <UserInfo user={takedown.submitter} /> 申请删除。
+        </p>
+      </>
+    );
 
   return (
     <div className="row px-2 px-md-0">

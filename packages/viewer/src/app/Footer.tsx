@@ -61,6 +61,13 @@ export default function Footer() {
                 联系我们
               </ExternalLink>{" "}
               &middot;{" "}
+              <Link
+                href="/removal"
+                className="link-secondary text-decoration-none"
+              >
+                删帖政策
+              </Link>{" "}
+              &middot;{" "}
               <ExternalLink href="https://github.com/piterator-org/luogu-discussion-archive">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

@@ -29,6 +29,7 @@ export async function GET(
       },
       where: {
         authorId: uid,
+        discussion: { takedown: { is: null } },
         id: { lt: cursor ? parseInt(cursor, 10) : undefined },
       },
       orderBy: { id: "desc" },
