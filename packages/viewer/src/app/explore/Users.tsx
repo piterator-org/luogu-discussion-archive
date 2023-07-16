@@ -6,7 +6,7 @@ const NUM_WATER_TANKS_HOME_PAGE = parseInt(
   10,
 );
 const RANGE_MILLISECONDS_WATER_TANK = parseInt(
-  process.env.RANGE_MILLISECONDS_WATER_TANK ?? "2592000000",
+  process.env.RANGE_MILLISECONDS_WATER_TANK ?? "604800000",
   10,
 );
 

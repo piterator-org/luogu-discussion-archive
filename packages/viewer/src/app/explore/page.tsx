@@ -43,7 +43,7 @@ export default function Page() {
           </div>
           <div className="col-12 col-md-4 col-xl-3">
             <div className="rounded-4 shadow px-4 px-md-3x pt-3x pb-2x">
-              <div className="mb-2 fs-4 fw-semibold">龙王榜（30 天）</div>
+              <div className="mb-2 fs-4 fw-semibold">龙王榜（7 天）</div>
               <Suspense fallback={<Spinner className="mt-4 mb-3" />}>
                 <Users />
               </Suspense>
