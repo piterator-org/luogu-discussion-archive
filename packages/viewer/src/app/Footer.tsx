@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 declare global {
   const VERSION: string;
   const COMMITHASH: string;
@@ -24,13 +26,14 @@ export default function Footer() {
       <div className="container-lg py-3 py-md-4 px-4 px-md-3 text-secondary">
         <div className="row">
           <div className="col-lg-4 col-md-6 col-sm-8 mb-3 small">
-            <a
+            <Link
               className="d-inline-flex align-items-center mb-1 text-body-emphasis text-decoration-none fs-5"
               href="/"
+              lang="en"
             >
               Luogu Discussion Archive
-            </a>
-            <div className="mt-2">
+            </Link>
+            <div className="mt-2" lang="en">
               We use Google Analytics on our site. For more information, see{" "}
               <ExternalLink href="https://www.google.cn/policies/privacy/partners/">
                 Google&apos;s Privacy &amp; Terms
@@ -41,7 +44,7 @@ export default function Footer() {
               </ExternalLink>
               .
             </div>
-            <div className="mt-2">
+            <div className="mt-2" lang="en">
               We improve our products and advertising by using{" "}
               <ExternalLink href="https://clarity.microsoft.com/">
                 Microsoft Clarity
@@ -51,6 +54,13 @@ export default function Footer() {
             </div>
             <div className="mt-2">
               &copy; 2023 Piterator &middot;{" "}
+              <ExternalLink
+                href="mailto:lda@piterator.com"
+                title="电子邮箱：lda@piterator.com"
+              >
+                联系我们
+              </ExternalLink>{" "}
+              &middot;{" "}
               <ExternalLink href="https://github.com/piterator-org/luogu-discussion-archive">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
