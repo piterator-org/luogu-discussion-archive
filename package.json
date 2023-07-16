@@ -7,7 +7,7 @@
     "migrate": "dotenv -e .env.local -- pnpm exec prisma migrate deploy"
   },
   "dependencies": {
-    "@prisma/client": "^4.16.2"
+    "@prisma/client": "^5.0.0"
   },
   "devDependencies": {
     "dotenv-cli": "^7.2.1",
@@ -18,7 +18,7 @@
     "husky": "^8.0.3",
     "lint-staged": "^13.2.3",
     "prettier": "^3.0.0",
-    "prisma": "^4.16.2",
+    "prisma": "^5.0.0",
     "puppeteer": "^20.8.2"
   },
   "engines": {

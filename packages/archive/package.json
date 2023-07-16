@@ -16,7 +16,7 @@
   "dependencies": {
     "@fastify/cors": "^8.3.0",
     "@logtail/pino": "^0.4.3",
-    "@prisma/client": "^4.16.2",
+    "@prisma/client": "^5.0.0",
     "@socket.io/admin-ui": "^0.5.1",
     "fastify": "^4.19.2",
     "fastify-plugin": "^4.5.0",
