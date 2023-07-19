@@ -16,7 +16,7 @@
     "jsdom": "^22.1.0",
     "katex": "^0.16.8",
     "next": "^13.4.9",
-    "puppeteer": "^20.8.2",
+    "puppeteer": "^20.8.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-infinite-scroll-component": "^6.1.0",
@@ -32,7 +32,7 @@
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
-    "eslint": "^8.44.0",
+    "eslint": "^8.45.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^17.1.0",
     "eslint-config-next": "^13.4.9",
@@ -42,7 +42,7 @@
     "git-revision-webpack-plugin": "^5.0.0",
     "sass": "^1.63.6",
     "typescript": "^5.1.6",
-    "webpack": "^5.88.1"
+    "webpack": "^5.88.2"
   },
   "optionalDependencies": {
     "sharp": "^0.32.3"

@@ -15,11 +15,11 @@
   },
   "dependencies": {
     "@fastify/cors": "^8.3.0",
-    "@logtail/pino": "^0.4.3",
+    "@logtail/pino": "^0.4.5",
     "@prisma/client": "^5.0.0",
     "@socket.io/admin-ui": "^0.5.1",
-    "fastify": "^4.19.2",
-    "fastify-plugin": "^4.5.0",
+    "fastify": "^4.20.0",
+    "fastify-plugin": "^4.5.1",
     "jsdom": "^22.1.0",
     "pino": "^8.14.1",
     "socket.io": "^4.7.1"
@@ -27,7 +27,7 @@
   "devDependencies": {
     "@types/jsdom": "^21.1.1",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
-    "eslint": "^8.44.0",
+    "eslint": "^8.45.0",
     "eslint-config-airbnb-typescript": "^17.1.0",
     "typescript": "^5.1.6"
   },
