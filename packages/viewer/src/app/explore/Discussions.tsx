@@ -19,6 +19,7 @@ export default async function Discussions() {
       time: {
         gte: new Date(new Date().getTime() - LIMIT_MILLISECONDS_HOT_DISCUSSION),
       },
+      discussion: { takedown: { is: null } },
     },
     _count: true,
     orderBy: { _count: { id: "desc" } },
