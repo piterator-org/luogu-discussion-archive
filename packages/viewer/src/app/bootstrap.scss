@@ -234,3 +234,15 @@ details[open] summary .open-show-inline {
     bottom: -2.8em;
   }
 }
+
+.link-at-user {
+  text-decoration: none;
+}
+
+.link-at-user:hover {
+  text-decoration: underline;
+}
+
+.link-at-user-unstored {
+  color: #00b5ad;
+}

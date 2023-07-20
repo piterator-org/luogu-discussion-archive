@@ -29,7 +29,23 @@ export default async function Page({
           take: 1,
         },
         replies: {
-          select: { id: true, author: true, time: true, content: true },
+          select: {
+            id: true,
+            author: true,
+            time: true,
+            content: true,
+            takedown: {
+              select: {
+                submitter: {
+                  select: {
+                    id: true,
+                    username: true,
+                  },
+                },
+                reason: true,
+              },
+            },
+          },
           orderBy: { id: "asc" },
           skip: (page - 1) * REPLIES_PER_PAGE,
           take: REPLIES_PER_PAGE,

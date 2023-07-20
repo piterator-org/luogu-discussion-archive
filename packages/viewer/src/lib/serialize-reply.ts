@@ -1,8 +1,13 @@
 import { JSDOM } from "jsdom";
 import hljs from "highlight.js";
-import type { User } from "@prisma/client";
+import type { Discussion, ReplyTakedown, User } from "@prisma/client";
 import prisma from "@/lib/prisma";
-import { getUserIdFromUrl, getUserUrl } from "@/lib/luogu";
+import {
+  getDiscussionIdFromUrl,
+  getUserIdFromUrl,
+  getUserUrl,
+  getUserRealUrl,
+} from "@/lib/luogu";
 import stringifyTime from "@/lib/time";
 
 export type UserMetioned = User & { numReplies?: number };
@@ -16,6 +21,26 @@ function getMentionedUser(element: Element) {
   );
 }
 
+function getDiscussionUrl(discussionId: number) {
+  return `/${discussionId}`;
+}
+
+function getHtmlTookdown(takedown: {
+  submitter: { id: number; username: string };
+  reason: string;
+}) {
+  return `<p class="text-danger">该回复已按
+    <span class="text-body-tertiary">
+      @<a href="${getUserRealUrl(takedown.submitter.id)}">${
+        takedown.submitter.username
+      }</a>
+    </span> 要求删除。
+  </p>
+  <blockquote>
+    <p>${takedown.reason}</p>
+  </blockquote>`;
+}
+
 hljs.registerAliases(["plain"], { languageName: "plaintext" });
 hljs.configure({ languages: ["cpp"] });
 
@@ -27,11 +52,26 @@ function renderHljs(body: HTMLElement) {
 
 export default async function serializeReply(
   discussionId: number,
-  { content, time }: { content: string; time: Date },
+  {
+    content,
+    time,
+    takedown,
+  }: {
+    content: string;
+    time: Date;
+    takedown?: {
+      submitter: { id: number; username: string };
+      reason: string;
+    } | null;
+  },
 ) {
   const users: number[] = [];
+  const userElements: { ele: Element; user: number }[] = [];
+  const discussions: number[] = [];
+  const discussionElements: { ele: Element; discussion: number }[] = [];
 
-  const { document } = new JSDOM(content).window;
+  const { document } = new JSDOM(takedown ? getHtmlTookdown(takedown) : content)
+    .window;
   document.body.querySelectorAll("a[href]").forEach((element) => {
     element.setAttribute("target", "_blank");
     element.setAttribute("rel", "noopener noreferrer");
@@ -44,9 +84,26 @@ export default async function serializeReply(
       const uid = getMentionedUser(element);
       if (uid) {
         users.push(uid);
+        userElements.push({ ele: element, user: uid });
         element.setAttribute("data-uid", uid.toString());
-        element.classList.add("text-decoration-none", "link-teal");
+        // element.classList.add("text-decoration-none", "link-teal");
         element.setAttribute("href", getUserUrl(uid));
+      } else {
+        const mentionedDiscussionId = getDiscussionIdFromUrl(
+          new URL(element.getAttribute("href") as string),
+        );
+        if (mentionedDiscussionId) {
+          discussions.push(mentionedDiscussionId);
+          discussionElements.push({
+            ele: element,
+            discussion: mentionedDiscussionId,
+          });
+          element.setAttribute(
+            "data-discussion-id",
+            mentionedDiscussionId.toString(),
+          );
+          element.setAttribute("href", getDiscussionUrl(mentionedDiscussionId));
+        }
       }
     } catch (e) {
       // Invalid URL
@@ -62,6 +119,38 @@ export default async function serializeReply(
       .then((r) => Object.fromEntries(r.map((u) => [u.authorId, u._count]))),
     prisma.user.findMany({ where: { id: { in: users } } }),
   ]);
+  const indUsersMetioned: { [k: number]: User } = {};
+  // eslint-disable-next-line no-return-assign
+  usersMetioned.forEach((el) => (indUsersMetioned[el.id] = el));
+  // eslint-disable-next-line no-restricted-syntax
+  for (const ue of userElements) {
+    if (ue.user in indUsersMetioned) {
+      ue.ele.classList.add(
+        `lg-fg-${indUsersMetioned[ue.user].color}`,
+        "link-at-user",
+      );
+    } else {
+      ue.ele.classList.add("link-at-user", "link-at-user-unstored");
+    }
+  }
+  const discussionsMetioned = await prisma.discussion.findMany({
+    where: { id: { in: discussions } },
+  });
+  const indDiscussionsMetioned: { [k: number]: Discussion } = {};
+  // eslint-disable-next-line no-return-assign
+  discussionsMetioned.forEach((el) => (indDiscussionsMetioned[el.id] = el));
+  // eslint-disable-next-line no-restricted-syntax
+  for (const de of discussionElements) {
+    if (de.discussion in indDiscussionsMetioned) {
+      de.ele.classList.add("link-teal", "link-discussion");
+    } else {
+      de.ele.classList.add(
+        "link-danger",
+        "link-discussion",
+        "link-discussion-unstored",
+      );
+    }
+  }
   renderHljs(document.body);
   return {
     content: document.body.innerHTML,
@@ -76,16 +165,22 @@ export default async function serializeReply(
 export async function serializeReplyNoninteractive({
   content,
   time,
+  takedown,
 }: {
   content: string;
   time: Date;
+  takedown?: {
+    submitter: { id: number; username: string };
+    reason: string;
+  } | null;
 }) {
   const users: number[] = [];
   const userElements: { ele: Element; user: number }[] = [];
   const links: Set<string> = new Set();
   const linkElements: { ele: Element; link: string }[] = [];
 
-  const { document } = new JSDOM(content).window;
+  const { document } = new JSDOM(takedown ? getHtmlTookdown(takedown) : content)
+    .window;
   document.body.querySelectorAll("a[href]").forEach((element) => {
     element.setAttribute("target", "_blank");
     element.setAttribute("rel", "noopener noreferrer");

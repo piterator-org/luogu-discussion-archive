@@ -42,6 +42,18 @@ export function getUserIdFromUrl(target: URL) {
   return Number.isNaN(uid) ? null : uid;
 }
 
+export function getDiscussionIdFromUrl(target: URL) {
+  if (!isLuoguUrl(target)) return null;
+  const discussionId = parseInt(
+    (target.pathname.startsWith("/discuss/") &&
+      target.pathname.split("/")[2]) ||
+      ((target.pathname === "/discuss/show" &&
+        target.searchParams.get("postid")) as string),
+    10,
+  );
+  return Number.isNaN(discussionId) ? null : discussionId;
+}
+
 export function getDiscussionId(s: string) {
   const id = parseInt(s, 10);
   if (!Number.isNaN(id)) return id;

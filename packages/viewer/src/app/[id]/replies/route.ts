@@ -10,11 +10,28 @@ export async function GET(
   const cursor = request.nextUrl.searchParams.get("cursor");
   const limit = request.nextUrl.searchParams.get("limit");
   const replies = await prisma.reply.findMany({
+    select: {
+      id: true,
+      author: true,
+      time: true,
+      content: true,
+      discussionId: true,
+      takedown: {
+        select: {
+          submitter: {
+            select: {
+              id: true,
+              username: true,
+            },
+          },
+          reason: true,
+        },
+      },
+    },
     where: {
       discussionId: id,
       id: { gt: cursor ? parseInt(cursor, 10) : undefined },
     },
-    select: { id: true, time: true, author: true, content: true },
     take: parseInt(limit ?? "10", 10),
   });
   return NextResponse.json({

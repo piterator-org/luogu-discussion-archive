@@ -14,11 +14,47 @@ export async function GET(
   /* eslint-enable @typescript-eslint/no-non-null-assertion */
   const reply = await (offset <= 0
     ? prisma.reply.findFirst({
+        select: {
+          id: true,
+          author: true,
+          time: true,
+          content: true,
+          discussionId: true,
+          takedown: {
+            select: {
+              submitter: {
+                select: {
+                  id: true,
+                  username: true,
+                },
+              },
+              reason: true,
+            },
+          },
+        },
         where: { discussionId, authorId, id: { lt: replyId } },
         orderBy: { id: "desc" },
         skip: -offset,
       })
     : prisma.reply.findFirst({
+        select: {
+          id: true,
+          author: true,
+          time: true,
+          content: true,
+          discussionId: true,
+          takedown: {
+            select: {
+              submitter: {
+                select: {
+                  id: true,
+                  username: true,
+                },
+              },
+              reason: true,
+            },
+          },
+        },
         where: { discussionId, authorId, id: { gt: replyId } },
         orderBy: { id: "asc" },
         skip: offset - 1,

@@ -18,6 +18,17 @@ export default async (id: number) =>
           },
         },
       },
+      takedown: {
+        select: {
+          submitter: {
+            select: {
+              id: true,
+              username: true,
+            },
+          },
+          reason: true,
+        },
+      },
     },
     where: { id },
   })) ?? notFound();
