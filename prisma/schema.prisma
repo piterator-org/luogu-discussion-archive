@@ -22,6 +22,7 @@ model User {
   pastes              Paste[]
   judgements          Judgement[]
   discussionTakedowns DiscussionTakedown[]
+  replyTakedowns      ReplyTakedown[]
 }
 
 model Discussion {
@@ -49,13 +50,14 @@ model Snapshot {
 }
 
 model Reply {
-  id           Int        @id
-  discussion   Discussion @relation(fields: [discussionId], references: [id])
+  id           Int            @id
+  discussion   Discussion     @relation(fields: [discussionId], references: [id])
   discussionId Int
-  time         DateTime   @db.Timestamp(0)
-  author       User       @relation(fields: [authorId], references: [id])
+  time         DateTime       @db.Timestamp(0)
+  author       User           @relation(fields: [authorId], references: [id])
   authorId     Int
-  content      String     @db.Text
+  content      String         @db.Text
+  takedown     ReplyTakedown?
 
   @@index([discussionId])
 }
@@ -66,6 +68,14 @@ model DiscussionTakedown {
   reason       String
   submitter    User       @relation(fields: [submitterId], references: [id])
   submitterId  Int
+}
+
+model ReplyTakedown {
+  reply       Reply  @relation(fields: [replyId], references: [id])
+  replyId     Int    @id
+  reason      String
+  submitter   User   @relation(fields: [submitterId], references: [id])
+  submitterId Int
 }
 
 model Paste {
