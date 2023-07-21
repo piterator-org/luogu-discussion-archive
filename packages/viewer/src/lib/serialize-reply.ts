@@ -4,6 +4,7 @@ import type { Discussion, ReplyTakedown, User } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import {
   getDiscussionIdFromUrl,
+  getDiscussionIdFromLDAUrl,
   getUserIdFromUrl,
   getUserUrl,
   getUserRealUrl,
@@ -89,9 +90,7 @@ export default async function serializeReply(
         // element.classList.add("text-decoration-none", "link-teal");
         element.setAttribute("href", getUserUrl(uid));
       } else {
-        const mentionedDiscussionId = getDiscussionIdFromUrl(
-          new URL(element.getAttribute("href") as string),
-        );
+        const mentionedDiscussionId = getDiscussionIdFromUrl(urlAbsolute);
         if (mentionedDiscussionId) {
           discussions.push(mentionedDiscussionId);
           discussionElements.push({
@@ -103,6 +102,20 @@ export default async function serializeReply(
             mentionedDiscussionId.toString(),
           );
           element.setAttribute("href", getDiscussionUrl(mentionedDiscussionId));
+        } else {
+          const mentionedLDADiscussionId =
+            getDiscussionIdFromLDAUrl(urlAbsolute);
+          if (mentionedLDADiscussionId) {
+            discussions.push(mentionedLDADiscussionId);
+            discussionElements.push({
+              ele: element,
+              discussion: mentionedLDADiscussionId,
+            });
+            element.setAttribute(
+              "data-discussion-id",
+              mentionedLDADiscussionId.toString(),
+            );
+          }
         }
       }
     } catch (e) {

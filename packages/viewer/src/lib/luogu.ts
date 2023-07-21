@@ -26,10 +26,19 @@ export const getForumName = (forum: string) =>
 
 export const judgementUrl = "https://www.luogu.com.cn/judgement";
 
+const isHTTPorHTTPS = (url: URL) =>
+  (url.protocol === "https:" && ["", "443"].includes(url.port)) ||
+  (url.protocol === "http:" && ["", "80"].includes(url.port));
+
 const isLuoguUrl = (url: URL) =>
-  url.hostname === "www.luogu.com.cn" &&
-  ((url.protocol === "https:" && ["", "443"].includes(url.port)) ||
-    (url.protocol === "http:" && ["", "80"].includes(url.port)));
+  url.hostname === "www.luogu.com.cn" && isHTTPorHTTPS(url);
+
+const isLDAHackUrl = (url: URL) =>
+  url.hostname === "www.luogu.com.co" && isHTTPorHTTPS(url);
+
+const isLDAUrl = (url: URL) =>
+  ["lglg.top", "cf.lglg.top", "hk.lglg.top"].includes(url.hostname) &&
+  isHTTPorHTTPS(url);
 
 export function getUserIdFromUrl(target: URL) {
   if (!isLuoguUrl(target)) return null;
@@ -43,7 +52,7 @@ export function getUserIdFromUrl(target: URL) {
 }
 
 export function getDiscussionIdFromUrl(target: URL) {
-  if (!isLuoguUrl(target)) return null;
+  if (!isLuoguUrl(target) || !isLDAHackUrl(target)) return null;
   const discussionId = parseInt(
     (target.pathname.startsWith("/discuss/") &&
       target.pathname.split("/")[2]) ||
@@ -51,6 +60,13 @@ export function getDiscussionIdFromUrl(target: URL) {
         target.searchParams.get("postid")) as string),
     10,
   );
+  return Number.isNaN(discussionId) ? null : discussionId;
+}
+
+export function getDiscussionIdFromLDAUrl(target: URL) {
+  if (!isLDAUrl(target) || !/^d+$/.test(target.pathname.split("/")[1]))
+    return null;
+  const discussionId = parseInt(target.pathname.split("/")[1], 10);
   return Number.isNaN(discussionId) ? null : discussionId;
 }
 
