@@ -2,22 +2,22 @@ import { notFound } from "next/navigation";
 import prisma from "@/lib/prisma";
 import paginate from "@/lib/pagination";
 import PageButtons from "@/components/replies/PageButtons";
-import PotteryShard from "../PotteryShard";
+import Ostracon from "@/components/Ostracon";
 
-const SHARDS_PER_PAGE = parseInt(process.env.SHARDS_PER_PAGE ?? "10", 10);
+const OSTRACA_PER_PAGE = parseInt(process.env.OSTRACA_PER_PAGE ?? "10", 10);
 
 export default async function Page({ params }: { params: { page: string } }) {
   const page = parseInt(params.page, 10);
-  const shards =
+  const ostraca =
     (await prisma.judgement.findMany({
       select: { time: true, user: true, content: true },
       orderBy: { time: "desc" },
-      skip: (page - 1) * SHARDS_PER_PAGE,
-      take: SHARDS_PER_PAGE,
+      skip: (page - 1) * OSTRACA_PER_PAGE,
+      take: OSTRACA_PER_PAGE,
     })) ?? notFound();
 
   const numPages = Math.ceil(
-    (await prisma.judgement.count()) / SHARDS_PER_PAGE,
+    (await prisma.judgement.count()) / OSTRACA_PER_PAGE,
   );
 
   const { pagesLocalAttachedFront, pagesLocalAttachedBack, pagesLocal } =
@@ -25,10 +25,10 @@ export default async function Page({ params }: { params: { page: string } }) {
 
   return (
     <>
-      {shards.map((shard) => (
-        <PotteryShard
-          shard={shard}
-          key={`${shard.time.toISOString()}${shard.user.id}`}
+      {ostraca.map((ostracon) => (
+        <Ostracon
+          ostracon={ostracon}
+          key={`${ostracon.time.toISOString()}${ostracon.user.id}`}
         />
       ))}
       {numPages > 1 && (
