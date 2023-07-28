@@ -12,6 +12,7 @@ export default function TabNavigation({ uid }: { uid: string }) {
         { children: "参与", href: `/user/${uid}` },
         { children: "发帖", href: `/user/${uid}/discussions` },
         { children: "回帖", href: `/user/${uid}/replies` },
+        { children: "陶片", href: `/user/${uid}/judgements` },
       ].map(({ children, href }) => (
         <li className="nav-item" key={href}>
           <Link
