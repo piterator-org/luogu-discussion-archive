@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import useSWR from "swr";
+import type { User } from "@prisma/client";
 import fetcher from "@/lib/fetcher";
 import UserInfo from "@/components/UserInfo";
-import type { User } from "@prisma/client";
 import type { UserMetioned } from "@/lib/serialize-reply";
 import Content from "./Content";
 

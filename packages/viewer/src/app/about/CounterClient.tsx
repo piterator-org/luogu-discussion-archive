@@ -1,7 +1,7 @@
 "use client";
 
-import fetcher from "@/lib/fetcher";
 import useSWR from "swr";
+import fetcher from "@/lib/fetcher";
 
 interface Data {
   discussions: number;

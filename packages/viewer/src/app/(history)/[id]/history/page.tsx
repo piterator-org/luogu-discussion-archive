@@ -1,5 +1,5 @@
-import prisma from "@/lib/prisma";
 import Link from "next/link";
+import prisma from "@/lib/prisma";
 
 export default async function Page({ params }: { params: { id: string } }) {
   const id = parseInt(params.id, 10);

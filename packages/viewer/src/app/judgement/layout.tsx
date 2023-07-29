@@ -1,7 +1,7 @@
+import React from "react";
 import UpdateButton from "@/components/UpdateButton";
 import prisma from "@/lib/prisma";
 import { judgementUrl } from "@/lib/luogu";
-import React from "react";
 
 export const dynamic = "force-dynamic";
 

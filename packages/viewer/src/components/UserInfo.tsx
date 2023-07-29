@@ -1,7 +1,7 @@
 import "./luogu3.css";
 import type { User } from "@prisma/client";
-import { getUserUrl } from "@/lib/luogu";
 import Link from "next/link";
+import { getUserUrl } from "@/lib/luogu";
 
 export default function UserInfo({
   user,

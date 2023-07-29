@@ -1,6 +1,6 @@
 import Link from "next/link";
-import type { Discussion } from "@/lib/discussion";
 import { ReactNode } from "react";
+import type { Discussion } from "@/lib/discussion";
 import UserAvatar from "./UserAvatar";
 import UserInfo from "./UserInfo";
 

@@ -1,6 +1,6 @@
 import { JSDOM } from "jsdom";
 import hljs from "highlight.js";
-import type { Discussion, ReplyTakedown, User } from "@prisma/client";
+import type { Discussion, User } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import {
   getDiscussionIdFromUrl,

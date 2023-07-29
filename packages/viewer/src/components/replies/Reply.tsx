@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import type { User } from "@prisma/client";
+import Link from "next/link";
 import type { UserMetioned } from "@/lib/serialize-reply";
 import UserAvatar from "@/components/UserAvatar";
 import UserInfo from "@/components/UserInfo";
-import Link from "next/link";
 import Content from "./Content";
 import ContextViewer from "./ContextViewer";
 
