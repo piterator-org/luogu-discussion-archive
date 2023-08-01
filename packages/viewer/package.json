@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@floating-ui/dom": "^1.5.0",
+    "@floating-ui/dom": "^1.5.1",
     "@prisma/client": "^5.0.0",
     "bootstrap": "^5.3.1",
     "highlight.js": "^11.8.0",
@@ -29,7 +29,7 @@
     "@types/jsdom": "^21.1.1",
     "@types/katex": "^0.16.2",
     "@types/node": "^20.4.5",
-    "@types/react": "^18.2.17",
+    "@types/react": "^18.2.18",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "eslint": "^8.46.0",
@@ -38,9 +38,9 @@
     "eslint-config-next": "^13.4.9",
     "eslint-import-resolver-typescript": "^3.5.5",
     "eslint-plugin-import": "^2.28.0",
-    "eslint-plugin-react": "^7.33.0",
+    "eslint-plugin-react": "^7.33.1",
     "git-revision-webpack-plugin": "^5.0.0",
-    "sass": "^1.64.1",
+    "sass": "^1.64.2",
     "typescript": "^5.1.6",
     "webpack": "^5.88.2"
   },
