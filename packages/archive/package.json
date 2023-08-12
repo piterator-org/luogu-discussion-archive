@@ -15,19 +15,19 @@
   },
   "dependencies": {
     "@fastify/cors": "^8.3.0",
-    "@logtail/pino": "^0.4.5",
-    "@prisma/client": "^5.0.0",
+    "@logtail/pino": "^0.4.6",
+    "@prisma/client": "^5.1.1",
     "@socket.io/admin-ui": "^0.5.1",
     "fastify": "^4.21.0",
     "fastify-plugin": "^4.5.1",
     "jsdom": "^22.1.0",
-    "pino": "^8.14.2",
-    "socket.io": "^4.7.1"
+    "pino": "^8.15.0",
+    "socket.io": "^4.7.2"
   },
   "devDependencies": {
     "@types/jsdom": "^21.1.1",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
-    "eslint": "^8.46.0",
+    "eslint": "^8.47.0",
     "eslint-config-airbnb-typescript": "^17.1.0",
     "typescript": "^5.1.6"
   },
