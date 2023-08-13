@@ -1,7 +1,9 @@
 import prisma from "@/lib/prisma";
 import { selectDiscussion } from "@/lib/discussion";
-import { NUM_DISCUSSIONS_TOP_CHARTS } from "./constants";
-import TopChart from "./TopChart";
+import { NUM_DISCUSSIONS_TOP_CHARTS } from "../indices/constants";
+import TopChart from "../indices/TopChart";
+
+export const dynamic = "force-dynamic";
 
 export default async function MostReplied() {
   return (
