@@ -37,14 +37,14 @@ export default function DiscussionEntry({
         <div
           className={`entry${
             decoratorBreakpoint !== undefined ? `-${decoratorBreakpoint}` : ""
-          }-card bg-white rounded-4 shadow${
+          }-card rounded-4 shadow-bssb${
             decoratorShadow ? `-${decoratorShadow}` : ""
           } mb-${decoratorShadow === "sm" ? "3x" : "4s"}`}
         >
           <div
             className={`entry${
               decoratorBreakpoint !== undefined ? `-${decoratorBreakpoint}` : ""
-            }-meta bg-light rounded-top-4 pe-4 py-2 overflow-ellipsis`}
+            }-meta bg-light-bssb rounded-top-4 pe-4 py-2 overflow-ellipsis`}
           >
             <UserInfo user={discussion.snapshots[0].author} />
           </div>

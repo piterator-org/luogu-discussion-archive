@@ -73,7 +73,7 @@ export default async function Page({
         <Reply discussion={{ id, authorId }} reply={reply} key={reply.id} />
       ))}
       {numPages > 1 && (
-        <div className="bg-body rounded-4 shadow my-4s px-4 py-3 py-md-4 text-center">
+        <div className="bg-body rounded-4 shadow-bssb my-4s px-4 py-3 py-md-4 text-center">
           <PageButtons
             ellipsisFront={!pagesLocalAttachedFront}
             ellipsisBack={!pagesLocalAttachedBack}

@@ -36,7 +36,7 @@ export default function ContextViewer({
     fetcher,
   );
   return (
-    <div className="reply-context bg-body rounded-top-4 shadow pe-4 pt-3x pb-4x">
+    <div className="reply-context bg-body rounded-top-4 shadow-bssb pe-4 pt-3x pb-4x">
       <div className="d-flex">
         <div className="me-auto">
           {/* eslint-disable-next-line no-nested-ternary */}
@@ -95,7 +95,7 @@ export default function ContextViewer({
         </div>
         <div className="ps-2">
           <button
-            className="btn btn-light shadow-sm d-block border-0 rounded-circle mb-1x"
+            className="btn btn-light-bssb shadow-bssb-sm d-block border-0 rounded-circle mb-1x"
             type="submit"
             disabled={Object.keys(data ?? {}).length === 0 && pageIndex <= 0}
             onClick={() => setPageIndex(pageIndex - 1)}
@@ -116,7 +116,7 @@ export default function ContextViewer({
             </svg>
           </button>
           <button
-            className="btn btn-light shadow-sm d-block border-0 rounded-circle"
+            className="btn btn-light-bssb shadow-bssb-sm d-block border-0 rounded-circle"
             type="submit"
             disabled={Object.keys(data ?? {}).length === 0 && pageIndex > 0}
             onClick={() => setPageIndex(pageIndex + 1)}

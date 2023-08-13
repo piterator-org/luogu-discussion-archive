@@ -63,7 +63,7 @@ export default function UpdateButton({
     <>
       <button
         type="button"
-        className={`btn btn-outline-primary shadow-sm ${className ?? ""}`}
+        className={`btn btn-outline-primary shadow-bssb-sm ${className ?? ""}`}
         onClick={() => {
           setDisabled(true);
           if (Number.isNaN(id) || !socketRef.current?.connected)
@@ -83,7 +83,7 @@ export default function UpdateButton({
       </button>
       <div className="toast-container position-fixed bottom-0 end-0 p-3">
         <div
-          className="toast text-bg-danger border-0 shadow"
+          className="toast text-bg-danger border-0 shadow-bssb"
           role="alert"
           aria-live="assertive"
           aria-atomic="true"
