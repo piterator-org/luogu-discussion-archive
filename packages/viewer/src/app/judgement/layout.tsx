@@ -1,7 +1,6 @@
-import React from "react";
-import UpdateButton from "@/components/UpdateButton";
-import prisma from "@/lib/prisma";
 import { judgementUrl } from "@/lib/luogu";
+import UpdateButton from "@/components/UpdateButton";
+import JudgementCount from "./JudgementCount";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +15,9 @@ export default function Page({ children }: React.PropsWithChildren) {
           <ul className="list-group">
             <li className="d-flex justify-content-between lh-lg">
               <span className="fw-semibold">放逐令数量</span>
-              <span className="text-muted">{prisma.judgement.count()}</span>
+              <span className="text-muted">
+                <JudgementCount />
+              </span>
             </li>
           </ul>
           <div className="mt-2 mb-1">

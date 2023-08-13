@@ -2,10 +2,7 @@
 
 import useSWR from "swr";
 import fetcher from "@/lib/fetcher";
-
-function Placeholder() {
-  return <span className="placeholder" style={{ width: "1.5em" }} />;
-}
+import Placeholder from "@/components/Placeholder";
 
 export default function UserStatistics({ uid }: { uid: number }) {
   const { data, isLoading } = useSWR<{

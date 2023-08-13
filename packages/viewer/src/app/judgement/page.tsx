@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import Ostraca from "./Ostraca";
 
 export default function Page() {
-  redirect(`/judgement/1`);
+  return <Ostraca />;
 }
