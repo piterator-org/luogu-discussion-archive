@@ -15,15 +15,18 @@ export default async function Layout({
     paginate(numPages, page);
   return (
     <>
+      <h3 className="pb-1 text-center d-none d-md-block mb-4s">最新发布</h3>
       {children}
-      <PageButtons
-        ellipsisFront={!pagesLocalAttachedFront}
-        ellipsisBack={!pagesLocalAttachedBack}
-        numPages={numPages}
-        pagesLocal={pagesLocal}
-        generatorUrl={(curPage: number) => `/indices/${curPage}`}
-        active={page}
-      />
+      <div className="bg-body rounded-4 shadow-bssb my-4s px-4 py-3 py-md-4 text-center">
+        <PageButtons
+          ellipsisFront={!pagesLocalAttachedFront}
+          ellipsisBack={!pagesLocalAttachedBack}
+          numPages={numPages}
+          pagesLocal={pagesLocal}
+          generatorUrl={(curPage: number) => `/indices/${curPage}`}
+          active={page}
+        />
+      </div>
     </>
   );
 }

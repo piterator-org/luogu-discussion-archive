@@ -13,6 +13,7 @@ export default function TopChart({
         <DiscussionEntry
           discussion={discussion}
           key={discussion.id}
+          decoratorBreakpoint="md"
           metaBottom={
             <>
               <svg
