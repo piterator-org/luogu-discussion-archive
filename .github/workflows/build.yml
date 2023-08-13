@@ -3,7 +3,7 @@ name: Build artifacts
 
 on:
   push:
-    branches: ["main"]
+    branches: [main]
 
 jobs:
   build:
@@ -28,7 +28,7 @@ jobs:
       - name: Use Node.js LTS
         uses: actions/setup-node@v3
         with:
-          node-version: "lts/*"
+          node-version: lts/*
           cache: pnpm
 
       - name: Install dependencies
@@ -37,8 +37,11 @@ jobs:
       - name: Next.js build cache
         uses: actions/cache@v3
         with:
-          path: packages/viewer/.next/
-          key: ${{ runner.os }}-next
+          path: packages/viewer/.next/cache/
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('packages/viewer/**/*.[jt]s', 'packages/viewer/**/*.[jt]sx') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('pnpm-lock.yaml') }}-
+            ${{ runner.os }}-nextjs-
 
       - name: Build
         run: pnpm -r run build
@@ -48,11 +51,11 @@ jobs:
         with:
           name: luogu-discussion-archive
           path: packages/archive/dist/
-          retention-days: 1
 
       - name: Upload luogu-discussion-viewer
         uses: actions/upload-artifact@v3
         with:
           name: luogu-discussion-viewer
-          path: packages/viewer/.next/
-          retention-days: 1
+          path: |
+            packages/viewer/.next/
+            !packages/viewer/.next/cache/
