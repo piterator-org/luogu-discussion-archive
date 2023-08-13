@@ -31,7 +31,7 @@ export default async function Layout({
   return (
     <div className="row px-2 px-md-0">
       <div className="col-md-4 col-12 mb-4x">
-        <div className="rounded-4 shadow px-4 py-4 text-center">
+        <div className="rounded-4 shadow-bssb px-4 py-4 text-center">
           <a
             href={getUserRealUrl(user.id)}
             target="_blank"
@@ -39,7 +39,7 @@ export default async function Layout({
           >
             <Image
               src={getUserAvatarUrl(user.id)}
-              className="rounded-circle shadow-sm md-block mb-3x"
+              className="rounded-circle shadow-bssb-sm md-block mb-3x"
               width={96}
               height={96}
               alt={user.id.toString()}
@@ -53,7 +53,7 @@ export default async function Layout({
           </div>
           <div>
             <a
-              className="btn btn-outline-primary shadow-sm"
+              className="btn btn-outline-primary shadow-bssb-sm"
               href={getUserRealUrl(user.id)}
               target="_blank"
               rel="noopener noreferrer"

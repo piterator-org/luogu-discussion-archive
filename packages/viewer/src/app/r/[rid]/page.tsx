@@ -30,7 +30,7 @@ export default async function Page({ params }: { params: { rid: string } }) {
     <div className="row px-2 px-md-0">
       <div className="col-xl-9 col-lg-10 col-md-11 col-12 mt-3 mb-3x mx-auto">
         <div className="pb-3 mb-4x position-relative">
-          <div className="bg-white rounded-4 shadow">
+          <div className="rounded-4 shadow-bssb">
             <div className="px-md-4x px-4 pt-md-3x pt-2x pb-md-4x pb-4 position-relative">
               <Content
                 discussionAuthor={reply.discussion.snapshots[0].authorId}
@@ -76,7 +76,7 @@ export default async function Page({ params }: { params: { rid: string } }) {
             </div>
           </div>
         </div>
-        <div className="mt-5 bg-white rounded-4 shadow d-md-none px-4 py-3">
+        <div className="mt-5 rounded-4 shadow-bssb d-md-none px-4 py-3">
           <div className="fw-medium text-body-tertiary">
             于帖子{" "}
             <Link

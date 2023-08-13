@@ -42,8 +42,8 @@ export default function Reply({
       )}
       <div className="reply position-relative">
         <UserAvatar className="reply-avatar" user={reply.author} />
-        <div className="reply-card bg-white rounded-4 shadow mb-4s">
-          <div className="reply-meta bg-light rounded-top-4 pe-4 py-2">
+        <div className="reply-card rounded-4 shadow-bssb mb-4s">
+          <div className="reply-meta bg-light-bssb rounded-top-4 pe-4 py-2">
             <UserInfo user={reply.author} />
             {reply.author.id === discussion.authorId ? (
               <span

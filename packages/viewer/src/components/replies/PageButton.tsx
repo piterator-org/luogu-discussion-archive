@@ -13,14 +13,14 @@ export default function PageButton({
   return page === active ? (
     <button
       type="button"
-      className="btn btn-primary btn-sm shadow-sm border-0 mx-1 my-1"
+      className="btn btn-primary btn-sm shadow-bssb-sm border-0 mx-1 my-1"
       disabled
     >
       {page}
     </button>
   ) : (
     <Link
-      className="btn btn-light btn-sm shadow-sm border-0 text-secondary mx-1 my-1"
+      className="btn btn-light-bssb btn-sm shadow-bssb-sm border-0 text-secondary mx-1 my-1"
       href={target}
     >
       {page}

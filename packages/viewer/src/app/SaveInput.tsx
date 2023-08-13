@@ -29,7 +29,7 @@ export default function SaveInput() {
       }}
     >
       <input
-        className="form-control shadow rounded-start-4 border-0"
+        className="form-control shadow-bssb rounded-start-4 border-0"
         autoComplete="off"
         placeholder="帖子链接或编号"
         disabled={disabled}
@@ -42,7 +42,7 @@ export default function SaveInput() {
       <button
         className={`btn btn-${
           error ? "danger" : "success"
-        } rounded-end-4 shadow`}
+        } rounded-end-4 shadow-bssb`}
         type="submit"
         disabled={disabled}
       >

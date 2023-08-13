@@ -74,7 +74,7 @@ export default function InfiniteScrollReplies({
       {showPageButtons && !isValidating && pagination.numPages > 1 && (
         <>
           <button
-            className="btn btn-link w-100 rounded-4 shadow py-2x py-md-3 text-center text-decoration-none"
+            className="btn btn-link w-100 rounded-4 shadow-bssb py-2x py-md-3 text-center text-decoration-none"
             onClick={() => {
               // eslint-disable-next-line @typescript-eslint/no-floating-promises
               setSize(size + 1);
@@ -95,7 +95,7 @@ export default function InfiniteScrollReplies({
               <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
             </svg>
           </button>
-          <div className="bg-body rounded-4 shadow my-4s px-4 py-3 py-md-4 text-center">
+          <div className="bg-body rounded-4 shadow-bssb my-4s px-4 py-3 py-md-4 text-center">
             <PageButtons
               ellipsisFront={!pagination.pagesLocalAttachedFront}
               ellipsisBack={!pagination.pagesLocalAttachedBack}

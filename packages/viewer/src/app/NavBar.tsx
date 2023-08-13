@@ -10,7 +10,7 @@ export default function NavBar() {
   });
 
   return (
-    <nav className="navbar navbar-expand-md sticky-top bg-body shadow-sm">
+    <nav className="navbar navbar-expand-md sticky-top bg-body shadow-bssb-sm">
       <div className="container-lg d-flex my-1 px-3x px-md-container-default">
         <Link className="navbar-brand" href="/">
           <div
@@ -26,7 +26,7 @@ export default function NavBar() {
           </div>
         </Link>
         <button
-          className="navbar-toggler border-0 shadow-sm"
+          className="navbar-toggler border-0 shadow-bssb-sm"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarSupportedContent"
@@ -63,13 +63,13 @@ export default function NavBar() {
           </ul>
           <form className="d-flex my-tiny my-md-0" role="search">
             <input
-              className="form-control border-0 shadow-sm me-2"
+              className="form-control border-0 shadow-bssb-sm me-2"
               type="search"
               disabled
               placeholder="帖子关键词、发布者"
             />
             <button
-              className="btn btn-outline-success shadow-sm text-nowrap"
+              className="btn btn-outline-success shadow-bssb-sm text-nowrap"
               type="submit"
               disabled
             >

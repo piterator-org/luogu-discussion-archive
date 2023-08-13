@@ -97,7 +97,7 @@ export default function Content({
           className="position-absolute"
           style={{ display: "none" }}
         >
-          <div className="bg-body rounded-4 shadow-sm px-3 py-2x mb-2">
+          <div className="bg-body rounded-4 shadow-bssb-sm px-3 py-2x mb-2">
             <div className="d-flex me-auto">
               <div>
                 <UserAvatar className="" user={user} decoratorShadow="sm" />

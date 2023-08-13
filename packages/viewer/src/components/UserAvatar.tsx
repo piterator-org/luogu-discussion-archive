@@ -18,7 +18,7 @@ export default function UserAvatar({
     <Link href={getUserUrl(id)} className={className}>
       <Image
         src={getUserAvatarUrl(id)}
-        className={`rounded-circle shadow${
+        className={`rounded-circle shadow-bssb${
           decoratorShadow ? `-${decoratorShadow}` : ""
         }`}
         width={size}

@@ -7,7 +7,7 @@ export default function TabNavigation({ uid }: { uid: string }) {
   const pathname = usePathname();
 
   return (
-    <ul className="nav nav-pills nav-fill rounded-4 shadow mb-4s">
+    <ul className="nav nav-pills nav-fill rounded-4 shadow-bssb mb-4s">
       {[
         { children: "参与", href: `/user/${uid}` },
         { children: "发帖", href: `/user/${uid}/discussions` },

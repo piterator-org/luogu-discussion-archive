@@ -13,8 +13,8 @@ export default function Ostracon({
 }) {
   return (
     <div className="position-relative">
-      <div className="bg-white rounded-4 shadow mb-4s">
-        <div className="bg-light rounded-top-4 px-4 py-2">
+      <div className="rounded-4 shadow-bssb mb-4s">
+        <div className="bg-light-bssb rounded-top-4 px-4 py-2">
           <span className="text-body-tertiary">
             {ostracon.time.toLocaleString("zh")}
           </span>

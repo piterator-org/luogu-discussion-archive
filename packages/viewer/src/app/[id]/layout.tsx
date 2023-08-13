@@ -76,7 +76,7 @@ export default async function Page({
   return (
     <div className="row px-2 px-md-0">
       <div className="col-lg-4 col-md-5 col-12 order-md-last mb-4s">
-        <div className="rounded-4 shadow px-4 py-3">
+        <div className="rounded-4 shadow-bssb px-4 py-3">
           <div className="mb-2 fs-2 fw-semibold d-block d-md-none">{title}</div>
           <ul className="list-group">
             <li className="d-flex justify-content-between lh-lg">
@@ -117,7 +117,7 @@ export default async function Page({
           </ul>
           <div className="mt-2 mb-1">
             <a
-              className="btn btn-outline-secondary shadow-sm"
+              className="btn btn-outline-secondary shadow-bssb-sm"
               href={getDiscussionUrl(parseInt(params.id, 10))}
               target="_blank"
               rel="noopener noreferrer"
@@ -131,7 +131,7 @@ export default async function Page({
         </div>
       </div>
       <div className="col-lg-8 col-md-7 col-12">
-        <div className="bg-body rounded-4 shadow mb-4s px-4 py-3 fs-2 fw-semibold d-none d-md-block">
+        <div className="bg-body rounded-4 shadow-bssb mb-4s px-4 py-3 fs-2 fw-semibold d-none d-md-block">
           {title}
         </div>
         <Reply

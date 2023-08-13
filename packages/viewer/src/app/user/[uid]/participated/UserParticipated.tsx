@@ -70,8 +70,8 @@ export default function UserParticipated({
                 className="entry-md-avatar"
                 user={discussion.snapshots[0].author}
               />
-              <div className="entry-md-card bg-white rounded-4 shadow mb-4s">
-                <div className="entry-md-meta bg-light rounded-top-4 pe-4 py-2 overflow-ellipsis">
+              <div className="entry-md-card rounded-4 shadow-bssb mb-4s">
+                <div className="entry-md-meta bg-light-bssb rounded-top-4 pe-4 py-2 overflow-ellipsis">
                   <UserInfo user={discussion.snapshots[0].author} />
                   {discussion.snapshots[0].author.id === user.id ? (
                     <span
@@ -182,8 +182,8 @@ export default function UserParticipated({
                       <div className="timeline">
                         {discussion.replies.map((reply) => (
                           <div className="timeline-node" key={reply.id}>
-                            <div className="bg-white rounded-4 shadow-sm my-3x">
-                              <div className="timeline-connect bg-light rounded-top-4 px-4 py-2">
+                            <div className="rounded-4 shadow-bssb-sm my-3x">
+                              <div className="timeline-connect bg-light-bssb rounded-top-4 px-4 py-2">
                                 <UserInfo user={user} />
                                 {reply.authorId ===
                                 discussion.snapshots[0].author.id ? (
