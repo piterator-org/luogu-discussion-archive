@@ -8,15 +8,15 @@ export default async function Page({ params }: { params: { id: string } }) {
     orderBy: { time: "desc" },
   });
   return (
-    <li>
+    <ul>
       {snapshots.map((snapshot) => (
-        <ul key={snapshot.time.toISOString()}>
+        <li key={snapshot.time.toISOString()}>
           <Link href={`/${id}/snapshot/${snapshot.time.toISOString()}`}>
             {snapshot.time.toLocaleString("zh")} -{" "}
             {snapshot.until.toLocaleString("zh")}
           </Link>
-        </ul>
+        </li>
       ))}
-    </li>
+    </ul>
   );
 }
