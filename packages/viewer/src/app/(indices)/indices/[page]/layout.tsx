@@ -9,7 +9,8 @@ export default async function Layout({
 }: React.PropsWithChildren<{ params: { page: string } }>) {
   const page = parseInt(params.page, 10);
   const numPages = Math.ceil(
-    (await prisma.discussion.count()) / NUM_DISCUSSIONS_TOP_CHARTS,
+    (await prisma.discussion.count({ where: { takedown: { is: null } } })) /
+      NUM_DISCUSSIONS_TOP_CHARTS,
   );
   const { pagesLocalAttachedFront, pagesLocalAttachedBack, pagesLocal } =
     paginate(numPages, page);
