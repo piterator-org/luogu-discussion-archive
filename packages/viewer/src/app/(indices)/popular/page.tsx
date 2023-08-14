@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 export default async function MostReplied() {
   return (
     <>
-      <h3 className="pb-1 text-center d-none d-md-block mb-4s">最多回复</h3>
+      <h3 className="pb-1 text-center mb-4s">最多回复</h3>
       <TopChart
         discussions={await prisma.discussion.findMany({
           select: selectDiscussion,

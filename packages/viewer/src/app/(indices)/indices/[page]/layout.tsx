@@ -15,7 +15,7 @@ export default async function Layout({
     paginate(numPages, page);
   return (
     <>
-      <h3 className="pb-1 text-center d-none d-md-block mb-4s">最新发布</h3>
+      <h3 className="pb-1 text-center mb-4s">最新发布</h3>
       {children}
       <div className="bg-body rounded-4 shadow-bssb my-4s px-4 py-3 py-md-4 text-center">
         <PageButtons
