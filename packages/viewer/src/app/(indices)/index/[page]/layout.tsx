@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
 import PageButtons from "@/components/replies/PageButtons";
 import paginate from "@/lib/pagination";
-import { NUM_DISCUSSIONS_TOP_CHARTS } from "../constants";
+import { NUM_DISCUSSIONS_INDEX } from "../../constants";
 
 export default async function Layout({
   children,
@@ -10,7 +10,7 @@ export default async function Layout({
   const page = parseInt(params.page, 10);
   const numPages = Math.ceil(
     (await prisma.discussion.count({ where: { takedown: { is: null } } })) /
-      NUM_DISCUSSIONS_TOP_CHARTS,
+      NUM_DISCUSSIONS_INDEX,
   );
   const { pagesLocalAttachedFront, pagesLocalAttachedBack, pagesLocal } =
     paginate(numPages, page);
@@ -24,7 +24,7 @@ export default async function Layout({
           ellipsisBack={!pagesLocalAttachedBack}
           numPages={numPages}
           pagesLocal={pagesLocal}
-          generatorUrl={(curPage: number) => `/indices/${curPage}`}
+          generatorUrl={(curPage: number) => `/index/${curPage}`}
           active={page}
         />
       </div>

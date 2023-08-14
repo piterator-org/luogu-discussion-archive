@@ -46,7 +46,7 @@ export default function NavBar() {
               </Link>
             </li>
             <li className="nav-item my-tiny my-md-0">
-              <Link className="nav-link" href="/indices">
+              <Link className="nav-link" href="/index">
                 索引
               </Link>
             </li>

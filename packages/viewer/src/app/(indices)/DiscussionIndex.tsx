@@ -2,7 +2,7 @@ import stringifyTime from "@/lib/time";
 import type { Discussion } from "@/lib/discussion";
 import DiscussionEntry from "@/components/DiscussionEntry";
 
-export default function TopChart({
+export default function DiscussionIndex({
   discussions,
 }: {
   discussions: Discussion[];
