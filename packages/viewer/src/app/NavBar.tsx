@@ -66,7 +66,7 @@ export default function NavBar() {
               </Link>
             </li>
           </ul>
-          <form className="d-flex my-tiny my-md-0" role="search">
+          {/* <form className="d-flex my-tiny my-md-0" role="search">
             <input
               className="form-control border-0 shadow-bssb-sm me-2"
               type="search"
@@ -80,7 +80,7 @@ export default function NavBar() {
             >
               即将上线
             </button>
-          </form>
+          </form> */}
         </div>
       </div>
     </nav>
