@@ -1,5 +1,7 @@
 # luogu-discussion-archive
 
+## [网上试一试](https://lglg.top/)
+
 ## 依赖
 
 使用 pnpm 管理依赖
