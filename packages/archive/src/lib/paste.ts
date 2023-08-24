@@ -1,8 +1,6 @@
 import type { BaseLogger } from "pino";
-import type { PrismaClient } from "@prisma/client";
+import type { Color, PrismaClient } from "@prisma/client";
 import { getReponse } from "./parser";
-
-type Color = "Gray" | "Blue" | "Green" | "Orange" | "Red" | "Purple";
 
 interface UserSummary {
   uid: number;
@@ -89,8 +87,17 @@ export default async function savePaste(
   await prisma.$transaction([
     prisma.user.upsert({
       where: { id: paste.user.uid },
-      create: { ...user, id: paste.user.uid },
-      update: user,
+      create: { ...user, profile: { create: paste.user }, id: paste.user.uid },
+      update: {
+        ...user,
+        profile: {
+          upsert: {
+            where: { uid: paste.user.uid },
+            create: paste.user,
+            update: paste.user,
+          },
+        },
+      },
     }),
     prisma.paste.upsert({
       where: { id: paste.id },

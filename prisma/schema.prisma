@@ -17,12 +17,37 @@ model User {
   color               String               @db.VarChar
   checkmark           String?              @db.Char(7)
   badge               String?              @db.VarChar
+  profile             Profile?
   snapshots           Snapshot[]
   replies             Reply[]
   pastes              Paste[]
   judgements          Judgement[]
   discussionTakedowns DiscussionTakedown[]
   replyTakedowns      ReplyTakedown[]
+}
+
+enum Color {
+  Gray
+  Blue
+  Green
+  Orange
+  Red
+  Purple
+}
+
+model Profile {
+  user       User     @relation(fields: [uid], references: [id])
+  uid        Int      @id
+  name       String
+  slogan     String?
+  badge      String?
+  isAdmin    Boolean
+  isBanned   Boolean
+  color      Color
+  ccfLevel   Int
+  background String
+  isRoot     Boolean?
+  updatedAt  DateTime @updatedAt
 }
 
 model Discussion {
