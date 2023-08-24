@@ -1,6 +1,6 @@
 import type { BaseLogger } from "pino";
 import type { PrismaClient } from "@prisma/client";
-import { getReponse } from "./parser";
+import { getResponse } from "./parser";
 
 interface LegacyDiscussList {
   status: 200;
@@ -39,7 +39,7 @@ export default async function getDiscussionList(
   page: number,
   after: number,
 ) {
-  const response = await getReponse(
+  const response = await getResponse(
     logger,
     `https://www.luogu.com.cn/api/discuss?page=${page}`,
   );

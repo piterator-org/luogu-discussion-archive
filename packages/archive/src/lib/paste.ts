@@ -1,19 +1,7 @@
 import type { BaseLogger } from "pino";
-import type { Color, PrismaClient } from "@prisma/client";
-import { getReponse } from "./parser";
-
-interface UserSummary {
-  uid: number;
-  name: string;
-  slogan: string | null;
-  badge: string | null;
-  isAdmin: boolean;
-  isBanned: boolean;
-  color: Color;
-  ccfLevel: number;
-  background: string;
-  isRoot?: true;
-}
+import type { PrismaClient } from "@prisma/client";
+import { getResponse } from "./parser";
+import { type UserSummary, upsertUser } from "./user";
 
 interface Paste {
   data: string;
@@ -29,30 +17,12 @@ interface LuoguError {
   errorTrace: string;
 }
 
-const colors = {
-  Gray: "gray",
-  Blue: "bluelight",
-  Green: "green",
-  Orange: "orange",
-  Red: "red",
-  Purple: "purple",
-};
-
-function getCheckmark(ccfLevel: number) {
-  // https://help.luogu.com.cn/manual/luogu/account/award-certify#%E8%AE%A4%E8%AF%81%E5%90%8E%E6%9C%89%E4%BB%80%E4%B9%88%E7%94%A8
-  if (!ccfLevel) return null;
-  if (ccfLevel >= 3 && ccfLevel <= 5) return "#5eb95e";
-  if (ccfLevel >= 6 && ccfLevel <= 7) return "#3498db";
-  if (ccfLevel >= 8) return "#f1c40f";
-  throw Error(`Unknown CCF Level: ${ccfLevel}`);
-}
-
 export default async function savePaste(
   logger: BaseLogger,
   prisma: PrismaClient,
   id: string,
 ) {
-  const response = await getReponse(
+  const response = await getResponse(
     logger,
     `https://www.luogu.com.cn/paste/${id}?_contentOnly`,
   );
@@ -78,27 +48,8 @@ export default async function savePaste(
   }
   if (json.code !== 200) throw Error(json.currentData.errorMessage);
   const { paste } = json.currentData;
-  const user = {
-    username: paste.user.name,
-    color: colors[paste.user.color],
-    checkmark: getCheckmark(paste.user.ccfLevel),
-    badge: paste.user.badge,
-  };
   await prisma.$transaction([
-    prisma.user.upsert({
-      where: { id: paste.user.uid },
-      create: { ...user, profile: { create: paste.user }, id: paste.user.uid },
-      update: {
-        ...user,
-        profile: {
-          upsert: {
-            where: { uid: paste.user.uid },
-            create: paste.user,
-            update: paste.user,
-          },
-        },
-      },
-    }),
+    upsertUser(prisma, paste.user),
     prisma.paste.upsert({
       where: { id: paste.id },
       create: {

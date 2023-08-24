@@ -3,6 +3,7 @@ import type { FastifyPluginCallback } from "fastify";
 import { emitters, startTask } from "../lib/discussion";
 import saveJudgements from "../lib/judgement";
 import savePaste from "../lib/paste";
+import saveActivities from "../lib/activity";
 
 export default (function routes(fastify, options, done) {
   fastify.get("/", () => ({ tasks: Object.keys(emitters) }));
@@ -44,6 +45,16 @@ export default (function routes(fastify, options, done) {
       .then(() => reply.code(201).send({}))
       .catch((err: Error) => reply.code(500).send({ error: err.message }));
   });
+
+  fastify.get<{ Params: { page: string } }>(
+    "/activity/:page(\\d+)",
+    (request, reply) =>
+      saveActivities(
+        fastify.log,
+        fastify.prisma,
+        parseInt(request.params.page, 10),
+      ).then(() => reply.code(201).send({})),
+  );
 
   done();
 } as FastifyPluginCallback);

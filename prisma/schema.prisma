@@ -24,6 +24,7 @@ model User {
   judgements          Judgement[]
   discussionTakedowns DiscussionTakedown[]
   replyTakedowns      ReplyTakedown[]
+  activities          Activity[]
 }
 
 enum Color {
@@ -103,6 +104,15 @@ model ReplyTakedown {
   reason      String
   submitter   User   @relation(fields: [submitterId], references: [id])
   submitterId Int
+}
+
+model Activity {
+  id      Int      @id
+  type    Int
+  time    DateTime @db.Timestamp(0)
+  user    User     @relation(fields: [userId], references: [id])
+  userId  Int
+  content String
 }
 
 model Paste {
