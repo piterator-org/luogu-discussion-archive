@@ -47,6 +47,7 @@ model Snapshot {
 
   @@id([discussionId, time])
   @@index([discussionId])
+  @@index([authorId])
 }
 
 model Reply {
@@ -60,6 +61,7 @@ model Reply {
   takedown     ReplyTakedown?
 
   @@index([discussionId])
+  @@index([authorId])
 }
 
 model DiscussionTakedown {
@@ -84,6 +86,8 @@ model Paste {
   user      User            @relation(fields: [userId], references: [id])
   userId    Int
   snapshots PasteSnapshot[]
+
+  @@index([userId])
 }
 
 model PasteSnapshot {
@@ -105,4 +109,5 @@ model Judgement {
 
   @@id([time, userId])
   @@index([time(sort: Desc)])
+  @@index([userId])
 }
