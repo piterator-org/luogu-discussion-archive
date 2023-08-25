@@ -20,11 +20,9 @@ model User {
   profile             Profile?
   snapshots           Snapshot[]
   replies             Reply[]
-  pastes              Paste[]
   judgements          Judgement[]
   discussionTakedowns DiscussionTakedown[]
   replyTakedowns      ReplyTakedown[]
-  activities          Activity[]
 }
 
 enum Color {
@@ -37,8 +35,8 @@ enum Color {
 }
 
 model Profile {
-  user       User     @relation(fields: [uid], references: [id])
-  uid        Int      @id
+  user       User       @relation(fields: [uid], references: [id])
+  uid        Int        @id
   name       String
   slogan     String?
   badge      String?
@@ -48,7 +46,9 @@ model Profile {
   ccfLevel   Int
   background String
   isRoot     Boolean?
-  updatedAt  DateTime @updatedAt
+  updatedAt  DateTime   @updatedAt
+  activities Activity[]
+  paste      Paste[]
 }
 
 model Discussion {
@@ -110,7 +110,7 @@ model Activity {
   id      Int      @id
   type    Int
   time    DateTime @db.Timestamp(0)
-  user    User     @relation(fields: [userId], references: [id])
+  user    Profile  @relation(fields: [userId], references: [uid])
   userId  Int
   content String
 }
@@ -118,7 +118,7 @@ model Activity {
 model Paste {
   id        String          @id @db.Char(8)
   time      DateTime        @db.Timestamp(0)
-  user      User            @relation(fields: [userId], references: [id])
+  user      Profile         @relation(fields: [userId], references: [uid])
   userId    Int
   snapshots PasteSnapshot[]
 
