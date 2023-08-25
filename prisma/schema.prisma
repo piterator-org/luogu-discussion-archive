@@ -26,6 +26,7 @@ model User {
 }
 
 enum Color {
+  Cheater
   Gray
   Blue
   Green

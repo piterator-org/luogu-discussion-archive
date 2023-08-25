@@ -14,6 +14,7 @@ export interface UserSummary {
 }
 
 const colors: Record<Color, string> = {
+  Cheater: "brown",
   Gray: "gray",
   Blue: "bluelight",
   Green: "green",
