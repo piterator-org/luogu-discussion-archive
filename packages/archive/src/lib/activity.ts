@@ -35,6 +35,7 @@ export async function saveActivityPage(
   res.feeds.result.forEach((activity) => {
     const data = {
       ...activity,
+      content: activity.content.replace(/\0/g, ""),
       time: new Date(activity.time * 1000),
       user: undefined,
       userId: activity.user.uid,
