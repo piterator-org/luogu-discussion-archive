@@ -1,9 +1,10 @@
 import { once } from "node:events";
 import type { FastifyPluginCallback } from "fastify";
+import type { PrismaPromise } from "@prisma/client";
 import { emitters, startTask } from "../lib/discussion";
 import saveJudgements from "../lib/judgement";
 import savePaste from "../lib/paste";
-import saveActivities from "../lib/activity";
+import saveActivities, { saveActivityPage } from "../lib/activity";
 
 export default (function routes(fastify, options, done) {
   fastify.get("/", () => ({ tasks: Object.keys(emitters) }));
@@ -46,14 +47,27 @@ export default (function routes(fastify, options, done) {
       .catch((err: Error) => reply.code(500).send({ error: err.message }));
   });
 
+  /*
+  fastify.get("/activity", (request, reply) =>
+    saveActivities(fastify.log, fastify.prisma).then(() =>
+      reply.code(201).send({}),
+    ),
+  );
+  */
+
   fastify.get<{ Params: { page: string } }>(
     "/activity/:page(\\d+)",
-    (request, reply) =>
-      saveActivities(
+    async (request, reply) => {
+      const operations: Array<PrismaPromise<unknown>> = [];
+      const res = await saveActivityPage(
         fastify.log,
         fastify.prisma,
         parseInt(request.params.page, 10),
-      ).then(() => reply.code(201).send({})),
+        operations,
+      );
+      await fastify.prisma.$transaction(operations);
+      return reply.code(201).send(res);
+    },
   );
 
   done();

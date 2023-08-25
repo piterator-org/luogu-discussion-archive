@@ -21,11 +21,11 @@ interface Body {
   };
 }
 
-export default async function saveActivities(
+export async function saveActivityPage(
   logger: BaseLogger,
   prisma: PrismaClient,
-  page = 1,
-  operations: Array<PrismaPromise<unknown>> = [],
+  page: number,
+  operations: Array<PrismaPromise<unknown>>,
 ) {
   const res = await getResponse(
     logger,
@@ -48,11 +48,23 @@ export default async function saveActivities(
       }),
     );
   });
+  return res;
+}
+
+export default async function saveActivities(
+  logger: BaseLogger,
+  prisma: PrismaClient,
+) {
+  let res: Body;
+  let page = 0;
+  const operations: Array<PrismaPromise<unknown>> = [];
   const last = await prisma.activity.findFirst({ orderBy: { id: "desc" } });
-  if (
-    res.feeds.result.length !== res.feeds.perPage ||
-    (last && res.feeds.result[res.feeds.result.length - 1].id <= last.id)
-  )
-    return prisma.$transaction(operations);
-  return saveActivities(logger, prisma, page + 1, operations);
+  do
+    // eslint-disable-next-line no-plusplus, no-await-in-loop
+    res = await saveActivityPage(logger, prisma, ++page, operations);
+  while (
+    res.feeds.result.length === res.feeds.perPage &&
+    (!last || res.feeds.result[res.feeds.result.length - 1].id > last.id)
+  );
+  await prisma.$transaction(operations);
 }
