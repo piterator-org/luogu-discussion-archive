@@ -32,7 +32,7 @@ export default function Page() {
       </div>
       <div className="px-2 px-md-0 py-5">
         <div className="row">
-          <div className="col-12 col-md-8 col-xl-9">
+          <div className="col-12 col-md-7 col-lg-8 col-xl-9">
             <div className="rounded-4 shadow-bssb mb-4s px-3x pt-3x">
               <div className="row">
                 <Suspense fallback={<Spinner className="mt-2 mb-4" />}>
@@ -41,7 +41,7 @@ export default function Page() {
               </div>
             </div>
           </div>
-          <div className="col-12 col-md-4 col-xl-3">
+          <div className="col-12 col-md-5 col-lg-4 col-xl-3">
             <div className="rounded-4 shadow-bssb px-4 px-md-3x pt-3x pb-2x">
               <div className="mb-2 fs-4 fw-semibold">龙王榜（7 天）</div>
               <Suspense fallback={<Spinner className="mt-4 mb-3" />}>
