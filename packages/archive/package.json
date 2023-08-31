@@ -18,7 +18,7 @@
     "@logtail/pino": "^0.4.6",
     "@prisma/client": "^5.2.0",
     "@socket.io/admin-ui": "^0.5.1",
-    "fastify": "^4.21.0",
+    "fastify": "^4.22.0",
     "fastify-plugin": "^4.5.1",
     "jsdom": "^22.1.0",
     "pino": "^8.15.0",
@@ -27,9 +27,9 @@
   "devDependencies": {
     "@types/jsdom": "^21.1.2",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
-    "eslint": "^8.47.0",
+    "eslint": "^8.48.0",
     "eslint-config-airbnb-typescript": "^17.1.0",
-    "typescript": "^5.1.6"
+    "typescript": "^5.2.2"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.7",

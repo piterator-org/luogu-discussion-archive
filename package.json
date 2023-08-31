@@ -11,15 +11,15 @@
   },
   "devDependencies": {
     "dotenv-cli": "^7.3.0",
-    "eslint": "^8.47.0",
+    "eslint": "^8.48.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
     "husky": "^8.0.3",
     "lint-staged": "^14.0.1",
-    "prettier": "^3.0.2",
+    "prettier": "^3.0.3",
     "prisma": "^5.2.0",
-    "puppeteer": "^21.1.0"
+    "puppeteer": "^21.1.1"
   },
   "engines": {
     "pnpm": "^8.6.0"
