@@ -5,8 +5,8 @@ module.exports = {
       files: ["*.ts", "*.tsx"],
       extends: [
         "airbnb-typescript/base",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "plugin:@typescript-eslint/recommended-type-checked",
+        "plugin:@typescript-eslint/stylistic-type-checked",
         "plugin:prettier/recommended",
       ],
       parserOptions: {

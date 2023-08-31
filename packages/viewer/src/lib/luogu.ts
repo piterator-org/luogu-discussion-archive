@@ -76,6 +76,7 @@ export function getDiscussionId(s: string) {
   const url = new URL(s);
   if (!isLuoguUrl(url)) return NaN;
   return parseInt(
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     (url.pathname === "/discuss/show" && url.searchParams.get("postid")) ||
       ((url.pathname.startsWith("/discuss/") &&
         url.pathname.split("/")[2]) as string),

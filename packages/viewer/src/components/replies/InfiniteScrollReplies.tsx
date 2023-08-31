@@ -10,7 +10,7 @@ import Spinner from "@/components/Spinner";
 import PageButtons from "./PageButtons";
 import Reply from "./Reply";
 
-type PageData = {
+interface PageData {
   data: {
     id: number;
     time: string;
@@ -19,7 +19,7 @@ type PageData = {
     usersMetioned: UserMetioned[];
   }[];
   nextCursor: number;
-};
+}
 
 const REPLIES_PER_PAGE = parseInt(process.env.REPLIES_PER_PAGE ?? "10", 10);
 

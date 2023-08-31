@@ -67,6 +67,7 @@ export default function UpdateButton({
         onClick={() => {
           setDisabled(true);
           if (Number.isNaN(id) || !socketRef.current?.connected)
+            // eslint-disable-next-line @typescript-eslint/no-floating-promises
             fetch(`${process.env.NEXT_PUBLIC_ARCHIVE_HOST ?? ""}/${target}`)
               .then(() => router.refresh())
               .finally(() => setDisabled(false));

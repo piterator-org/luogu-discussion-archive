@@ -14,7 +14,7 @@ import stringifyTime from "@/lib/time";
 export type UserMetioned = User & { numReplies?: number };
 
 function getMentionedUser(element: Element) {
-  const href = element.getAttribute("href") as string;
+  const href = element.getAttribute("href")!;
   return (
     element.previousSibling?.nodeType === element.TEXT_NODE &&
     element.previousSibling.nodeValue?.endsWith("@") &&
@@ -78,7 +78,7 @@ export default async function serializeReply(
     element.setAttribute("rel", "noopener noreferrer");
     try {
       const urlAbsolute = new URL(
-        element.getAttribute("href") as string,
+        element.getAttribute("href")!,
         "https://www.luogu.com.cn/discuss/",
       );
       element.setAttribute("href", urlAbsolute.href);
@@ -132,7 +132,7 @@ export default async function serializeReply(
       .then((r) => Object.fromEntries(r.map((u) => [u.authorId, u._count]))),
     prisma.user.findMany({ where: { id: { in: users } } }),
   ]);
-  const indUsersMetioned: { [k: number]: User } = {};
+  const indUsersMetioned: Record<number, User> = {};
   // eslint-disable-next-line no-return-assign
   usersMetioned.forEach((el) => (indUsersMetioned[el.id] = el));
   // eslint-disable-next-line no-restricted-syntax
@@ -149,7 +149,7 @@ export default async function serializeReply(
   const discussionsMetioned = await prisma.discussion.findMany({
     where: { id: { in: discussions } },
   });
-  const indDiscussionsMetioned: { [k: number]: Discussion } = {};
+  const indDiscussionsMetioned: Record<number, Discussion> = {};
   // eslint-disable-next-line no-return-assign
   discussionsMetioned.forEach((el) => (indDiscussionsMetioned[el.id] = el));
   // eslint-disable-next-line no-restricted-syntax
@@ -189,7 +189,7 @@ export async function serializeReplyNoninteractive({
 }) {
   const users: number[] = [];
   const userElements: { ele: Element; user: number }[] = [];
-  const links: Set<string> = new Set();
+  const links = new Set<string>();
   const linkElements: { ele: Element; link: string }[] = [];
 
   const { document } = new JSDOM(takedown ? getHtmlTookdown(takedown) : content)
@@ -200,7 +200,7 @@ export async function serializeReplyNoninteractive({
     let flagLinkUnhandled = true;
     try {
       const urlAbsolute = new URL(
-        element.getAttribute("href") as string,
+        element.getAttribute("href")!,
         "https://www.luogu.com.cn/discuss/",
       );
       element.setAttribute("href", urlAbsolute.href);
@@ -215,10 +215,8 @@ export async function serializeReplyNoninteractive({
       } else {
         flagLinkUnhandled = false;
         if (
-          new URL(
-            element.textContent as string,
-            "https://www.luogu.com.cn/discuss/",
-          ).href !== urlAbsolute.href
+          new URL(element.textContent!, "https://www.luogu.com.cn/discuss/")
+            .href !== urlAbsolute.href
         ) {
           links.add(urlAbsolute.href);
           linkElements.push({
@@ -244,7 +242,7 @@ export async function serializeReplyNoninteractive({
   const usersMetioned = await prisma.user.findMany({
     where: { id: { in: users } },
   });
-  const indUsersMetioned: { [k: number]: User } = {};
+  const indUsersMetioned: Record<number, User> = {};
   // eslint-disable-next-line no-return-assign
   usersMetioned.forEach((el) => (indUsersMetioned[el.id] = el));
   // eslint-disable-next-line no-restricted-syntax
@@ -253,7 +251,7 @@ export async function serializeReplyNoninteractive({
       ue.ele.classList.add(`lg-fg-${indUsersMetioned[ue.user].color}`);
     }
   }
-  const indLinks: { [k: string]: number } = {};
+  const indLinks: Record<string, number> = {};
   // eslint-disable-next-line no-return-assign
   [...links].map((link, i) => (indLinks[link] = i + 1));
   // eslint-disable-next-line no-restricted-syntax

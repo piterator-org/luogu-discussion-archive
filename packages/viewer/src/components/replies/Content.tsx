@@ -25,7 +25,7 @@ export default function Content({
   const userRefs = useRef<Record<number, HTMLDivElement | null>>({});
 
   useEffect(() => {
-    renderMathInElement(contentRef.current as HTMLDivElement, {
+    renderMathInElement(contentRef.current!, {
       delimiters: [
         { left: "$$", right: "$$", display: true },
         { left: "$", right: "$", display: false },
@@ -33,8 +33,8 @@ export default function Content({
     });
 
     contentRef.current?.querySelectorAll("a[data-uid]").forEach((element) => {
-      const uid = parseInt(element.getAttribute("data-uid") as string, 10);
-      const tooltip = userRefs.current[uid] as HTMLDivElement;
+      const uid = parseInt(element.getAttribute("data-uid")!, 10);
+      const tooltip = userRefs.current[uid]!;
       if (!tooltip) return;
 
       function update() {

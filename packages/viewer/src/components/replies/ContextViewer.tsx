@@ -8,14 +8,14 @@ import UserInfo from "@/components/UserInfo";
 import type { UserMetioned } from "@/lib/serialize-reply";
 import Content from "./Content";
 
-type Data = {
+interface Data {
   id: number;
   discussionId: number;
   authorId: number;
   time: string;
   content: string;
   usersMetioned: UserMetioned[];
-};
+}
 
 export default function ContextViewer({
   discussionAuthor,
@@ -58,27 +58,27 @@ export default function ContextViewer({
                   className="text-body-secondary"
                   style={{ fontSize: ".8em" }}
                 >
-                  推测的上文，发布于 {(data as Data).time}
+                  推测的上文，发布于 {data!.time}
                 </span>
               ) : pageIndex < 0 ? (
                 <span
                   className="text-body-tertiary"
                   style={{ fontSize: ".8em" }}
                 >
-                  可能的上文，发布于 {(data as Data).time}
+                  可能的上文，发布于 {data!.time}
                 </span>
               ) : (
                 <span
                   className="text-body-tertiary"
                   style={{ fontSize: ".8em" }}
                 >
-                  本层后发布，发布于 {(data as Data).time}
+                  本层后发布，发布于 {data!.time}
                 </span>
               )}
               <Content
                 discussionAuthor={discussionAuthor}
-                content={(data as Data).content}
-                usersMetioned={(data as Data).usersMetioned}
+                content={data!.content}
+                usersMetioned={data!.usersMetioned}
               />
             </div>
           ) : (

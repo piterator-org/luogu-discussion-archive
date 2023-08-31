@@ -6,6 +6,7 @@ import UpdateButton from "@/components/UpdateButton";
 export default function Page() {
   const pathname = usePathname();
   const params = useParams();
+  const { id } = params;
   return (
     <div className="my-screen-middle">
       <div className="mx-auto" style={{ width: "max-content" }}>
@@ -62,7 +63,10 @@ export default function Page() {
         </div>
         {Number.isNaN(parseInt(pathname.slice(1), 10)) || (
           <div className="mt-2x mb-1">
-            <UpdateButton className="w-100" target={params.id}>
+            <UpdateButton
+              className="w-100"
+              target={typeof id === "string" ? id : id[0]}
+            >
               立即保存帖子
             </UpdateButton>
           </div>
