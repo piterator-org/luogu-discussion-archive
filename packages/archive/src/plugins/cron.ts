@@ -31,7 +31,7 @@ export default fastifyPlugin(
             (promise: Promise<unknown>, id) =>
               promise
                 .then(() => {
-                  fastify.log.debug({ targrt: id }, "started");
+                  fastify.log.debug({ target: id }, "started");
                   startTask(
                     fastify.log,
                     fastify.prisma,
@@ -41,7 +41,7 @@ export default fastifyPlugin(
                   return once(emitters[id], "done");
                 })
                 .catch((err) => fastify.log.error(err))
-                .then(() => fastify.log.debug({ targrt: id }, "finished"))
+                .then(() => fastify.log.debug({ target: id }, "finished"))
                 .then(() => delay(500)),
             Promise.resolve(),
           );
