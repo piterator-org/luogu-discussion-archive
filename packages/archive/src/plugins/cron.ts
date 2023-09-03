@@ -4,13 +4,14 @@ import fastifyPlugin from "fastify-plugin";
 import delay from "../utils/delay";
 import getDiscussionList from "../lib/list";
 import { emitters, startTask } from "../lib/discussion";
+import saveActivities from "../lib/activity";
 
 const AUTO_SAVE_PAGES = 5;
-const AUTO_SAVE_INTERVAL = 15000;
+const AUTO_SAVE_INTERVAL = 1000;
 
 export default fastifyPlugin(
   function cron(fastify, options, done) {
-    const save: () => Promise<unknown> = () =>
+    const save = (): Promise<unknown> =>
       Array.from(Array(AUTO_SAVE_PAGES))
         .reduce(
           (prev: Promise<number[]>, curr, i) =>
@@ -46,6 +47,7 @@ export default fastifyPlugin(
             Promise.resolve(),
           );
         })
+        .then(() => saveActivities(fastify.log, fastify.prisma))
         .catch((err) => fastify.log.error(err))
         .finally(() =>
           setTimeout(() => {

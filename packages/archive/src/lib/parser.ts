@@ -9,7 +9,7 @@ export async function getResponse(
   retries = 1,
 ) {
   const response = await fetch(url, {
-    headers: cookie ? { cookie: process.env.COOKIE as string } : undefined,
+    headers: cookie ? { cookie: process.env.COOKIE! } : undefined,
     cache: "no-cache",
   });
   logger.info(

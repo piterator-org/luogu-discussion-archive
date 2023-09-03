@@ -125,7 +125,7 @@ export async function saveDiscussion(
   operations = [];
   const pages = Math.max(
     ...Array.from(app.querySelectorAll("[data-ci-pagination-page]")).map((e) =>
-      parseInt(e.getAttribute("data-ci-pagination-page") as string, 10),
+      parseInt(e.getAttribute("data-ci-pagination-page")!, 10),
     ),
   );
   if (pages > 1) {

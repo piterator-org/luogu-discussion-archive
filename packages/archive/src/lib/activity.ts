@@ -25,7 +25,7 @@ export async function saveActivityPage(
   logger: BaseLogger,
   prisma: PrismaClient,
   page: number,
-  operations: Array<PrismaPromise<unknown>>,
+  operations: PrismaPromise<unknown>[],
 ) {
   const res = await getResponse(
     logger,
@@ -58,7 +58,7 @@ export default async function saveActivities(
 ) {
   let res: Body;
   let page = 0;
-  const operations: Array<PrismaPromise<unknown>> = [];
+  const operations: PrismaPromise<unknown>[] = [];
   const last = await prisma.activity.findFirst({ orderBy: { id: "desc" } });
   do
     // eslint-disable-next-line no-plusplus, no-await-in-loop
