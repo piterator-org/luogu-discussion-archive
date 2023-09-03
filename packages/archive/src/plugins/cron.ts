@@ -11,6 +11,7 @@ const AUTO_SAVE_INTERVAL = 1000;
 
 export default fastifyPlugin(
   function cron(fastify, options, done) {
+    const logger = fastify.log.child({ type: "cron" });
     const save = (): Promise<unknown> =>
       Array.from(Array(AUTO_SAVE_PAGES))
         .reduce(
@@ -18,7 +19,7 @@ export default fastifyPlugin(
             prev.then(async (array) =>
               array.concat(
                 await getDiscussionList(
-                  fastify.log,
+                  logger,
                   fastify.prisma,
                   i + 1,
                   Math.floor(new Date().getTime() / 1000) - 86400,
@@ -32,23 +33,23 @@ export default fastifyPlugin(
             (promise: Promise<unknown>, id) =>
               promise
                 .then(() => {
-                  fastify.log.debug({ target: id }, "started");
+                  logger.debug({ id }, "started");
                   startTask(
-                    fastify.log,
+                    logger,
                     fastify.prisma,
                     fastify.io.to(id.toString()),
                     id,
                   );
                   return once(emitters[id], "done");
                 })
-                .catch((err) => fastify.log.error(err))
-                .then(() => fastify.log.debug({ target: id }, "finished"))
+                .catch((err) => logger.error(err))
+                .then(() => logger.debug({ id }, "finished"))
                 .then(() => delay(500)),
             Promise.resolve(),
           );
         })
-        .then(() => saveActivities(fastify.log, fastify.prisma))
-        .catch((err) => fastify.log.error(err))
+        .then(() => saveActivities(logger, fastify.prisma))
+        .catch((err) => logger.error(err))
         .finally(() =>
           setTimeout(() => {
             // eslint-disable-next-line @typescript-eslint/no-floating-promises

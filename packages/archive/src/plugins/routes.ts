@@ -11,7 +11,7 @@ export default (function routes(fastify, options, done) {
 
   fastify.get("/judgement", (request, reply) => {
     saveJudgements(
-      fastify.log.child({ reqId: request.id, target: "judgement" }),
+      fastify.log.child({ reqId: request.id, type: "judgement" }),
       fastify.prisma,
     )
       .then(() => reply.code(201).send({}))
@@ -24,7 +24,8 @@ export default (function routes(fastify, options, done) {
       savePaste(
         fastify.log.child({
           reqId: request.id,
-          target: request.params.id,
+          type: "paste",
+          id: request.params.id,
         }),
         fastify.prisma,
         request.params.id,
@@ -37,7 +38,7 @@ export default (function routes(fastify, options, done) {
   fastify.get<{ Params: { id: string } }>("/:id(\\d+)", (request, reply) => {
     const id = parseInt(request.params.id, 10);
     startTask(
-      fastify.log.child({ reqId: request.id, target: id }),
+      fastify.log.child({ reqId: request.id, type: "discussion", id }),
       fastify.prisma,
       fastify.io.to(request.params.id),
       id,
@@ -48,9 +49,10 @@ export default (function routes(fastify, options, done) {
   });
 
   fastify.get("/activity", (request, reply) =>
-    saveActivities(fastify.log, fastify.prisma).then(() =>
-      reply.code(201).send({}),
-    ),
+    saveActivities(
+      fastify.log.child({ reqId: request.id, type: "activity" }),
+      fastify.prisma,
+    ).then(() => reply.code(201).send({})),
   );
 
   fastify.get<{ Params: { page: string } }>(
@@ -58,7 +60,11 @@ export default (function routes(fastify, options, done) {
     async (request, reply) => {
       const operations: PrismaPromise<unknown>[] = [];
       const res = await saveActivityPage(
-        fastify.log,
+        fastify.log.child({
+          reqId: request.id,
+          type: "activity",
+          page: request.params.page,
+        }),
         fastify.prisma,
         parseInt(request.params.page, 10),
         operations,
