@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
     select: {
       id: true,
       time: true,
-      user: { select: { user: true } },
+      user: true,
       content: true,
     },
     orderBy: { id: "desc" },
