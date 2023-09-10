@@ -29,6 +29,20 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
         )}
         <NavBar />
         <div className="container-lg" style={{ marginTop: "2rem" }}>
+          <div
+            className="col-lg-6 col-md-7 col-12 mt-5 mb-4 mx-auto alert alert-warning"
+            role="alert"
+          >
+            洛谷于 9 月 7 日
+            <a
+              href="https://www.luogu.com.cn/discuss/680426"
+              target="_blank"
+              rel="noreferrer"
+            >
+              升级了讨论区
+            </a>
+            ；由于维护者精力有限且学业繁忙，暂未完成相关适配。
+          </div>
           {children}
         </div>
         <Footer />
