@@ -41,7 +41,7 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
             >
               升级了讨论区
             </a>
-            ；由于维护者精力有限且学业繁忙，暂未完成相关适配。
+            ，暂未完成相关适配。
           </div>
           {children}
         </div>
