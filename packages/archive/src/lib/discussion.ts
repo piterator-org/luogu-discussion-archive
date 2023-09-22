@@ -1,155 +1,194 @@
 import { EventEmitter } from "node:events";
 import type { BaseLogger } from "pino";
 import type { BroadcastOperator } from "socket.io";
-import type { PrismaClient, PrismaPromise, Reply } from "@prisma/client";
-import { parseApp, parseComment, parseUser } from "./parser";
+import type { PrismaClient, PrismaPromise } from "@prisma/client";
+import { getResponse } from "./parser";
 import type { ServerToClientEvents } from "../plugins/socket.io";
+import { UserSummary } from "./user";
 
 const PAGES_PER_SAVE = parseInt(process.env.PAGES_PER_SAVE ?? "128", 10);
 export const emitters: Record<number, EventEmitter> = {};
 
-export async function saveDiscussion(
+interface ForumData {
+  name: string;
+  type: number;
+  slug: string;
+  color: string;
+}
+
+interface PostData {
+  id: number;
+  title: string;
+  author: UserSummary;
+  time: number;
+  content: string;
+}
+
+interface ReplyContent {
+  id: number;
+  author: UserSummary;
+  time: number;
+  content: string;
+}
+
+interface ReplyData {
+  count: number;
+  perPage: number;
+  result: ReplyContent[];
+}
+
+interface ResponseBody {
+  currentData: {
+    forum: ForumData;
+    post: PostData;
+    replies: ReplyData;
+  };
+}
+
+export async function savePost(
   logger: BaseLogger,
   prisma: PrismaClient,
   id: number,
   maxPages = PAGES_PER_SAVE,
 ) {
-  let operations: PrismaPromise<unknown>[] = [];
+  const operations: PrismaPromise<unknown>[] = [];
 
   const fetchPage = (page: number) =>
-    parseApp(logger, `https://www.luogu.com.cn/discuss/${id}?page=${page}`, 3);
+    getResponse(
+      logger,
+      `https://www.luogu.com.cn/discuss/${id}?_contentOnly&page=${page}`,
+      true,
+    ).then((response): Promise<ResponseBody> => response.json());
 
-  /* eslint-disable @typescript-eslint/no-non-null-assertion */
-  function extractComment(element: Element) {
-    const user = parseUser(element.querySelector(".am-comment-meta")!);
-    operations.push(
-      prisma.user.upsert({
-        where: { id: user.id },
-        create: user,
-        update: user,
-      }),
-    );
-    return { authorId: user.id, ...parseComment(element) };
-  }
-
-  const extractReplies = (app: HTMLElement) =>
-    Array.from(
-      app.querySelectorAll("article.am-comment-primary > div.am-comment-main"),
-    ).map((element) => ({
-      id: parseInt(
-        element
-          .querySelector(".am-comment-hd a[data-report-id]")!
-          .getAttribute("data-report-id")!,
-        10,
-      ),
-      discussionId: id,
-      ...extractComment(element),
-    })) as Reply[];
-
-  const extractMetadata = (app: HTMLElement) => ({
-    title: app.querySelector("div.lg-toolbar > h1")!.textContent!,
-    forum: app
-      .querySelector(
-        'ul.lg-summary-list > li > span > a[href^="/discuss/lists?forumname="]',
-      )!
-      .getAttribute("href")!
-      .slice("/discuss/lists?forumname=".length),
-    ...extractComment(
-      app.querySelector("article.am-comment-danger > div.am-comment-main")!,
-    ),
-    replyCount: parseInt(
-      app
-        .querySelector("article.am-comment-danger")!
-        .getAttribute("data-reply-count")!,
-      10,
-    ),
-  });
-  /* eslint-enable @typescript-eslint/no-non-null-assertion */
-
-  function saveReplies(replies: Reply[]) {
+  const saveReplies = async (replies: ReplyContent[]) => {
+    // Create reply if non exists
+    let replyOperations: PrismaPromise<unknown>[] = [];
     replies.forEach((reply) => {
-      operations.push(
+      replyOperations.push(
         prisma.reply.upsert({
           where: { id: reply.id },
-          create: reply,
-          update: reply,
+          create: {
+            id: reply.id,
+            postId: id,
+            time: new Date(reply.time * 1000),
+          },
+          update: {},
         }),
       );
     });
-  }
+    await prisma.$transaction(replyOperations);
 
-  const app = await fetchPage(1);
-  const discussion = extractMetadata(app);
+    // TODO: User Snapshot Hook
+
+    replyOperations = [];
+    await Promise.all(
+      /* Promise<void>[] */ replies.map(async (reply) => {
+        const lastSnapshot = await prisma.replySnapshot.findFirst({
+          where: { replyId: reply.id },
+          orderBy: { time: "desc" },
+        });
+        replyOperations.push(
+          !lastSnapshot ||
+            lastSnapshot.authorId !== reply.author.uid ||
+            lastSnapshot.content !== reply.content
+            ? prisma.replySnapshot.create({
+                data: {
+                  replyId: reply.id,
+                  content: reply.content,
+                  authorId: reply.author.uid,
+                  until: new Date(),
+                  time: new Date(reply.time * 1000),
+                },
+              })
+            : prisma.replySnapshot.update({
+                where: {
+                  replyId: lastSnapshot.replyId,
+                  replyId_time: {
+                    replyId: lastSnapshot.replyId,
+                    time: lastSnapshot.time,
+                  },
+                },
+                data: { until: new Date() },
+              }),
+        );
+      }),
+    );
+    await prisma.$transaction(replyOperations);
+  };
+
+  const { post, replies, forum } = await fetchPage(1).then(
+    (data) => data.currentData,
+  );
+  const postTime = new Date(post.time * 1000);
   operations.push(
-    prisma.discussion.upsert({
+    prisma.post.upsert({
       where: { id },
-      create: { id, time: discussion.time, replyCount: discussion.replyCount },
-      update: { time: discussion.time, replyCount: discussion.replyCount },
+      create: { id, time: postTime, replyCount: replies.count },
+      update: { time: postTime, replyCount: replies.count },
     }),
   );
 
-  const lastSnapshot = await prisma.snapshot.findFirst({
-    where: { discussionId: id },
+  // TODO: user snapshot update hook will be called here
+
+  const lastSnapshot = await prisma.postSnapshot.findFirst({
+    where: { postId: id },
     orderBy: { time: "desc" },
   });
+
   operations.push(
     lastSnapshot &&
-      lastSnapshot.forum === discussion.forum &&
-      lastSnapshot.title === discussion.title &&
-      lastSnapshot.authorId === discussion.authorId &&
-      lastSnapshot.content === discussion.content
-      ? prisma.snapshot.update({
+      lastSnapshot.forumSlug === forum.slug &&
+      lastSnapshot.title === post.title &&
+      lastSnapshot.authorId === post.author.uid &&
+      lastSnapshot.content === post.content
+      ? prisma.postSnapshot.update({
           where: {
-            discussionId_time: {
-              discussionId: lastSnapshot.discussionId,
+            postId_time: {
+              postId: lastSnapshot.postId,
               time: lastSnapshot.time,
             },
           },
           data: { until: new Date() },
         })
-      : prisma.snapshot.create({
+      : prisma.postSnapshot.create({
           data: {
-            discussionId: id,
-            title: discussion.title,
-            forum: discussion.forum,
-            authorId: discussion.authorId,
-            content: discussion.content,
+            postId: id,
+            title: post.title,
+            forumSlug: forum.slug,
+            authorId: post.author.uid,
+            content: post.content,
           },
         }),
   );
 
-  saveReplies(extractReplies(app));
   await prisma.$transaction(operations);
-  if (id in emitters) emitters[id].emit("start");
 
-  operations = [];
-  const pages = Math.max(
-    ...Array.from(app.querySelectorAll("[data-ci-pagination-page]")).map((e) =>
-      parseInt(e.getAttribute("data-ci-pagination-page")!, 10),
-    ),
-  );
+  let lastPromise = saveReplies(replies.result);
+  if (id in emitters) emitters[id].emit("start");
+  const pages = Math.ceil(replies.count / replies.perPage);
   if (pages > 1) {
     const { id: lastReply } = (
       await prisma.reply.findMany({
-        where: { discussionId: id },
+        where: { postId: id },
         orderBy: { id: "desc" },
         take: 1,
       })
     )[0];
     for (let i = Math.min(pages, maxPages); i > 0; i -= 1) {
-      const replies = extractReplies(
-        // eslint-disable-next-line no-await-in-loop
-        await fetchPage(i),
-      );
-      saveReplies(replies);
-      if (replies[replies.length - 1].id <= lastReply) break;
+      // eslint-disable-next-line no-await-in-loop
+      const [newReplies] = await Promise.all([
+        fetchPage(i).then((data) => data.currentData.replies.result),
+        lastPromise,
+      ]);
+      lastPromise = saveReplies(newReplies);
+      if (newReplies[newReplies.length - 1].id <= lastReply) break;
     }
   }
-  await prisma.$transaction(operations);
-  operations = [];
+
+  await lastPromise;
 
   if (pages > maxPages)
-    await saveDiscussion(logger, prisma, id, maxPages + PAGES_PER_SAVE);
+    await savePost(logger, prisma, id, maxPages + PAGES_PER_SAVE);
 }
 
 export function startTask(
@@ -163,7 +202,7 @@ export function startTask(
     emitters[id].on("start", () => room.volatile.emit("start"));
     emitters[id].on("done", () => room.emit("success"));
     emitters[id].on("error", (err: Error) => room.emit("failure", err.message));
-    saveDiscussion(logger, prisma, id)
+    savePost(logger, prisma, id)
       .then(() => emitters[id].emit("done"))
       .catch((err) => {
         emitters[id].emit("error", err);

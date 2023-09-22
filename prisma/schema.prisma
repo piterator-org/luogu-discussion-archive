@@ -11,20 +11,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id                  Int                  @id
-  username            String               @db.VarChar
-  color               String               @db.VarChar
-  checkmark           String?              @db.Char(7)
-  badge               String?              @db.VarChar
-  profile             Profile?
-  snapshots           Snapshot[]
-  replies             Reply[]
-  judgements          Judgement[]
-  discussionTakedowns DiscussionTakedown[]
-  replyTakedowns      ReplyTakedown[]
-}
-
 enum Color {
   Cheater
   Gray
@@ -35,115 +21,183 @@ enum Color {
   Purple
 }
 
-model Profile {
-  user       User       @relation(fields: [uid], references: [id])
-  uid        Int        @id
-  name       String
-  slogan     String?
-  badge      String?
-  isAdmin    Boolean
-  isBanned   Boolean
-  color      Color
-  ccfLevel   Int
-  background String
-  isRoot     Boolean?
-  updatedAt  DateTime   @updatedAt
-  activities Activity[]
-  paste      Paste[]
+model User {
+  id        Int      @id
+  updatedAt DateTime @updatedAt
+
+  userSnapshots UserSnapshot[]
+
+  activities     Activity[]
+  paste          Paste[]
+  judgements     Judgement[]
+  postSnapshots  PostSnapshot[]
+  replySnapshots ReplySnapshot[]
+
+  postTakedowns     PostTakedown[]
+  replyTakedowns    ReplyTakedown[]
+  activityTakedowns ActivityTakedown[]
 }
 
-model Discussion {
-  id         Int                 @id
-  time       DateTime            @db.Timestamp(0)
-  snapshots  Snapshot[]
+model Forum {
+  slug         String         @id
+  name         String
+  PostSnapshot PostSnapshot[]
+}
+
+model Post {
+  id         Int            @id
+  time       DateTime       @db.Timestamp(0)
+  snapshots  PostSnapshot[]
   replyCount Int
   replies    Reply[]
-  takedown   DiscussionTakedown?
-}
 
-model Snapshot {
-  discussion   Discussion @relation(fields: [discussionId], references: [id])
-  discussionId Int
-  time         DateTime   @default(now())
-  until        DateTime   @updatedAt
-  title        String     @db.VarChar
-  forum        String     @db.VarChar
-  author       User       @relation(fields: [authorId], references: [id])
-  authorId     Int
-  content      String     @db.Text
-
-  @@id([discussionId, time])
-  @@index([discussionId])
-  @@index([authorId])
+  takedown PostTakedown?
 }
 
 model Reply {
-  id           Int            @id
-  discussion   Discussion     @relation(fields: [discussionId], references: [id])
-  discussionId Int
-  time         DateTime       @db.Timestamp(0)
-  author       User           @relation(fields: [authorId], references: [id])
-  authorId     Int
-  content      String         @db.Text
-  takedown     ReplyTakedown?
+  id Int @id
 
-  @@index([discussionId])
-  @@index([authorId])
-}
+  post   Post @relation(fields: [postId], references: [id])
+  postId Int
 
-model DiscussionTakedown {
-  discussion   Discussion @relation(fields: [discussionId], references: [id])
-  discussionId Int        @id
-  reason       String
-  submitter    User       @relation(fields: [submitterId], references: [id])
-  submitterId  Int
-}
+  time DateTime @db.Timestamp(0)
 
-model ReplyTakedown {
-  reply       Reply  @relation(fields: [replyId], references: [id])
-  replyId     Int    @id
-  reason      String
-  submitter   User   @relation(fields: [submitterId], references: [id])
-  submitterId Int
+  snapshots ReplySnapshot[]
+  takedown  ReplyTakedown?
+
+  @@index([postId])
 }
 
 model Activity {
   id      Int      @id
   type    Int
   time    DateTime @db.Timestamp(0)
-  user    Profile  @relation(fields: [userId], references: [uid])
+  user    User     @relation(fields: [userId], references: [id])
   userId  Int
   content String
+
+  ActivityTakedown ActivityTakedown[]
 }
 
 model Paste {
-  id        String          @id @db.Char(8)
-  time      DateTime        @db.Timestamp(0)
-  user      Profile         @relation(fields: [userId], references: [uid])
+  id   String   @id @db.Char(8)
+  time DateTime @db.Timestamp(0)
+
+  user      User            @relation(fields: [userId], references: [id])
   userId    Int
   snapshots PasteSnapshot[]
 
   @@index([userId])
 }
 
-model PasteSnapshot {
-  paste   Paste    @relation(fields: [pasteId], references: [id])
-  pasteId String   @db.Char(8)
-  time    DateTime @default(now())
-  until   DateTime @updatedAt
-  public  Boolean
-  data    String?
-
-  @@id([pasteId, time])
-}
-
 model Judgement {
   time    DateTime @db.Timestamp(0)
   user    User     @relation(fields: [userId], references: [id])
   userId  Int
-  content String   @db.VarChar
+  content String
 
   @@id([time, userId])
   @@index([time(sort: Desc)])
+  @@index([userId])
+}
+
+model PostSnapshot {
+  post   Post @relation(fields: [postId], references: [id])
+  postId Int
+
+  author   User @relation(fields: [authorId], references: [id])
+  authorId Int
+
+  time      DateTime @default(now())
+  until     DateTime @updatedAt
+  title     String
+  forum     Forum    @relation(fields: [forumSlug], references: [slug])
+  forumSlug String
+
+  content String @db.Text
+
+  @@id([postId, time])
+  @@index([postId])
+  @@index([authorId])
+}
+
+model ReplySnapshot {
+  reply   Reply @relation(fields: [replyId], references: [id])
+  replyId Int
+
+  author   User @relation(fields: [authorId], references: [id])
+  authorId Int
+
+  time    DateTime @default(now())
+  until   DateTime @updatedAt
+  content String   @db.Text
+
+  @@id([replyId, time])
+  @@index([replyId])
+  @@index([authorId])
+}
+
+model PasteSnapshot {
+  paste   Paste  @relation(fields: [pasteId], references: [id])
+  pasteId String @db.Char(8)
+
+  time   DateTime @default(now())
+  until  DateTime @updatedAt
+  public Boolean
+  data   String?
+
+  @@id([pasteId, time])
+}
+
+model PostTakedown {
+  post   Post @relation(fields: [postId], references: [id])
+  postId Int  @id
+
+  submitter   User @relation(fields: [submitterId], references: [id])
+  submitterId Int
+
+  reason String
+}
+
+model ReplyTakedown {
+  reply   Reply @relation(fields: [replyId], references: [id])
+  replyId Int   @id
+
+  submitter   User @relation(fields: [submitterId], references: [id])
+  submitterId Int
+
+  reason String
+}
+
+model ActivityTakedown {
+  activity   Activity @relation(fields: [activityId], references: [id])
+  activityId Int      @id
+
+  submitter   User @relation(fields: [submitterId], references: [id])
+  submitterId Int
+
+  reason String
+}
+
+model UserSnapshot {
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+
+  name   String
+  slogan String?
+  badge  String?
+
+  isAdmin  Boolean
+  isBanned Boolean
+  isRoot   Boolean?
+
+  color      Color
+  ccfLevel   Int
+  background String
+
+  until DateTime @updatedAt
+  time  DateTime @default(now())
+
+  @@id([userId, time])
   @@index([userId])
 }

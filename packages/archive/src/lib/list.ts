@@ -48,7 +48,7 @@ export default async function getDiscussionList(
   } = (await response.json()) as LegacyDiscussList;
   const saved = Object.fromEntries(
     (
-      await prisma.discussion.findMany({
+      await prisma.post.findMany({
         select: {
           id: true,
           replies: { select: { time: true }, orderBy: { id: "desc" }, take: 1 },

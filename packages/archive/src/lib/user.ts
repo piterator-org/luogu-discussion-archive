@@ -9,7 +9,7 @@ export interface UserSummary {
   isBanned: boolean;
   color: Color;
   ccfLevel: number;
-  background: string;
+  background?: string;
   isRoot?: true;
 }
 

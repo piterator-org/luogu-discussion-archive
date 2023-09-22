@@ -1,3 +1,7 @@
+**未准备好生产使用（是根本没法用好吧）**
+
+**功能 / 需求 / Schema 尚未稳定**
+
 # luogu-discussion-archive
 
 ## 依赖
