@@ -4,6 +4,7 @@ import type { BaseLogger } from "pino";
 import type { PrismaClient, PrismaPromise } from "@prisma/client";
 import { getResponse } from "./parser";
 import { upsertUser, type UserSummary } from "./user";
+import { upsertUserSnapshotHook } from "./hooks";
 
 export interface Activity {
   content: string;
@@ -26,11 +27,12 @@ export async function saveActivityPage(
   prisma: PrismaClient,
   page: number,
   operations: PrismaPromise<unknown>[],
+  userPromises: Promise<unknown>[]
 ) {
   const res = await getResponse(
     logger,
     `https://www.luogu.com.cn/api/feed/list?page=${page}`,
-    false,
+    false
   ).then((response): Promise<Body> => response.json());
   res.feeds.result.forEach((activity) => {
     const data = {
@@ -40,13 +42,13 @@ export async function saveActivityPage(
       user: undefined,
       userId: activity.user.uid,
     };
+    userPromises.push(upsertUserSnapshotHook(activity.user));
     operations.push(
-      upsertUser(prisma, activity.user),
       prisma.activity.upsert({
         where: { id: activity.id },
         create: data,
         update: data,
-      }),
+      })
     );
   });
   return res;
@@ -54,18 +56,26 @@ export async function saveActivityPage(
 
 export default async function saveActivities(
   logger: BaseLogger,
-  prisma: PrismaClient,
+  prisma: PrismaClient
 ) {
   let res: Body;
   let page = 0;
   const operations: PrismaPromise<unknown>[] = [];
+  const userPromises: Promise<unknown>[] = [];
   const last = await prisma.activity.findFirst({ orderBy: { id: "desc" } });
   do
     // eslint-disable-next-line no-plusplus, no-await-in-loop
-    res = await saveActivityPage(logger, prisma, ++page, operations);
+    res = await saveActivityPage(
+      logger,
+      prisma,
+      ++page,
+      operations,
+      userPromises
+    );
   while (
     res.feeds.result.length === res.feeds.perPage &&
     (!last || res.feeds.result[res.feeds.result.length - 1].id > last.id)
   );
+  await Promise.all(userPromises);
   await prisma.$transaction(operations);
 }

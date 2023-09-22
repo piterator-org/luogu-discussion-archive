@@ -101,6 +101,29 @@ model Judgement {
   @@index([userId])
 }
 
+model UserSnapshot {
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+
+  name   String
+  slogan String?
+  badge  String?
+
+  isAdmin  Boolean
+  isBanned Boolean
+  isRoot   Boolean?
+
+  color      Color
+  ccfLevel   Int
+  background String
+
+  until DateTime @updatedAt
+  time  DateTime @default(now())
+
+  @@id([userId, time])
+  @@index([userId])
+}
+
 model PostSnapshot {
   post   Post @relation(fields: [postId], references: [id])
   postId Int
@@ -177,27 +200,4 @@ model ActivityTakedown {
   submitterId Int
 
   reason String
-}
-
-model UserSnapshot {
-  user   User @relation(fields: [userId], references: [id])
-  userId Int
-
-  name   String
-  slogan String?
-  badge  String?
-
-  isAdmin  Boolean
-  isBanned Boolean
-  isRoot   Boolean?
-
-  color      Color
-  ccfLevel   Int
-  background String
-
-  until DateTime @updatedAt
-  time  DateTime @default(now())
-
-  @@id([userId, time])
-  @@index([userId])
 }
