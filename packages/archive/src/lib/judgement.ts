@@ -4,30 +4,36 @@ import { parseApp, parseComment, parseUser } from "./parser";
 
 export default async function saveJudgements(
   logger: BaseLogger,
-  prisma: PrismaClient,
+  prisma: PrismaClient
 ) {
   const operations: PrismaPromise<unknown>[] = [];
 
   (await parseApp(logger, "https://www.luogu.com.cn/judgement"))
     .querySelectorAll("li.feed-li > div.am-comment-main")
-    .forEach((element) => {
+    .forEach(async (element) => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const user = parseUser(element.querySelector(".feed-username")!);
-      operations.push(
-        prisma.user.upsert({
-          where: { id: user.id },
-          create: user,
-          update: user,
-        }),
-      );
-
       const judgement = { userId: user.id, ...parseComment(element) };
+      const profile = {
+        ...user,
+        user: {
+          connectOrCreate: {
+            where: { id: user.id },
+            create: { id: user.id },
+          },
+        },
+      };
       operations.push(
+        prisma.judgementProfile.upsert({
+          where: { userId: user.id },
+          update: profile,
+          create: profile,
+        }),
         prisma.judgement.upsert({
           where: { time_userId: { time: judgement.time, userId: user.id } },
           create: judgement,
           update: judgement,
-        }),
+        })
       );
     });
 

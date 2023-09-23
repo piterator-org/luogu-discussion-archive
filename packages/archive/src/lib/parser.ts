@@ -47,7 +47,7 @@ export function parseUser(element: Element) {
   const a = element.querySelector('a[href^="/user/"]')!;
   return {
     id: parseInt(a.getAttribute("href")!.slice("/user/".length), 10),
-    username: a.textContent!,
+    name: a.textContent!,
     color: a.getAttribute("class")!.split(" ", 1)[0].slice("lg-fg-".length),
     checkmark: element.querySelector("a > svg")?.getAttribute("fill") ?? null,
     badge: element.querySelector("span.am-badge")?.innerHTML ?? null,

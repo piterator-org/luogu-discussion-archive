@@ -72,10 +72,11 @@ export async function savePost(
     ).then((response): Promise<ResponseBody> => response.json());
 
   const saveReplies = async (replies: ReplyContent[]) => {
-    await Promise.all(
-      replies.map(({ author }) => upsertUserSnapshotHook(author))
-    );
-
+    await prisma.$transaction(async (tx) => {
+      for (const { author } of replies) {
+        upsertUserSnapshotHook(tx, author);
+      }
+    });
     allReplies = [...allReplies, ...replies];
   };
 
@@ -120,7 +121,7 @@ export async function savePost(
   const { post, replies, forum } = (await fetchPage(1)).currentData;
   const postTime = new Date(post.time * 1000);
 
-  await upsertUserSnapshotHook(post.author);
+  await upsertUserSnapshotHook(prisma, post.author);
 
   await prisma.$transaction(async (tx) => {
     await tx.post.upsert({

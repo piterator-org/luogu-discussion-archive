@@ -1,48 +1,45 @@
-import { PrismaPromise, UserSnapshot } from "@prisma/client";
-import prisma from "./prisma";
+import { Prisma, PrismaClient, UserSnapshot } from "@prisma/client";
 import { UserSummary } from "./user";
 
-const postUpsertUserSnapshot = (
-  user: UserSummary,
-  snapshot: UserSnapshot | null
+export const upsertUserSnapshotHook = async (
+  tx: PrismaClient | Prisma.TransactionClient,
+  user: UserSummary
 ) => {
+  const lastSnapshot = await tx.userSnapshot.findFirst({
+    where: { userId: user.uid },
+    orderBy: { time: "desc" },
+  });
   if (
-    snapshot &&
-    user.slogan === snapshot.slogan &&
-    user.ccfLevel === snapshot.ccfLevel &&
-    user.badge === snapshot.badge &&
-    user.isAdmin === snapshot.isAdmin &&
-    user.isBanned === snapshot.isBanned &&
-    user.isRoot === snapshot.isRoot &&
-    user.color === snapshot.color &&
-    user.name === snapshot.name &&
-    user.slogan === snapshot.slogan &&
-    (user.background || "") === snapshot.background
+    lastSnapshot !== null &&
+    user.slogan === lastSnapshot.slogan &&
+    user.ccfLevel === lastSnapshot.ccfLevel &&
+    user.badge === lastSnapshot.badge &&
+    user.isAdmin === lastSnapshot.isAdmin &&
+    user.isBanned === lastSnapshot.isBanned &&
+    (user.isRoot ?? null) === lastSnapshot.isRoot &&
+    user.color === lastSnapshot.color &&
+    user.name === lastSnapshot.name &&
+    user.slogan === lastSnapshot.slogan &&
+    (user.background ?? "") === lastSnapshot.background
   ) {
-    return prisma.userSnapshot.update({
-      where: { userId_time: { ...snapshot } },
+    return await tx.userSnapshot.update({
+      where: {
+        userId_time: { userId: lastSnapshot.userId, time: lastSnapshot.time },
+      },
       data: { until: new Date() },
     });
   }
-  return prisma.userSnapshot.create({
+  const userSnapshot = { ...user, uid: undefined };
+  return await tx.userSnapshot.create({
     data: {
-      ...user,
-      userId: user.uid,
-      background: user.background || "",
-      time: new Date(),
+      ...userSnapshot,
+      background: user.background ?? "",
+      user: {
+        connectOrCreate: {
+          where: { id: user.uid },
+          create: { id: user.uid },
+        },
+      },
     },
   });
-};
-
-export const upsertUserSnapshotHook = async (user: UserSummary) => {
-  const lastSnapshot = await prisma.userSnapshot.findFirst({
-    where: {
-      userId: user.uid,
-    },
-    orderBy: {
-      time: "desc",
-    },
-  });
-
-  return postUpsertUserSnapshot(user, lastSnapshot);
 };

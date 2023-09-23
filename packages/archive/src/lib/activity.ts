@@ -3,7 +3,7 @@
 import type { BaseLogger } from "pino";
 import type { PrismaClient, PrismaPromise } from "@prisma/client";
 import { getResponse } from "./parser";
-import { upsertUser, type UserSummary } from "./user";
+import type { UserSummary } from "./user";
 import { upsertUserSnapshotHook } from "./hooks";
 
 export interface Activity {
@@ -26,14 +26,16 @@ export async function saveActivityPage(
   logger: BaseLogger,
   prisma: PrismaClient,
   page: number,
-  operations: PrismaPromise<unknown>[],
-  userPromises: Promise<unknown>[]
+  operations: PrismaPromise<unknown>[]
 ) {
   const res = await getResponse(
     logger,
     `https://www.luogu.com.cn/api/feed/list?page=${page}`,
     false
   ).then((response): Promise<Body> => response.json());
+  for (const { user } of res.feeds.result) {
+    await upsertUserSnapshotHook(prisma, user);
+  }
   res.feeds.result.forEach((activity) => {
     const data = {
       ...activity,
@@ -42,7 +44,6 @@ export async function saveActivityPage(
       user: undefined,
       userId: activity.user.uid,
     };
-    userPromises.push(upsertUserSnapshotHook(activity.user));
     operations.push(
       prisma.activity.upsert({
         where: { id: activity.id },
@@ -61,21 +62,13 @@ export default async function saveActivities(
   let res: Body;
   let page = 0;
   const operations: PrismaPromise<unknown>[] = [];
-  const userPromises: Promise<unknown>[] = [];
   const last = await prisma.activity.findFirst({ orderBy: { id: "desc" } });
   do
     // eslint-disable-next-line no-plusplus, no-await-in-loop
-    res = await saveActivityPage(
-      logger,
-      prisma,
-      ++page,
-      operations,
-      userPromises
-    );
+    res = await saveActivityPage(logger, prisma, ++page, operations);
   while (
     res.feeds.result.length === res.feeds.perPage &&
     (!last || res.feeds.result[res.feeds.result.length - 1].id > last.id)
   );
-  await Promise.all(userPromises);
   await prisma.$transaction(operations);
 }

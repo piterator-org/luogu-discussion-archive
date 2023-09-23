@@ -36,6 +36,7 @@ model User {
   postTakedowns     PostTakedown[]
   replyTakedowns    ReplyTakedown[]
   activityTakedowns ActivityTakedown[]
+  JudgementProfile  JudgementProfile?
 }
 
 model Forum {
@@ -91,13 +92,30 @@ model Paste {
 }
 
 model Judgement {
-  time    DateTime @db.Timestamp(0)
-  user    User     @relation(fields: [userId], references: [id])
+  time DateTime @db.Timestamp(0)
+
+  user    User   @relation(fields: [userId], references: [id])
   userId  Int
   content String
 
   @@id([time, userId])
   @@index([time(sort: Desc)])
+  @@index([userId])
+}
+
+model JudgementProfile {
+  user   User @relation(fields: [userId], references: [id])
+  userId Int  @id
+
+  time DateTime @default(now())
+
+  checkmark String? @db.Char(7)
+  badge     String?
+  name      String
+  color     String
+
+  updatedAt DateTime @updatedAt
+
   @@index([userId])
 }
 

@@ -1,7 +1,8 @@
 import type { BaseLogger } from "pino";
 import type { PrismaClient } from "@prisma/client";
 import { getResponse } from "./parser";
-import { type UserSummary, upsertUser } from "./user";
+import { type UserSummary } from "./user";
+import { upsertUserSnapshotHook } from "./hooks";
 
 interface Paste {
   data: string;
@@ -20,11 +21,11 @@ interface LuoguError {
 export default async function savePaste(
   logger: BaseLogger,
   prisma: PrismaClient,
-  id: string,
+  id: string
 ) {
   const response = await getResponse(
     logger,
-    `https://www.luogu.com.cn/paste/${id}?_contentOnly`,
+    `https://www.luogu.com.cn/paste/${id}?_contentOnly`
   );
   const json = (await response.json()) as
     | { code: 403 | 404; currentData: LuoguError }
@@ -48,8 +49,8 @@ export default async function savePaste(
   }
   if (json.code !== 200) throw Error(json.currentData.errorMessage);
   const { paste } = json.currentData;
+  await upsertUserSnapshotHook(prisma, paste.user);
   await prisma.$transaction([
-    upsertUser(prisma, paste.user),
     prisma.paste.upsert({
       where: { id: paste.id },
       create: {
