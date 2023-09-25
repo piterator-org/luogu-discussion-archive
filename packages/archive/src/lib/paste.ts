@@ -2,7 +2,7 @@ import type { BaseLogger } from "pino";
 import type { PrismaClient } from "@prisma/client";
 import { getResponse } from "./parser";
 import { type UserSummary } from "./user";
-import { upsertUserSnapshotHook } from "./hooks";
+import { upsertUserSnapshotHook } from "./user";
 
 interface Paste {
   data: string;
@@ -21,11 +21,11 @@ interface LuoguError {
 export default async function savePaste(
   logger: BaseLogger,
   prisma: PrismaClient,
-  id: string
+  id: string,
 ) {
   const response = await getResponse(
     logger,
-    `https://www.luogu.com.cn/paste/${id}?_contentOnly`
+    `https://www.luogu.com.cn/paste/${id}?_contentOnly`,
   );
   const json = (await response.json()) as
     | { code: 403 | 404; currentData: LuoguError }

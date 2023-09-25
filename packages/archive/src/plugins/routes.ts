@@ -12,7 +12,7 @@ export default (function routes(fastify, options, done) {
   fastify.get("/judgement", (request, reply) => {
     saveJudgements(
       fastify.log.child({ reqId: request.id, type: "judgement" }),
-      fastify.prisma
+      fastify.prisma,
     )
       .then(() => reply.code(201).send({}))
       .catch((err: Error) => reply.code(500).send({ error: err.message }));
@@ -28,11 +28,11 @@ export default (function routes(fastify, options, done) {
           id: request.params.id,
         }),
         fastify.prisma,
-        request.params.id
+        request.params.id,
       )
         .then(() => reply.code(201).send({}))
         .catch((err: Error) => reply.code(500).send({ error: err.message }));
-    }
+    },
   );
 
   fastify.get<{ Params: { id: string } }>("/:id(\\d+)", (request, reply) => {
@@ -41,7 +41,7 @@ export default (function routes(fastify, options, done) {
       fastify.log.child({ reqId: request.id, type: "discussion", id }),
       fastify.prisma,
       fastify.io.to(request.params.id),
-      id
+      id,
     );
     once(emitters[id], "done")
       .then(() => reply.code(201).send({}))
@@ -51,8 +51,8 @@ export default (function routes(fastify, options, done) {
   fastify.get("/activity", (request, reply) =>
     saveActivities(
       fastify.log.child({ reqId: request.id, type: "activity" }),
-      fastify.prisma
-    ).then(() => reply.code(201).send({}))
+      fastify.prisma,
+    ).then(() => reply.code(201).send({})),
   );
 
   fastify.get<{ Params: { page: string } }>(
@@ -68,12 +68,12 @@ export default (function routes(fastify, options, done) {
         }),
         fastify.prisma,
         parseInt(request.params.page, 10),
-        operations
+        operations,
       );
       await Promise.all(userPromises);
       await fastify.prisma.$transaction(operations);
       return reply.code(201).send(res);
-    }
+    },
   );
 
   done();

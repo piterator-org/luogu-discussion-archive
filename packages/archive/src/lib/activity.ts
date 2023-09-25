@@ -4,7 +4,7 @@ import type { BaseLogger } from "pino";
 import type { PrismaClient, PrismaPromise } from "@prisma/client";
 import { getResponse } from "./parser";
 import type { UserSummary } from "./user";
-import { upsertUserSnapshotHook } from "./hooks";
+import { upsertUserSnapshotHook } from "./user";
 
 export interface Activity {
   content: string;
@@ -26,16 +26,20 @@ export async function saveActivityPage(
   logger: BaseLogger,
   prisma: PrismaClient,
   page: number,
-  operations: PrismaPromise<unknown>[]
+  operations: PrismaPromise<unknown>[],
 ) {
   const res = await getResponse(
     logger,
     `https://www.luogu.com.cn/api/feed/list?page=${page}`,
-    false
+    false,
   ).then((response): Promise<Body> => response.json());
+
+  // eslint-disable-next-line no-restricted-syntax
   for (const { user } of res.feeds.result) {
+    // eslint-disable-next-line no-await-in-loop
     await upsertUserSnapshotHook(prisma, user);
   }
+
   res.feeds.result.forEach((activity) => {
     const data = {
       ...activity,
@@ -49,7 +53,7 @@ export async function saveActivityPage(
         where: { id: activity.id },
         create: data,
         update: data,
-      })
+      }),
     );
   });
   return res;
@@ -57,7 +61,7 @@ export async function saveActivityPage(
 
 export default async function saveActivities(
   logger: BaseLogger,
-  prisma: PrismaClient
+  prisma: PrismaClient,
 ) {
   let res: Body;
   let page = 0;

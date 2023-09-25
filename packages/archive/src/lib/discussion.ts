@@ -4,10 +4,9 @@ import type { BroadcastOperator } from "socket.io";
 import type { PostSnapshot, PrismaClient } from "@prisma/client";
 import { getResponse } from "./parser";
 import type { ServerToClientEvents } from "../plugins/socket.io";
-import { UserSummary } from "./user";
-import { upsertUserSnapshotHook } from "./hooks";
+import { UserSummary, upsertUserSnapshotHook } from "./user";
 
-const PAGES_PER_SAVE = parseInt(process.env.PAGES_PER_SAVE ?? "128", 10);
+const PAGES_PER_SAVE = parseInt(process.env.PAGES_PER_SAVE ?? "64", 10);
 export const emitters: Record<number, EventEmitter> = {};
 
 interface ForumData {
@@ -48,7 +47,7 @@ interface ResponseBody {
 
 const isPostSame = (
   lastSnapshot: PostSnapshot,
-  { forum, post }: { forum: ForumData; post: PostData }
+  { forum, post }: { forum: ForumData; post: PostData },
 ) =>
   lastSnapshot.forumSlug === forum.slug &&
   lastSnapshot.title === post.title &&
@@ -59,30 +58,31 @@ export async function savePost(
   logger: BaseLogger,
   prisma: PrismaClient,
   id: number,
-  maxPages = PAGES_PER_SAVE
+  maxPages = PAGES_PER_SAVE,
 ) {
   let allReplies: ReplyContent[] = [];
-  let userPromises: Promise<void>[] = [];
 
   const fetchPage = (page: number) =>
     getResponse(
       logger,
       `https://www.luogu.com.cn/discuss/${id}?_contentOnly&page=${page}`,
-      true
+      true,
     ).then((response): Promise<ResponseBody> => response.json());
 
   const saveReplies = async (replies: ReplyContent[]) => {
-    await prisma.$transaction(async (tx) => {
-      for (const { author } of replies) {
-        upsertUserSnapshotHook(tx, author);
-      }
-    });
+    // eslint-disable-next-line no-restricted-syntax
+    for (const { author } of replies) {
+      // eslint-disable-next-line no-await-in-loop
+      await upsertUserSnapshotHook(prisma, author);
+    }
     allReplies = [...allReplies, ...replies];
   };
 
   const saveAllReplies = async () => {
     await prisma.$transaction(async (tx) => {
-      allReplies.forEach(async (reply) => {
+      // eslint-disable-next-line no-restricted-syntax
+      for (const reply of allReplies) {
+        // eslint-disable-next-line no-await-in-loop
         await tx.reply.upsert({
           where: { id: reply.id },
           create: {
@@ -92,6 +92,7 @@ export async function savePost(
           },
           update: {},
         });
+        // eslint-disable-next-line no-await-in-loop
         const snapshot = await tx.replySnapshot.findFirst({
           where: { replyId: reply.id },
         });
@@ -100,7 +101,8 @@ export async function savePost(
           snapshot.content === reply.content &&
           snapshot.authorId === reply.author.uid;
         if (!isSame) {
-          tx.replySnapshot.create({
+          // eslint-disable-next-line no-await-in-loop
+          await tx.replySnapshot.create({
             data: {
               authorId: reply.author.uid,
               replyId: reply.id,
@@ -109,12 +111,18 @@ export async function savePost(
             },
           });
         } else {
-          tx.replySnapshot.update({
-            where: { replyId_time: { ...snapshot } },
+          // eslint-disable-next-line no-await-in-loop
+          await tx.replySnapshot.update({
+            where: {
+              replyId_time: {
+                replyId: snapshot.replyId,
+                time: snapshot.time,
+              },
+            },
             data: { until: new Date() },
           });
         }
-      });
+      }
     });
   };
 
@@ -123,34 +131,42 @@ export async function savePost(
 
   await upsertUserSnapshotHook(prisma, post.author);
 
-  await prisma.$transaction(async (tx) => {
-    await tx.post.upsert({
-      where: { id },
-      create: { id, time: postTime, replyCount: replies.count },
-      update: { time: postTime, replyCount: replies.count },
-    });
-
-    const lastSnapshot = await tx.postSnapshot.findFirst({
-      where: { postId: id },
-      orderBy: { time: "desc" },
-    });
-
-    if (lastSnapshot && isPostSame(lastSnapshot, { forum, post }))
-      await tx.postSnapshot.update({
-        where: { postId_time: { ...lastSnapshot } },
-        data: { until: new Date() },
+  await prisma.$transaction(
+    async (tx) => {
+      await tx.post.upsert({
+        where: { id },
+        create: { id, time: postTime, replyCount: replies.count },
+        update: { time: postTime, replyCount: replies.count },
       });
-    else
-      await tx.postSnapshot.create({
-        data: {
-          postId: id,
-          title: post.title,
-          forumSlug: forum.slug,
-          authorId: post.author.uid,
-          content: post.content,
-        },
+
+      const lastSnapshot = await tx.postSnapshot.findFirst({
+        where: { postId: id },
+        orderBy: { time: "desc" },
       });
-  });
+
+      if (lastSnapshot && isPostSame(lastSnapshot, { forum, post }))
+        await tx.postSnapshot.update({
+          where: { postId_time: { time: lastSnapshot.time, postId: id } },
+          data: { until: new Date() },
+        });
+      else
+        await tx.postSnapshot.create({
+          data: {
+            title: post.title,
+            forum: {
+              connectOrCreate: {
+                where: { slug: forum.slug },
+                create: { slug: forum.slug, name: forum.name },
+              },
+            },
+            author: { connect: { id: post.author.uid } },
+            post: { connect: { id } },
+            content: post.content,
+          },
+        });
+    },
+    { timeout: 7500 },
+  );
 
   await saveReplies(replies.result);
   await saveAllReplies();
@@ -170,13 +186,13 @@ export async function savePost(
     for (let i = Math.min(pages, maxPages); i > 0; i -= 1) {
       // eslint-disable-next-line no-await-in-loop
       const { replies: newReplies } = (await fetchPage(i)).currentData;
-      saveReplies(newReplies.result);
+      // eslint-disable-next-line no-await-in-loop
+      await saveReplies(newReplies.result);
       if (newReplies.result[newReplies.result.length - 1].id <= lastReply)
         break;
     }
   }
 
-  await Promise.all(userPromises);
   await saveAllReplies();
 
   if (pages > maxPages)
@@ -187,7 +203,7 @@ export function startTask(
   logger: BaseLogger,
   prisma: PrismaClient,
   room: BroadcastOperator<ServerToClientEvents, unknown>,
-  id: number
+  id: number,
 ) {
   if (!(id in emitters)) {
     emitters[id] = new EventEmitter();

@@ -36,7 +36,6 @@ model User {
   postTakedowns     PostTakedown[]
   replyTakedowns    ReplyTakedown[]
   activityTakedowns ActivityTakedown[]
-  JudgementProfile  JudgementProfile?
 }
 
 model Forum {
@@ -103,37 +102,19 @@ model Judgement {
   @@index([userId])
 }
 
-model JudgementProfile {
-  user   User @relation(fields: [userId], references: [id])
-  userId Int  @id
-
-  time DateTime @default(now())
-
-  checkmark String? @db.Char(7)
-  badge     String?
-  name      String
-  color     String
-
-  updatedAt DateTime @updatedAt
-
-  @@index([userId])
-}
-
 model UserSnapshot {
   user   User @relation(fields: [userId], references: [id])
   userId Int
 
-  name   String
-  slogan String?
-  badge  String?
+  name  String
+  badge String?
 
   isAdmin  Boolean
   isBanned Boolean
   isRoot   Boolean?
 
-  color      Color
-  ccfLevel   Int
-  background String
+  color    Color
+  ccfLevel Int
 
   until DateTime @updatedAt
   time  DateTime @default(now())

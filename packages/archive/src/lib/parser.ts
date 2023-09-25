@@ -1,6 +1,25 @@
 import type { BaseLogger } from "pino";
 import { JSDOM } from "jsdom";
+import { Color } from "@prisma/client";
 import delay from "../utils/delay";
+
+const colors: Record<string, Color> = {
+  brown: Color.Cheater,
+  gray: Color.Gray,
+  bluelight: Color.Blue,
+  green: Color.Green,
+  orange: Color.Orange,
+  red: Color.Red,
+  purple: Color.Purple,
+};
+
+export interface JudgementProfile {
+  id: number;
+  name: string;
+  color: Color;
+  checkmark: string | null;
+  badge: string | null;
+}
 
 export async function getResponse(
   logger: BaseLogger,
@@ -43,12 +62,13 @@ export async function parseApp(
 }
 
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-export function parseUser(element: Element) {
+export function parseUser(element: Element): JudgementProfile {
   const a = element.querySelector('a[href^="/user/"]')!;
   return {
     id: parseInt(a.getAttribute("href")!.slice("/user/".length), 10),
     name: a.textContent!,
-    color: a.getAttribute("class")!.split(" ", 1)[0].slice("lg-fg-".length),
+    color:
+      colors[a.getAttribute("class")!.split(" ", 1)[0].slice("lg-fg-".length)],
     checkmark: element.querySelector("a > svg")?.getAttribute("fill") ?? null,
     badge: element.querySelector("span.am-badge")?.innerHTML ?? null,
   };
