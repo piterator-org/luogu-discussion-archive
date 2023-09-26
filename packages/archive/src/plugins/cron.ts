@@ -4,8 +4,8 @@ import fastifyPlugin from "fastify-plugin";
 import saveActivities from "../lib/activity";
 
 import delay from "../utils/delay";
-import getDiscussionList from "../lib/list";
-import { emitters, startTask } from "../lib/discussion";
+import getPostList from "../lib/list";
+import { emitters, startTask } from "../lib/post";
 
 const AUTO_SAVE_PAGES = 5;
 
@@ -20,7 +20,7 @@ export default fastifyPlugin(
           (prev: Promise<number[]>, curr, i) =>
             prev.then(async (array) =>
               array.concat(
-                await getDiscussionList(
+                await getPostList(
                   logger,
                   fastify.prisma,
                   i + 1,
@@ -30,8 +30,8 @@ export default fastifyPlugin(
             ),
           Promise.resolve([]),
         )
-        .then((discussions) => {
-          return discussions.reduce(
+        .then((posts) => {
+          return posts.reduce(
             (promise: Promise<unknown>, id) =>
               promise
                 .then(() => {

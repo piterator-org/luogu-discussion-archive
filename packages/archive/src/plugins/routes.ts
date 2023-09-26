@@ -1,7 +1,7 @@
 import { once } from "node:events";
 import type { FastifyPluginCallback } from "fastify";
 import type { PrismaPromise } from "@prisma/client";
-import { emitters, startTask } from "../lib/discussion";
+import { emitters, startTask } from "../lib/post";
 import saveJudgements from "../lib/judgement";
 import savePaste from "../lib/paste";
 import saveActivities, { saveActivityPage } from "../lib/activity";
@@ -38,7 +38,7 @@ export default (function routes(fastify, options, done) {
   fastify.get<{ Params: { id: string } }>("/:id(\\d+)", (request, reply) => {
     const id = parseInt(request.params.id, 10);
     startTask(
-      fastify.log.child({ reqId: request.id, type: "discussion", id }),
+      fastify.log.child({ reqId: request.id, type: "post", id }),
       fastify.prisma,
       fastify.io.to(request.params.id),
       id,

@@ -2,7 +2,7 @@ import { FastifyPluginCallback } from "fastify";
 import fastifyPlugin from "fastify-plugin";
 import { Server } from "socket.io";
 import { instrument } from "@socket.io/admin-ui";
-import { startTask } from "../lib/discussion";
+import { startTask } from "../lib/post";
 
 export interface ServerToClientEvents {
   start: () => void;
@@ -11,9 +11,9 @@ export interface ServerToClientEvents {
 }
 
 interface ClientToServerEvents {
-  update: (discussion: number) => void;
-  subscribe: (discussion: number) => void;
-  unsubscribe: (discussion: number) => void;
+  update: (post: number) => void;
+  subscribe: (post: number) => void;
+  unsubscribe: (post: number) => void;
 }
 
 declare module "fastify" {

@@ -33,7 +33,7 @@ interface LegacyDiscussList {
   };
 }
 
-export default async function getDiscussionList(
+export default async function getPostList(
   logger: BaseLogger,
   prisma: PrismaClient,
   page: number,
