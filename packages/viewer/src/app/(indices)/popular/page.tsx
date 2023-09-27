@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { selectDiscussion } from "@/lib/discussion";
+import { getPost } from "@/lib/post";
 import { NUM_DISCUSSIONS_INDEX } from "../constants";
 import DiscussionIndex from "../DiscussionIndex";
 
@@ -12,11 +12,11 @@ export default async function MostReplied() {
     <>
       <h3 className="pb-1 text-center mb-4s">最多回复</h3>
       <DiscussionIndex
-        discussions={await prisma.discussion.findMany({
-          select: selectDiscussion,
+        discussions={await prisma.post.findMany({
           where: { takedown: { is: null } },
           orderBy: { replyCount: "desc" },
           take: NUM_DISCUSSIONS_INDEX,
+          select: getPost.latestNoContent,
         })}
       />
     </>

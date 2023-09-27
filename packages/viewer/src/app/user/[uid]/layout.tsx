@@ -12,12 +12,13 @@ export async function generateMetadata({
 }: {
   params: { uid: string };
 }) {
-  const { username } =
-    (await prisma.user.findUnique({
-      select: { username: true },
-      where: { id: parseInt(params.uid, 10) },
+  const uid = parseInt(params.uid, 10);
+  const { name } =
+    (await prisma.userSnapshot.findFirst({
+      where: { userId: uid },
+      orderBy: { time: "desc" },
     })) ?? notFound();
-  return { title: `@${username} 的黑历史 - 洛谷帖子保存站` };
+  return { title: `@${name} 的黑历史 - 洛谷帖子保存站` };
 }
 
 export default async function Layout({

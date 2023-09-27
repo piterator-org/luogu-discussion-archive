@@ -1,7 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
-import { selectDiscussionWithContent } from "@/lib/discussion";
+import { getPost } from "@/lib/post";
 import serializeReply from "@/lib/serialize-reply";
+import { getReply } from "@/lib/reply";
 import { NUM_PER_PAGE } from "../../constants";
 
 export async function GET(
@@ -10,15 +11,21 @@ export async function GET(
 ) {
   const uid = parseInt(params.uid, 10);
   const cursor = request.nextUrl.searchParams.get("cursor");
-  const discussions = await prisma.discussion
+  const discussions = await prisma.post
     .findMany({
       select: {
-        ...selectDiscussionWithContent,
-        replies: { where: { authorId: uid }, orderBy: { id: "asc" } },
+        ...getPost.latestWithContent,
+        replies: {
+          where: {
+            snapshots: { some: { authorId: uid } },
+          },
+          select: getReply.latestWithContent,
+          orderBy: { id: "asc" },
+        },
       },
       where: {
         OR: [
-          { replies: { some: { authorId: uid } } },
+          { replies: { some: { snapshots: { some: { authorId: uid } } } } },
           { snapshots: { some: { authorId: uid } } },
         ],
         takedown: { is: null },

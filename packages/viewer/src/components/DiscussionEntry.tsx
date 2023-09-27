@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ReactNode } from "react";
-import type { Discussion } from "@/lib/discussion";
+import type { PostWithLatestSnapshotMeta } from "@/lib/post";
 import UserAvatar from "./UserAvatar";
 import UserInfo from "./UserInfo";
 
@@ -12,7 +12,7 @@ export default function DiscussionEntry({
   metaBottom,
   children,
 }: React.PropsWithChildren<{
-  discussion: Discussion;
+  discussion: PostWithLatestSnapshotMeta;
   // eslint-disable-next-line react/require-default-props
   decoratorShadow?: string;
   decoratorBreakpoint?: string;

@@ -2,7 +2,7 @@
 
 import useSWRInfinite from "swr/infinite";
 import InfiniteScroll from "react-infinite-scroll-component";
-import type { DiscussionWithContent } from "@/lib/discussion";
+import type { PostWithLatestContent } from "@/lib/post";
 import type { UserMetioned } from "@/lib/serialize-reply";
 import Content from "@/components/replies/Content";
 import fetcher from "@/lib/fetcher";
@@ -10,7 +10,7 @@ import Spinner from "@/components/Spinner";
 import DiscussionEntry from "@/components/DiscussionEntry";
 
 interface PageData {
-  data: (DiscussionWithContent & {
+  data: (PostWithLatestContent & {
     content: string;
     time: string;
     usersMetioned: UserMetioned[];

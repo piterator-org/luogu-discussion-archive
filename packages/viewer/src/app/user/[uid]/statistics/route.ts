@@ -7,10 +7,10 @@ export async function GET(
 ) {
   const uid = parseInt(params.uid, 10);
   const [discussions, replies, judgements] = await Promise.all([
-    prisma.discussion.count({
+    prisma.post.count({
       where: { snapshots: { some: { authorId: uid } } },
     }),
-    prisma.reply.count({ where: { authorId: uid } }),
+    prisma.reply.count({ where: { snapshots: { some: { authorId: uid } } } }),
     prisma.judgement.count({ where: { userId: uid } }),
   ]);
   return NextResponse.json({ discussions, replies, judgements });

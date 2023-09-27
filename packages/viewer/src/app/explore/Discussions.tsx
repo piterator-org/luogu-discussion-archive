@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 import stringifyTime from "@/lib/time";
-import { selectDiscussion } from "@/lib/discussion";
+import { getPost } from "@/lib/post";
 import DiscussionEntry from "@/components/DiscussionEntry";
 
 const NUM_DISCUSSIONS_HOME_PAGE = parseInt(
@@ -14,12 +14,12 @@ const LIMIT_MILLISECONDS_HOT_DISCUSSION = parseInt(
 
 export default async function Discussions() {
   const discussionReplyCount = await prisma.reply.groupBy({
-    by: ["discussionId"],
+    by: ["postId"],
     where: {
       time: {
         gte: new Date(new Date().getTime() - LIMIT_MILLISECONDS_HOT_DISCUSSION),
       },
-      discussion: { takedown: { is: null } },
+      post: { takedown: { is: null } },
     },
     _count: true,
     orderBy: { _count: { id: "desc" } },
@@ -27,20 +27,20 @@ export default async function Discussions() {
   });
   const discussions = Object.fromEntries(
     (
-      await prisma.discussion.findMany({
-        select: selectDiscussion,
-        where: { id: { in: discussionReplyCount.map((r) => r.discussionId) } },
+      await prisma.post.findMany({
+        select: getPost.latestNoContent,
+        where: { id: { in: discussionReplyCount.map((r) => r.postId) } },
       })
     ).map((d) => [d.id, d]),
   );
   discussionReplyCount.map((r) => ({
-    ...discussions[r.discussionId],
+    ...discussions[r.postId],
     recentReplyCount: r._count,
   }));
 
   return discussionReplyCount
     .map((r) => ({
-      ...discussions[r.discussionId],
+      ...discussions[r.postId],
       recentReplyCount: r._count,
     }))
     .map((discussion) => (

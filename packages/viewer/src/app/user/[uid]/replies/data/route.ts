@@ -1,4 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { getPost } from "@/lib/post";
+import { getReply } from "@/lib/reply";
 import prisma from "@/lib/prisma";
 import serializeReply from "@/lib/serialize-reply";
 import { NUM_PER_PAGE } from "../../constants";
@@ -12,25 +14,20 @@ export async function GET(
   const replies = await prisma.reply
     .findMany({
       select: {
-        id: true,
-        time: true,
-        author: true,
-        content: true,
-        discussion: {
-          select: {
-            id: true,
-            snapshots: {
-              select: { title: true, authorId: true },
-              orderBy: { time: "desc" },
-              take: 1,
-            },
-          },
+        ...getReply.latestWithContent,
+        post: {
+          select: getPost.latestNoContent,
         },
       },
       where: {
-        authorId: uid,
-        discussion: { takedown: { is: null } },
+        post: { takedown: { is: null } },
+        takedown: { is: null },
         id: { lt: cursor ? parseInt(cursor, 10) : undefined },
+        snapshots: {
+          some: {
+            authorId: uid,
+          },
+        },
       },
       orderBy: { id: "desc" },
       take: NUM_PER_PAGE,
@@ -38,7 +35,7 @@ export async function GET(
     .then((r) =>
       r.map(async (reply) => ({
         ...reply,
-        ...(await serializeReply(reply.discussion.id, reply)),
+        ...(await serializeReply(reply.post.id, reply.snapshots[0])),
       })),
     )
     .then((r) => Promise.all(r));

@@ -23,6 +23,7 @@ export default function Ostracon({
           {/* eslint-disable-next-line react/no-danger */}
           <div dangerouslySetInnerHTML={{ __html: ostracon.content }} />
           <span className="text-body-tertiary">
+            {/* TODO: icon font instead of svg */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="1em"

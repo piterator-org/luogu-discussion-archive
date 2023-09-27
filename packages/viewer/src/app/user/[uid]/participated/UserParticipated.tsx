@@ -4,7 +4,7 @@ import Link from "next/link";
 import useSWRInfinite from "swr/infinite";
 import InfiniteScroll from "react-infinite-scroll-component";
 import type { User } from "@prisma/client";
-import type { DiscussionWithContent } from "@/lib/discussion";
+import type { PostWithLatestContent } from "@/lib/post";
 import type { UserMetioned } from "@/lib/serialize-reply";
 import UserAvatar from "@/components/UserAvatar";
 import UserInfo from "@/components/UserInfo";
@@ -14,7 +14,7 @@ import Spinner from "@/components/Spinner";
 import { NUM_MAX_REPLIES_SHOWED_DEFAULT } from "../constants";
 
 interface PageData {
-  data: (DiscussionWithContent & {
+  data: (PostWithLatestContent & {
     content: string;
     time: string;
     usersMetioned: UserMetioned[];

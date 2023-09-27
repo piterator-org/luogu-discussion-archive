@@ -11,7 +11,7 @@ export default async function Page({ params }: { params: { id: string } }) {
     snapshots: [{ authorId }],
     _count: { replies },
   } =
-    (await prisma.discussion.findUnique({
+    (await prisma.post.findUnique({
       where: { id },
       select: {
         snapshots: {

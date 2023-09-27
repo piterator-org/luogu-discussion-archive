@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
-import { selectDiscussionWithContent } from "@/lib/discussion";
+import { getPost } from "@/lib/post";
 import serializeReply from "@/lib/serialize-reply";
 import { NUM_PER_PAGE } from "../../constants";
 
@@ -10,8 +10,8 @@ export async function GET(
 ) {
   const uid = parseInt(params.uid, 10);
   const cursor = request.nextUrl.searchParams.get("cursor");
-  const discussions = await prisma.discussion.findMany({
-    select: selectDiscussionWithContent,
+  const posts = await prisma.post.findMany({
+    select: getPost.latestWithContent,
     where: {
       snapshots: { some: { authorId: uid } },
       takedown: { is: null },
@@ -22,16 +22,14 @@ export async function GET(
   });
   return NextResponse.json({
     data: await Promise.all(
-      discussions.map(async (discussion) => ({
-        ...discussion,
-        ...(await serializeReply(discussion.id, {
-          content: discussion.snapshots[0].content,
-          time: discussion.time,
+      posts.map(async (post) => ({
+        ...post,
+        ...(await serializeReply(post.id, {
+          content: post.snapshots[0].content,
+          time: post.time,
         })),
       })),
     ),
-    nextCursor: discussions.length
-      ? discussions[discussions.length - 1].id
-      : null,
+    nextCursor: posts.length ? posts[posts.length - 1].id : null,
   });
 }

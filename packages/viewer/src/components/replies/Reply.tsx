@@ -63,6 +63,7 @@ export default function Reply({
                   className="ms-2 link-secondary position-relative"
                   style={{ fontSize: ".8em", top: "-.2em" }}
                 >
+                  {/* TODO: svg to iconfont */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="1em"

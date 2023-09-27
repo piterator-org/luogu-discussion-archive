@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import serializeReply from "@/lib/serialize-reply";
 
+import { selectReply } from "@/lib/reply";
+
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } },
@@ -11,25 +13,12 @@ export async function GET(
   const limit = request.nextUrl.searchParams.get("limit");
   const replies = await prisma.reply.findMany({
     select: {
-      id: true,
-      author: true,
-      time: true,
-      content: true,
-      discussionId: true,
-      takedown: {
-        select: {
-          submitter: {
-            select: {
-              id: true,
-              username: true,
-            },
-          },
-          reason: true,
-        },
-      },
+      ...selectReply.withBasic,
+      ...selectReply.withTakedown,
+      ...selectReply.withLatestContent,
     },
     where: {
-      discussionId: id,
+      postId: id,
       id: { gt: cursor ? parseInt(cursor, 10) : undefined },
     },
     take: parseInt(limit ?? "10", 10),

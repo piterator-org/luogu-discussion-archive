@@ -1,11 +1,11 @@
 import stringifyTime from "@/lib/time";
-import type { Discussion } from "@/lib/discussion";
+import type { PostWithLatestSnapshotMeta } from "@/lib/post";
 import DiscussionEntry from "@/components/DiscussionEntry";
 
 export default function DiscussionIndex({
   discussions,
 }: {
-  discussions: Discussion[];
+  discussions: PostWithLatestSnapshotMeta[];
 }) {
   return (
     <>

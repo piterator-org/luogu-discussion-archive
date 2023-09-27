@@ -22,8 +22,8 @@ function getMentionedUser(element: Element) {
   );
 }
 
-function getDiscussionUrl(discussionId: number) {
-  return `/${discussionId}`;
+function getDiscussionUrl(postId: number) {
+  return `/${postId}`;
 }
 
 function getHtmlTookdown(takedown: {
@@ -52,7 +52,7 @@ function renderHljs(body: HTMLElement) {
 }
 
 export default async function serializeReply(
-  discussionId: number,
+  postId: number,
   {
     content,
     time,
@@ -126,7 +126,7 @@ export default async function serializeReply(
     prisma.reply
       .groupBy({
         by: ["authorId"],
-        where: { discussionId, authorId: { in: users } },
+        where: { postId, authorId: { in: users } },
         _count: true,
       })
       .then((r) => Object.fromEntries(r.map((u) => [u.authorId, u._count]))),
@@ -146,7 +146,7 @@ export default async function serializeReply(
       ue.ele.classList.add("link-at-user", "link-at-user-unstored");
     }
   }
-  const discussionsMetioned = await prisma.discussion.findMany({
+  const discussionsMetioned = await prisma.post.findMany({
     where: { id: { in: discussions } },
   });
   const indDiscussionsMetioned: Record<number, Discussion> = {};
@@ -168,10 +168,12 @@ export default async function serializeReply(
   return {
     content: document.body.innerHTML,
     time: stringifyTime(time),
-    usersMetioned: usersMetioned.map((u) => ({
-      ...u,
-      numReplies: replyCount[u.id],
-    })) as UserMetioned[],
+    usersMetioned: [],
+    // TODO: 修复回复上下文推断
+    // usersMetioned: usersMetioned.map((u) => ({
+    //   ...u,
+    //   numReplies: replyCount[u.id],
+    // })) as UserMetioned[],
   };
 }
 

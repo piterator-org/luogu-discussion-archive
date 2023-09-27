@@ -19,7 +19,7 @@ export default async function Page({
     snapshots: [{ authorId }],
     replies,
     _count: { replies: numReplies },
-  } = await prisma.discussion
+  } = await prisma.post
     .findUnique({
       where: { id },
       select: {
