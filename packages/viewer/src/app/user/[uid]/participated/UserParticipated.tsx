@@ -4,7 +4,7 @@ import Link from "next/link";
 import useSWRInfinite from "swr/infinite";
 import InfiniteScroll from "react-infinite-scroll-component";
 import type { PostWithLatestContent } from "@/lib/post";
-import type { UserMetioned } from "@/lib/serialize-reply";
+// import type { UserMetioned } from "@/lib/serialize-reply";
 import UserAvatar from "@/components/UserAvatar";
 import UserInfo from "@/components/UserInfo";
 import Content from "@/components/replies/Content";
@@ -12,21 +12,12 @@ import fetcher from "@/lib/fetcher";
 import Spinner from "@/components/Spinner";
 import { NUM_MAX_REPLIES_SHOWED_DEFAULT } from "../constants";
 import { LatestUser } from "@/lib/user";
+import { ReplyWithLatestContentPostMeta } from "@/lib/reply";
+import stringifyTime from "@/lib/time";
 
 interface PageData {
   data: (PostWithLatestContent & {
-    content: string;
-    time: string;
-    usersMetioned: UserMetioned[];
-  } & {
-    replies: {
-      content: string;
-      time: string;
-      usersMetioned: UserMetioned[];
-      id: number;
-      discussionId: number;
-      authorId: number;
-    }[];
+    replies: ReplyWithLatestContentPostMeta[];
   })[];
   nextCursor: number;
 }
@@ -45,7 +36,7 @@ export default function UserParticipated({
         : `/user/${uid}/participated/data${
             pageIndex ? `?cursor=${previousPageData.nextCursor}` : ""
           }`,
-    fetcher,
+    fetcher
   );
 
   return (
@@ -136,7 +127,7 @@ export default function UserParticipated({
                       </summary>
                       <Content
                         discussionAuthor={discussion.snapshots[0].author.id}
-                        content={discussion.content}
+                        content={discussion.snapshots[0].content}
                         // usersMetioned={discussion.usersMetioned}
                       />
                     </details>
@@ -185,7 +176,7 @@ export default function UserParticipated({
                             <div className="rounded-4 shadow-bssb-sm my-3x">
                               <div className="timeline-connect bg-light-bssb rounded-top-4 px-4 py-2">
                                 <UserInfo user={user} />
-                                {reply.authorId ===
+                                {reply.snapshots[0].author.id ===
                                 discussion.snapshots[0].author.id ? (
                                   <span
                                     className="ms-1 badge position-relative bg-teal d-inline-block"
@@ -202,7 +193,7 @@ export default function UserParticipated({
                                 )}
                                 <span className="float-end text-body-tertiary">
                                   <span className="d-none d-md-inline">
-                                    {reply.time}
+                                    {stringifyTime(reply.time)}
                                   </span>
                                   <Link
                                     href={`/r/${reply.id}`}
@@ -234,14 +225,14 @@ export default function UserParticipated({
                                   discussionAuthor={
                                     discussion.snapshots[0].author.id
                                   }
-                                  content={reply.content}
+                                  content={reply.snapshots[0].content}
                                   // usersMetioned={reply.usersMetioned}
                                 />
                                 <span
                                   className="text-end text-body-tertiary d-block d-md-none"
                                   style={{ fontSize: ".8rem" }}
                                 >
-                                  {reply.time}
+                                  {stringifyTime(reply.time)}
                                 </span>
                               </div>
                             </div>
@@ -288,12 +279,12 @@ export default function UserParticipated({
                       <path d="m2.165 15.803.02-.004c1.83-.363 2.948-.842 3.468-1.105A9.06 9.06 0 0 0 8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6a10.437 10.437 0 0 1-.524 2.318l-.003.011a10.722 10.722 0 0 1-.244.637c-.079.186.074.394.273.362a21.673 21.673 0 0 0 .693-.125zm.8-3.108a1 1 0 0 0-.287-.801C1.618 10.83 1 9.468 1 8c0-3.192 3.004-6 7-6s7 2.808 7 6c0 3.193-3.004 6-7 6a8.06 8.06 0 0 1-2.088-.272 1 1 0 0 0-.711.074c-.387.196-1.24.57-2.634.893a10.97 10.97 0 0 0 .398-2z" />
                     </svg>{" "}
                     {discussion.replyCount}
-                    <span className="float-end">{discussion.time}</span>
+                    <span className="float-end">{stringifyTime(discussion.time)}</span>
                   </div>
                 </div>
               </div>
             </div>
-          )),
+          ))
         )}
       </InfiniteScroll>
       {isValidating && <Spinner />}

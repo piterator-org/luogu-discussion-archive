@@ -1,13 +1,13 @@
-import type { User } from "@prisma/client";
 import UserAvatar from "@/components/UserAvatar";
 import UserInfo from "@/components/UserInfo";
+import type { LatestUser } from "@/lib/user";
 
 export default function Ostracon({
   ostracon,
 }: {
   ostracon: {
     time: Date;
-    user: User;
+    user: LatestUser;
     content: string;
   };
 }) {

@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { selectUser } from "./user";
+import { get } from "http";
 
 export const selectReply = {
   withBasic: Prisma.validator<Prisma.ReplyDefaultArgs>()({
@@ -44,6 +45,23 @@ export const selectReply = {
       },
     },
   }).select,
+  withPostMeta: Prisma.validator<Prisma.ReplyDefaultArgs>()({
+    select: {
+      postId: undefined,
+      post: {
+        select: {
+          id: true,
+          snapshots: {
+            select: {
+              forum: true,
+              title: true,
+              author: { select: selectUser.withLatest },
+            },
+          },
+        },
+      },
+    },
+  }).select,
 };
 
 export const getReply = {
@@ -53,6 +71,15 @@ export const getReply = {
   },
   latestWithContent: {
     ...selectReply.withBasic,
+    ...selectReply.withLatestContent,
+  },
+  latestWithPostMeta: {
+    ...selectReply.withBasic,
+    ...selectReply.withPostMeta,
+  },
+  latestContentWithPostMeta: {
+    ...selectReply.withBasic,
+    ...selectReply.withPostMeta,
     ...selectReply.withLatestContent,
   },
 };
@@ -67,10 +94,19 @@ export const selectReplyWithLatestContent =
     select: getReply.latestWithContent,
   });
 
+export const selectReplyWithLatestContentPostMeta =
+  Prisma.validator<Prisma.ReplyDefaultArgs>()({
+    select: getReply.latestContentWithPostMeta,
+  });
+
 export type ReplyWithLatestSnapshotMeta = Prisma.ReplyGetPayload<
   typeof selectReplyWithLatestSnapshotMeta
 >;
 
 export type ReplyWithLatestContent = Prisma.ReplyGetPayload<
   typeof selectReplyWithLatestContent
+>;
+
+export type ReplyWithLatestContentPostMeta = Prisma.ReplyGetPayload<
+  typeof selectReplyWithLatestContentPostMeta
 >;

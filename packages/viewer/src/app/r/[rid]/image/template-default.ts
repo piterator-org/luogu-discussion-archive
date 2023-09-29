@@ -100,7 +100,7 @@ export default (
               position: relative;
             "
             >
-              ${reply.content}
+              ${reply.snapshots[0].content}
             </div>
           </div>
           <div

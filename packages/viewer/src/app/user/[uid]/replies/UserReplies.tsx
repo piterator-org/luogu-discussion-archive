@@ -3,27 +3,15 @@
 import Link from "next/link";
 import useSWRInfinite from "swr/infinite";
 import InfiniteScroll from "react-infinite-scroll-component";
-import type { User } from "@prisma/client";
-import type { UserMetioned } from "@/lib/serialize-reply";
+// import type { User } from "@prisma/client";
+// import type { UserMetioned } from "@/lib/serialize-reply";
 import fetcher from "@/lib/fetcher";
 import Reply from "@/components/replies/Reply";
 import Spinner from "@/components/Spinner";
+import { ReplyWithLatestContentPostMeta } from "@/lib/reply";
 
 interface PageData {
-  data: {
-    id: number;
-    time: string;
-    author: User;
-    content: string;
-    usersMetioned: UserMetioned[];
-    discussion: {
-      id: number;
-      snapshots: {
-        title: string;
-        authorId: number;
-      }[];
-    };
-  }[];
+  data: ReplyWithLatestContentPostMeta[];
   nextCursor: number;
 }
 
@@ -57,19 +45,22 @@ export default function UserReplies({ uid }: { uid: string }) {
           replies.map((reply) => (
             <div key={reply.id}>
               <Reply
-                reply={reply}
+                reply={{
+                  ...reply,
+                  postId: reply.post.id,
+                }}
                 post={{
-                  id: reply.discussion.id,
-                  authorId: reply.discussion.snapshots[0].authorId,
+                  id: reply.post.id,
+                  authorId: reply.post.snapshots[0].author.id,
                 }}
               >
                 <div className="mt-2 fw-medium text-body-tertiary">
                   于帖子{" "}
                   <Link
                     className="text-decoration-none"
-                    href={`/${reply.discussion.id}`}
+                    href={`/${reply.post.id}`}
                   >
-                    {reply.discussion.snapshots[0].title}
+                    {reply.post.snapshots[0].title}
                   </Link>
                   ：
                 </div>

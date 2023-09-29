@@ -72,7 +72,7 @@ export default function UserDiscussions({ uid }: { uid: string }) {
               <Content
                 discussionAuthor={discussion.snapshots[0].author.id}
                 content={discussion.content}
-                usersMetioned={discussion.usersMetioned}
+                // usersMetioned={discussion.usersMetioned}
               />
             </DiscussionEntry>
           )),

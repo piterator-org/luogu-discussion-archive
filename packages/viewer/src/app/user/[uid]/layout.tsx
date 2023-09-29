@@ -6,6 +6,7 @@ import UserInfo from "@/components/UserInfo";
 import "@/components/markdown.css";
 import TabNavigation from "./TabNavigation";
 import UserStatistics from "./UserStatistics";
+import { selectUser } from "@/lib/user";
 
 export async function generateMetadata({
   params,
@@ -28,6 +29,7 @@ export default async function Layout({
   const user =
     (await prisma.user.findUnique({
       where: { id: parseInt(params.uid, 10) },
+      select: selectUser.withLatest,
     })) ?? notFound();
   return (
     <div className="row px-2 px-md-0">
