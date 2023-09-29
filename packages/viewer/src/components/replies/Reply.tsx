@@ -1,51 +1,50 @@
 "use client";
 
 import { useState } from "react";
-import type { User } from "@prisma/client";
+// import type { User } from "@prisma/client";
 import Link from "next/link";
-import type { UserMetioned } from "@/lib/serialize-reply";
+// import type { UserMetioned } from "@/lib/serialize-reply";
 import UserAvatar from "@/components/UserAvatar";
 import UserInfo from "@/components/UserInfo";
 import Content from "./Content";
 import ContextViewer from "./ContextViewer";
 
+import type { ReplyWithLatestContent } from "@/lib/reply";
+import stringifyTime from "@/lib/time";
+
 export default function Reply({
-  discussion,
+  post,
   reply,
   children,
 }: React.PropsWithChildren<{
-  discussion: { id: number; authorId: number };
-  reply: {
-    id?: number;
-    time: string;
-    author: User;
-    content: string;
-    usersMetioned: UserMetioned[];
-  };
+  post: { id: number; authorId: number };
+  reply: ReplyWithLatestContent;
 }>) {
   const [userId, setUserId] = useState<number | null>(null);
+  const snapshot = reply.snapshots[0]
+
   return (
     <div
       className={reply.id && userId ? "my-5m" : undefined}
       id={(reply.id ?? 0).toString()}
     >
-      {reply.id && userId && (
+      {reply.id !== -1 && userId && (
         <ContextViewer
-          discussionAuthor={discussion.authorId}
-          discussionId={discussion.id}
+          discussionAuthor={post.authorId}
+          discussionId={post.id}
           userId={userId}
           replyId={reply.id}
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          userMetioned={reply.usersMetioned.find((user) => user.id === userId)!}
+          // userMetioned={reply.usersMetioned.find((user) => user.id === userId)!}
           key={userId}
         />
       )}
       <div className="reply position-relative">
-        <UserAvatar className="reply-avatar" user={reply.author} />
+        <UserAvatar className="reply-avatar" user={snapshot.author} />
         <div className="reply-card rounded-4 shadow-bssb mb-4s">
           <div className="reply-meta bg-light-bssb rounded-top-4 pe-4 py-2">
-            <UserInfo user={reply.author} />
-            {reply.author.id === discussion.authorId ? (
+            <UserInfo user={snapshot.author} />
+            {snapshot.author.id === post.authorId ? (
               <span
                 className="ms-1 badge position-relative bg-teal d-inline-block"
                 style={{ top: "-.15em", left: ".08em", marginRight: ".08em" }}
@@ -56,8 +55,8 @@ export default function Reply({
               ""
             )}
             <span className="float-end text-body-tertiary">
-              <span className="d-none d-md-inline">{reply.time}</span>
-              {reply.id !== undefined ? (
+              <span className="d-none d-md-inline">{stringifyTime(reply.time)}</span>
+              {reply.id !== -1 ? (
                 <Link
                   href={`/r/${reply.id}`}
                   className="ms-2 link-secondary position-relative"
@@ -88,16 +87,16 @@ export default function Reply({
           <div className="reply-content pe-4 py-2 position-relative">
             {children}
             <Content
-              discussionAuthor={discussion.authorId}
-              content={reply.content}
-              usersMetioned={reply.usersMetioned}
+              discussionAuthor={post.authorId}
+              content={snapshot.content}
+              // usersMetioned={reply.usersMetioned}
               userIdState={[userId, setUserId]}
             />
             <span
               className="text-end text-body-tertiary d-block d-md-none"
               style={{ fontSize: ".8rem" }}
             >
-              {reply.time}
+              {stringifyTime(reply.time)}
             </span>
           </div>
         </div>

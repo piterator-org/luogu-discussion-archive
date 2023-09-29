@@ -1,4 +1,5 @@
 import { Prisma } from "@prisma/client";
+import { selectUser } from "./user";
 
 export const selectReply = {
   withBasic: Prisma.validator<Prisma.ReplyDefaultArgs>()({
@@ -13,7 +14,7 @@ export const selectReply = {
       snapshots: {
         select: {
           time: true,
-          author: true,
+          author: { select: selectUser.withLatest },
         },
         orderBy: { time: "desc" },
         take: 1,
@@ -25,11 +26,7 @@ export const selectReply = {
       takedown: {
         select: {
           reason: true,
-          submitter: {
-            select: {
-              userSnapshots: true,
-            },
-          },
+          submitter: { select: selectUser.withLatest },
         },
       },
     },
@@ -39,7 +36,7 @@ export const selectReply = {
       snapshots: {
         select: {
           time: true,
-          author: true,
+          author: { select: selectUser.withLatest },
           content: true,
         },
         orderBy: { time: "desc" },

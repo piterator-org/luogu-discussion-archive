@@ -1,4 +1,6 @@
 import { Prisma } from "@prisma/client";
+import { getReply } from "./reply";
+import { selectUser } from "./user";
 
 export const selectPost = {
   withBasic: Prisma.validator<Prisma.PostDefaultArgs>()({
@@ -8,6 +10,8 @@ export const selectPost = {
       replyCount: true,
     },
   }).select,
+
+  // Not compatible to use `withLatestContent` here, because the `content` field
   withLatestSnapshotMeta: Prisma.validator<Prisma.PostDefaultArgs>()({
     select: {
       snapshots: {
@@ -15,7 +19,10 @@ export const selectPost = {
           time: true,
           title: true,
           forum: true,
-          author: true,
+          author: {
+            select: selectUser.withLatest,
+          },
+          until: true,
         },
         orderBy: { time: "desc" },
         take: 1,
@@ -27,11 +34,13 @@ export const selectPost = {
       takedown: {
         select: {
           reason: true,
-          submitter: true,
+          submitter: { select: selectUser.withLatest },
         },
       },
     },
   }).select,
+
+  // Not compatible to use `withLatestSnapshotMeta` here, because the `content` field
   withLatestContent: Prisma.validator<Prisma.PostDefaultArgs>()({
     select: {
       snapshots: {
@@ -39,8 +48,11 @@ export const selectPost = {
           time: true,
           title: true,
           forum: true,
-          author: true,
+          author: {
+            select: selectUser.withLatest,
+          },
           content: true,
+          until: true,
         },
         orderBy: { time: "desc" },
         take: 1,
@@ -70,10 +82,24 @@ export const selectPostWithLatestContent =
     select: getPost.latestWithContent,
   });
 
+export const selectPostWithLatestReplies =
+  Prisma.validator<Prisma.PostDefaultArgs>()({
+    select: {
+      ...selectPost.withLatestContent,
+      replies: {
+        select: getReply.latestWithContent,
+      },
+    },
+  });
+
 export type PostWithLatestSnapshotMeta = Prisma.PostGetPayload<
   typeof selectPostWithLatestSnapshotMeta
 >;
 
 export type PostWithLatestContent = Prisma.PostGetPayload<
   typeof selectPostWithLatestContent
+>;
+
+export type PostWithLatestReplies = Prisma.PostGetPayload<
+  typeof selectPostWithLatestReplies
 >;

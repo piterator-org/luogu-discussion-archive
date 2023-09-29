@@ -1,4 +1,6 @@
-export const getDiscussionUrl = (discussion: number, page?: number) =>
+import { Color, Forum } from "@prisma/client";
+
+export const getPostUrl = (discussion: number, page?: number) =>
   `https://www.luogu.com.cn/discuss/${discussion}${
     page !== undefined ? `?page=${page}` : ""
   }`;
@@ -11,18 +13,10 @@ export const getUserRealUrl = (user: number) =>
 export const getUserAvatarUrl = (user: number) =>
   `https://cdn.luogu.com.cn/upload/usericon/${user}.png`;
 
-export const getForumUrl = (forum: string) =>
-  `https://www.luogu.com.cn/discuss/lists?forumname=${forum}`;
+export const getForumUrl = (forum: Forum) =>
+  `https://www.luogu.com.cn/discuss/lists?forumname=${forum.slug}`;
 
-export const getForumName = (forum: string) =>
-  ({
-    siteaffairs: "站务版",
-    problem: "题目总版",
-    academics: "学术版",
-    relevantaffairs: "灌水区",
-    service: "反馈、申请、工单专版",
-    miaomiaowu: "小黑屋",
-  })[forum] ?? forum;
+export const getForumName = (forum: Forum) => forum.name;
 
 export const judgementUrl = "https://www.luogu.com.cn/judgement";
 
@@ -46,7 +40,7 @@ export function getUserIdFromUrl(target: URL) {
     (target.pathname.startsWith("/user/") && target.pathname.split("/")[2]) ||
       ((target.pathname === "/space/show" &&
         target.searchParams.get("uid")) as string),
-    10,
+    10
   );
   return Number.isNaN(uid) ? null : uid;
 }
@@ -58,7 +52,7 @@ export function getDiscussionIdFromUrl(target: URL) {
       target.pathname.split("/")[2]) ||
       ((target.pathname === "/discuss/show" &&
         target.searchParams.get("postid")) as string),
-    10,
+    10
   );
   return Number.isNaN(discussionId) ? null : discussionId;
 }
@@ -80,6 +74,31 @@ export function getDiscussionId(s: string) {
     (url.pathname === "/discuss/show" && url.searchParams.get("postid")) ||
       ((url.pathname.startsWith("/discuss/") &&
         url.pathname.split("/")[2]) as string),
-    10,
+    10
   );
+}
+
+export function getCheckmarkColor(ccfLevel: number) {
+  if (ccfLevel <= 5) return "#52c41a";
+  if (ccfLevel <= 7) return "#3498db";
+  return "#ffc116";
+}
+
+export function getNameClassByColor(color: Color) {
+  switch (color) {
+    case "Blue":
+      return "bluelight";
+    case "Green":
+      return "green";
+    case "Gray":
+      return "gray";
+    case "Cheater":
+      return "brown";
+    case "Orange":
+      return "orange";
+    case "Purple":
+      return "purple";
+    case "Red":
+      return "red";
+  }
 }

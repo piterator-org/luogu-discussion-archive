@@ -58,7 +58,7 @@ export default function UserReplies({ uid }: { uid: string }) {
             <div key={reply.id}>
               <Reply
                 reply={reply}
-                discussion={{
+                post={{
                   id: reply.discussion.id,
                   authorId: reply.discussion.snapshots[0].authorId,
                 }}

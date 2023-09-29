@@ -2,8 +2,10 @@ import { notFound } from "next/navigation";
 import prisma from "@/lib/prisma";
 import paginate from "@/lib/pagination";
 import PageButtons from "@/components/replies/PageButtons";
-import serializeReply from "@/lib/serialize-reply";
+// import serializeReply from "@/lib/serialize-reply";
 import Reply from "@/components/replies/Reply";
+import { selectReply } from "@/lib/reply";
+import { selectPost } from "@/lib/post";
 
 const REPLIES_PER_PAGE = parseInt(process.env.REPLIES_PER_PAGE ?? "10", 10);
 
@@ -16,35 +18,19 @@ export default async function Page({
   const page = parseInt(params.page, 10);
   if (Number.isNaN(page)) notFound();
   const {
-    snapshots: [{ authorId }],
+    snapshots,
     replies,
     _count: { replies: numReplies },
   } = await prisma.post
     .findUnique({
       where: { id },
       select: {
-        snapshots: {
-          select: { authorId: true },
-          orderBy: { time: "desc" },
-          take: 1,
-        },
+        ...selectPost.withLatestSnapshotMeta,
         replies: {
           select: {
-            id: true,
-            author: true,
-            time: true,
-            content: true,
-            takedown: {
-              select: {
-                submitter: {
-                  select: {
-                    id: true,
-                    username: true,
-                  },
-                },
-                reason: true,
-              },
-            },
+            ...selectReply.withBasic,
+            ...selectReply.withTakedown,
+            ...selectReply.withLatestContent,
           },
           orderBy: { id: "asc" },
           skip: (page - 1) * REPLIES_PER_PAGE,
@@ -53,16 +39,7 @@ export default async function Page({
         _count: { select: { replies: true } },
       },
     })
-    .then((discussion) => discussion ?? notFound())
-    .then(async (discussion) => ({
-      ...discussion,
-      replies: await Promise.all(
-        discussion.replies.map(async (reply) => ({
-          ...reply,
-          ...(await serializeReply(id, reply)),
-        })),
-      ),
-    }));
+    .then((post) => post ?? notFound())
   const numPages = Math.ceil(numReplies / REPLIES_PER_PAGE);
   const { pagesLocalAttachedFront, pagesLocalAttachedBack, pagesLocal } =
     paginate(numPages, page);
@@ -70,7 +47,7 @@ export default async function Page({
   return (
     <>
       {replies.map((reply) => (
-        <Reply discussion={{ id, authorId }} reply={reply} key={reply.id} />
+        <Reply post={{ id, authorId: snapshots[0].author.id }} reply={reply} key={reply.id} />
       ))}
       {numPages > 1 && (
         <div className="bg-body rounded-4 shadow-bssb my-4s px-4 py-3 py-md-4 text-center">

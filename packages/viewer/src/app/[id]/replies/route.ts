@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import serializeReply from "@/lib/serialize-reply";
+// import serializeReply from "@/lib/serialize-reply";
 
 import { selectReply } from "@/lib/reply";
 
@@ -24,12 +24,7 @@ export async function GET(
     take: parseInt(limit ?? "10", 10),
   });
   return NextResponse.json({
-    data: await Promise.all(
-      replies.map(async (reply) => ({
-        ...reply,
-        ...(await serializeReply(id, reply)),
-      })),
-    ),
+    replies,
     nextCursor: replies.length ? replies[replies.length - 1].id : null,
   });
 }

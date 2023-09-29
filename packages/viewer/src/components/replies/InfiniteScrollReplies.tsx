@@ -9,15 +9,10 @@ import fetcher from "@/lib/fetcher";
 import Spinner from "@/components/Spinner";
 import PageButtons from "./PageButtons";
 import Reply from "./Reply";
+import { ReplyWithLatestContent } from "@/lib/reply";
 
 interface PageData {
-  data: {
-    id: number;
-    time: string;
-    author: User;
-    content: string;
-    usersMetioned: UserMetioned[];
-  }[];
+  replies: ReplyWithLatestContent[];
   nextCursor: number;
 }
 
@@ -26,7 +21,7 @@ const REPLIES_PER_PAGE = parseInt(process.env.REPLIES_PER_PAGE ?? "10", 10);
 export const getKey =
   (id: number) => (pageIndex: number, previousPageData: PageData) => {
     // 已经到最后一页
-    if (previousPageData && !previousPageData.data.length) return null;
+    if (previousPageData && !previousPageData.replies.length) return null;
     // 在首页时，没有 `previousPageData`
     if (pageIndex === 0) return `/${id}/replies?limit=${REPLIES_PER_PAGE}`;
     // 将游标添加到 API
@@ -54,17 +49,17 @@ export default function InfiniteScrollReplies({
   return (
     <>
       <InfiniteScroll
-        dataLength={data?.reduce((c, a) => c + a.data.length, 0) ?? 0}
+        dataLength={data?.reduce((c, a) => c + a.replies.length, 0) ?? 0}
         next={() => showPageButtons || setSize(size + 1)}
-        hasMore={(data?.[data.length - 1].data.length ?? 0) >= REPLIES_PER_PAGE}
+        hasMore={(data?.[data.length - 1].replies.length ?? 0) >= REPLIES_PER_PAGE}
         loader=""
         style={{ overflow: "inherit" }}
         scrollThreshold="1024px"
       >
         {data?.map(
-          (replies) =>
-            replies.data?.map((reply) => (
-              <Reply discussion={discussion} reply={reply} key={reply.id} />
+          (data) =>
+            data.replies?.map((reply) => (
+              <Reply post={discussion} reply={reply} key={reply.id} />
             )),
         )}
       </InfiniteScroll>

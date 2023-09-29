@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import prisma from "@/lib/prisma";
-import { getDiscussionUrl, getForumName, getForumUrl } from "@/lib/luogu";
+import { getPostUrl, getForumUrl } from "@/lib/luogu";
 import stringifyTime from "@/lib/time";
 import UserInfo from "@/components/UserInfo";
 import "@/components/markdown.css";
 import UpdateButton from "@/components/UpdateButton";
-import serializeReply from "@/lib/serialize-reply";
 import Reply from "@/components/replies/Reply";
+import { selectPost } from "@/lib/post";
 
 export async function generateMetadata({
   params,
@@ -16,16 +16,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const id = parseInt(params.id, 10);
   if (Number.isNaN(id)) notFound();
-  const snapshot = await prisma.snapshot.findFirst({
-    select: { title: true, discussion: { select: { takedown: true } } },
+  const snapshot = await prisma.postSnapshot.findFirst({
+    select: { title: true, post: { select: { takedown: true } } },
     orderBy: { time: "desc" },
-    where: { discussionId: id },
+    where: { postId: id },
   });
   return {
     title: `${
-      snapshot && !snapshot.discussion.takedown
-        ? `「${snapshot.title}」`
-        : "404"
+      snapshot && !snapshot.post.takedown ? `「${snapshot.title}」` : "404"
     } - 洛谷帖子保存站`,
   };
 }
@@ -42,23 +40,12 @@ export default async function Page({
     snapshots: [{ title, forum, author, content, until: updatedAt }],
     _count: { replies },
     takedown,
-  } = (await prisma.discussion.findUnique({
+  } = (await prisma.post.findUnique({
     where: { id },
     select: {
-      time: true,
-      replyCount: true,
-      snapshots: {
-        select: {
-          until: true,
-          title: true,
-          forum: true,
-          author: true,
-          content: true,
-        },
-        orderBy: { time: "desc" },
-        take: 1,
-      },
-      takedown: { select: { reason: true, submitter: true } },
+      ...selectPost.withBasic,
+      ...selectPost.withLatestContent,
+      ...selectPost.withTakedown,
       _count: { select: { replies: true } },
     },
   })) ?? notFound();
@@ -87,7 +74,7 @@ export default async function Page({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {getForumName(forum)}
+                {forum.name}
               </a>
             </li>
             <li className="d-flex justify-content-between lh-lg">
@@ -118,7 +105,7 @@ export default async function Page({
           <div className="mt-2 mb-1">
             <a
               className="btn btn-outline-secondary shadow-bssb-sm"
-              href={getDiscussionUrl(parseInt(params.id, 10))}
+              href={getPostUrl(parseInt(params.id, 10))}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -135,10 +122,12 @@ export default async function Page({
           {title}
         </div>
         <Reply
-          discussion={{ id, authorId: author.id }}
+          post={{ id, authorId: author.id }}
           reply={{
-            author,
-            ...(await serializeReply(id, { content, time })),
+            time,
+            id: -1,
+            postId: id,
+            snapshots: [{ content, time, author }],
           }}
         />
         {children}

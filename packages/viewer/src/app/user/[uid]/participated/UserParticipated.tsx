@@ -3,7 +3,6 @@
 import Link from "next/link";
 import useSWRInfinite from "swr/infinite";
 import InfiniteScroll from "react-infinite-scroll-component";
-import type { User } from "@prisma/client";
 import type { PostWithLatestContent } from "@/lib/post";
 import type { UserMetioned } from "@/lib/serialize-reply";
 import UserAvatar from "@/components/UserAvatar";
@@ -12,6 +11,7 @@ import Content from "@/components/replies/Content";
 import fetcher from "@/lib/fetcher";
 import Spinner from "@/components/Spinner";
 import { NUM_MAX_REPLIES_SHOWED_DEFAULT } from "../constants";
+import { LatestUser } from "@/lib/user";
 
 interface PageData {
   data: (PostWithLatestContent & {
@@ -36,7 +36,7 @@ export default function UserParticipated({
   user,
 }: {
   uid: string;
-  user: User;
+  user: LatestUser;
 }) {
   const { data, size, setSize, isValidating } = useSWRInfinite<PageData>(
     (pageIndex: number, previousPageData: PageData) =>
@@ -137,7 +137,7 @@ export default function UserParticipated({
                       <Content
                         discussionAuthor={discussion.snapshots[0].author.id}
                         content={discussion.content}
-                        usersMetioned={discussion.usersMetioned}
+                        // usersMetioned={discussion.usersMetioned}
                       />
                     </details>
                   ) : undefined}
@@ -235,7 +235,7 @@ export default function UserParticipated({
                                     discussion.snapshots[0].author.id
                                   }
                                   content={reply.content}
-                                  usersMetioned={reply.usersMetioned}
+                                  // usersMetioned={reply.usersMetioned}
                                 />
                                 <span
                                   className="text-end text-body-tertiary d-block d-md-none"

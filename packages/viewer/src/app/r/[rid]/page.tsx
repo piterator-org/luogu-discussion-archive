@@ -1,3 +1,5 @@
+// eslint-disable
+// Not impl yet
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import prisma from "@/lib/prisma";
@@ -13,6 +15,8 @@ export const metadata = { title: "金玉良言 - 洛谷帖子保存站" };
 const REPLIES_PER_PAGE = parseInt(process.env.REPLIES_PER_PAGE ?? "10", 10);
 
 export default async function Page({ params }: { params: { rid: string } }) {
+  return <>抱歉，本功能暂未完成 TAT</>;
+
   const id = parseInt(params.rid, 10);
   if (Number.isNaN(id)) notFound();
   const replyRaw = await getReplyRaw(id);

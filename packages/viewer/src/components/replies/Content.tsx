@@ -1,94 +1,96 @@
+// eslint-disable
+// Not impl: Context
 "use client";
 
-import "katex/dist/katex.css";
+import "katex/dist/katex.min.css";
 import "highlight.js/styles/tokyo-night-dark.css";
 import { useEffect, useRef } from "react";
-import renderMathInElement from "katex/contrib/auto-render";
-import { computePosition, shift } from "@floating-ui/dom";
-import type { UserMetioned } from "@/lib/serialize-reply";
-import UserInfo from "@/components/UserInfo";
-import UserAvatar from "@/components/UserAvatar";
+// import { computePosition, shift } from "@floating-ui/dom";
+// import type { UserMetioned } from "@/lib/serialize-reply";
+// import UserInfo from "@/components/UserInfo";
+// import UserAvatar from "@/components/UserAvatar";
+import Markdown from "react-markdown";
+import rehypeKatex from "rehype-katex";
+import remarkMath from "remark-math";
 
 export default function Content({
+  // Markdown
   content,
   discussionAuthor,
-  usersMetioned,
+  // usersMetioned,
   userIdState,
 }: {
   content: string;
   discussionAuthor: number;
-  usersMetioned: UserMetioned[];
+  // usersMetioned: UserMetioned[];
   // eslint-disable-next-line react/require-default-props
   userIdState?: [number | null, (userId: number | null) => void];
 }) {
   const contentRef = useRef<HTMLDivElement>(null);
-  const userRefs = useRef<Record<number, HTMLDivElement | null>>({});
+  // const userRefs = useRef<Record<number, HTMLDivElement | null>>({});
 
-  useEffect(() => {
-    renderMathInElement(contentRef.current!, {
-      delimiters: [
-        { left: "$$", right: "$$", display: true },
-        { left: "$", right: "$", display: false },
-      ],
-    });
+  // useEffect(() => {
+  //   contentRef.current?.querySelectorAll("a[data-uid]").forEach((element) => {
+  //     const uid = parseInt(element.getAttribute("data-uid")!, 10);
+  //     const tooltip = userRefs.current[uid]!;
+  //     if (!tooltip) return;
 
-    contentRef.current?.querySelectorAll("a[data-uid]").forEach((element) => {
-      const uid = parseInt(element.getAttribute("data-uid")!, 10);
-      const tooltip = userRefs.current[uid]!;
-      if (!tooltip) return;
+  //     function update() {
+  //       // eslint-disable-next-line @typescript-eslint/no-floating-promises
+  //       computePosition(element as HTMLElement, tooltip, {
+  //         placement: "top",
+  //         middleware: [shift()],
+  //       }).then(({ x, y }) =>
+  //         Object.assign(tooltip.style, { left: `${x}px`, top: `${y}px` }),
+  //       );
+  //     }
+  //     function showTooltip() {
+  //       update();
+  //       tooltip.style.display = "block";
+  //     }
+  //     function hideTooltip() {
+  //       tooltip.style.display = "none";
+  //     }
 
-      function update() {
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        computePosition(element as HTMLElement, tooltip, {
-          placement: "top",
-          middleware: [shift()],
-        }).then(({ x, y }) =>
-          Object.assign(tooltip.style, { left: `${x}px`, top: `${y}px` }),
-        );
-      }
-      function showTooltip() {
-        update();
-        tooltip.style.display = "block";
-      }
-      function hideTooltip() {
-        tooltip.style.display = "none";
-      }
-
-      (
-        [
-          ["mouseenter", showTooltip],
-          ["mouseleave", hideTooltip],
-          ["focus", showTooltip],
-          ["blur", hideTooltip],
-          ...(userIdState
-            ? [
-                [
-                  "click",
-                  (event: Event) => {
-                    event.preventDefault();
-                    hideTooltip();
-                    if (userIdState[0] !== uid) userIdState[1](uid);
-                    else userIdState[1](null);
-                  },
-                ],
-              ]
-            : []),
-        ] as [string, () => void][]
-      ).forEach(([event, listener]) =>
-        element.addEventListener(event, listener),
-      );
-    });
-  });
+  //     (
+  //       [
+  //         ["mouseenter", showTooltip],
+  //         ["mouseleave", hideTooltip],
+  //         ["focus", showTooltip],
+  //         ["blur", hideTooltip],
+  //         ...(userIdState
+  //           ? [
+  //               [
+  //                 "click",
+  //                 (event: Event) => {
+  //                   event.preventDefault();
+  //                   hideTooltip();
+  //                   if (userIdState[0] !== uid) userIdState[1](uid);
+  //                   else userIdState[1](null);
+  //                 },
+  //               ],
+  //             ]
+  //           : []),
+  //       ] as [string, () => void][]
+  //     ).forEach(([event, listener]) =>
+  //       element.addEventListener(event, listener),
+  //     );
+  //   });
+  // });
 
   return (
     <>
       <div
         className="markdown text-break overflow-x-auto overflow-y-hidden"
         ref={contentRef}
-        /* eslint-disable-next-line react/no-danger */
-        dangerouslySetInnerHTML={{ __html: content }}
       />
-      {usersMetioned.map((user) => (
+      <Markdown
+        rehypePlugins={[rehypeKatex]}
+        remarkPlugins={[remarkMath]}
+        children={content}
+        skipHtml={true}
+      />
+      {/* {usersMetioned.map((user) => (
         <div
           ref={(el) => {
             userRefs.current[user.id] = el;
@@ -134,7 +136,7 @@ export default function Content({
             </div>
           </div>
         </div>
-      ))}
+      ))} */}
     </>
   );
 }
