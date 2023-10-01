@@ -3,13 +3,14 @@
 import { useState } from "react";
 import useSWRInfinite from "swr/infinite";
 import InfiniteScroll from "react-infinite-scroll-component";
-import type { User } from "@prisma/client";
-import type { UserMetioned } from "@/lib/serialize-reply";
+// import type { User } from "@prisma/client";
+// import type { UserMetioned } from "@/lib/serialize-reply";
 import fetcher from "@/lib/fetcher";
 import Spinner from "@/components/Spinner";
 import PageButtons from "./PageButtons";
 import Reply from "./Reply";
 import { ReplyWithLatestContent } from "@/lib/reply";
+import { BsThreeDots } from "react-icons/bs";
 
 interface PageData {
   replies: ReplyWithLatestContent[];
@@ -42,7 +43,7 @@ export default function InfiniteScrollReplies({
 }) {
   const { data, size, setSize, isValidating } = useSWRInfinite<PageData>(
     getKey(discussion.id),
-    fetcher,
+    fetcher
   );
   const [showPageButtons, setShowPageButtons] = useState<boolean>(true);
 
@@ -51,7 +52,9 @@ export default function InfiniteScrollReplies({
       <InfiniteScroll
         dataLength={data?.reduce((c, a) => c + a.replies.length, 0) ?? 0}
         next={() => showPageButtons || setSize(size + 1)}
-        hasMore={(data?.[data.length - 1].replies.length ?? 0) >= REPLIES_PER_PAGE}
+        hasMore={
+          (data?.[data.length - 1].replies.length ?? 0) >= REPLIES_PER_PAGE
+        }
         loader=""
         style={{ overflow: "inherit" }}
         scrollThreshold="1024px"
@@ -60,7 +63,7 @@ export default function InfiniteScrollReplies({
           (data) =>
             data.replies?.map((reply) => (
               <Reply post={discussion} reply={reply} key={reply.id} />
-            )),
+            ))
         )}
       </InfiniteScroll>
 
@@ -78,17 +81,10 @@ export default function InfiniteScrollReplies({
             type="button"
           >
             加载更多
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="1em"
-              height="1em"
-              fill="currentColor"
-              className="bi bi-three-dots ms-1"
-              viewBox="0 0 16 16"
+            <BsThreeDots
+              className="ms-1"
               style={{ position: "relative", top: "-.09em" }}
-            >
-              <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
-            </svg>
+            />
           </button>
           <div className="bg-body rounded-4 shadow-bssb my-4s px-4 py-3 py-md-4 text-center">
             <PageButtons

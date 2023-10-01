@@ -11,6 +11,7 @@ import ContextViewer from "./ContextViewer";
 
 import type { ReplyWithLatestContent } from "@/lib/reply";
 import stringifyTime from "@/lib/time";
+import { BsBoxArrowUpRight } from "react-icons/bs";
 
 export default function Reply({
   post,
@@ -21,7 +22,7 @@ export default function Reply({
   reply: ReplyWithLatestContent;
 }>) {
   const [userId, setUserId] = useState<number | null>(null);
-  const snapshot = reply.snapshots[0]
+  const snapshot = reply.snapshots[0];
 
   return (
     <div
@@ -55,31 +56,16 @@ export default function Reply({
               ""
             )}
             <span className="float-end text-body-tertiary">
-              <span className="d-none d-md-inline">{stringifyTime(reply.time)}</span>
+              <span className="d-none d-md-inline">
+                {stringifyTime(reply.time)}
+              </span>
               {reply.id !== -1 ? (
                 <Link
                   href={`/r/${reply.id}`}
                   className="ms-2 link-secondary position-relative"
                   style={{ fontSize: ".8em", top: "-.2em" }}
                 >
-                  {/* TODO: svg to iconfont */}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="1em"
-                    height="1em"
-                    fill="currentColor"
-                    className="bi bi-box-arrow-up-right"
-                    viewBox="0 0 16 16"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"
-                    />
-                    <path
-                      fillRule="evenodd"
-                      d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"
-                    />
-                  </svg>
+                  <BsBoxArrowUpRight width="1em" height="1em" />
                 </Link>
               ) : undefined}
             </span>

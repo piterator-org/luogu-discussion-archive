@@ -4,7 +4,9 @@
 
 import "katex/dist/katex.min.css";
 import "highlight.js/styles/tokyo-night-dark.css";
+import gfm from "remark-gfm";
 import { useEffect, useRef } from "react";
+
 // import { computePosition, shift } from "@floating-ui/dom";
 // import type { UserMetioned } from "@/lib/serialize-reply";
 // import UserInfo from "@/components/UserInfo";
@@ -86,10 +88,11 @@ export default function Content({
       />
       <Markdown
         rehypePlugins={[rehypeKatex]}
-        remarkPlugins={[remarkMath]}
-        children={content}
+        remarkPlugins={[remarkMath, [gfm, { singleTilde: false }]]}
         skipHtml={true}
-      />
+      >
+        {content}
+      </Markdown>
       {/* {usersMetioned.map((user) => (
         <div
           ref={(el) => {

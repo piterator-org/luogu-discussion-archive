@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
 import { getPost } from "@/lib/post";
-import serializeReply from "@/lib/serialize-reply";
+// import serializeReply from "@/lib/serialize-reply";
 import { NUM_PER_PAGE } from "../../constants";
 
 export async function GET(
@@ -21,15 +21,7 @@ export async function GET(
     take: NUM_PER_PAGE,
   });
   return NextResponse.json({
-    data: await Promise.all(
-      posts.map(async (post) => ({
-        ...post,
-        ...(await serializeReply(post.id, {
-          content: post.snapshots[0].content,
-          time: post.time,
-        })),
-      })),
-    ),
+    data: posts,
     nextCursor: posts.length ? posts[posts.length - 1].id : null,
   });
 }

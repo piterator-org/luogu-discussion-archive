@@ -1,14 +1,14 @@
 "use client";
 
 import useSWRInfinite from "swr/infinite";
-import type { User } from "@prisma/client";
 import InfiniteScroll from "react-infinite-scroll-component";
 import fetcher from "@/lib/fetcher";
 import Spinner from "@/components/Spinner";
 import Ostracon from "@/components/Ostracon";
+import { LatestUser } from "@/lib/user";
 
 interface PageData {
-  data: { user: User; time: string; content: string }[];
+  data: { user: LatestUser; time: string; content: string }[];
   nextCursor: string;
 }
 

@@ -1,13 +1,13 @@
 import prisma from "@/lib/prisma";
 import { getPost } from "@/lib/post";
 import { NUM_DISCUSSIONS_INDEX } from "../../constants";
-import DiscussionIndex from "../../DiscussionIndex";
+import PostIndex from "../../DiscussionIndex";
 
 export const metadata = { title: "索引 - 洛谷帖子保存站" };
 
 export default async function Page({ params }: { params: { page: string } }) {
   const page = parseInt(params.page, 10);
-  const discussions = await prisma.post.findMany({
+  const posts = await prisma.post.findMany({
     select: getPost.latestNoContent,
     where: { takedown: { is: null } },
     orderBy: { id: "desc" },
@@ -15,5 +15,5 @@ export default async function Page({ params }: { params: { page: string } }) {
     take: NUM_DISCUSSIONS_INDEX,
   });
 
-  return <DiscussionIndex discussions={discussions} />;
+  return <PostIndex posts={posts} />;
 }
