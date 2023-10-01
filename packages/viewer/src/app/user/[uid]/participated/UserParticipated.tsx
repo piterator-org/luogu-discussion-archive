@@ -10,7 +10,6 @@ import UserInfo from "@/components/UserInfo";
 import Content from "@/components/replies/Content";
 import fetcher from "@/lib/fetcher";
 import Spinner from "@/components/Spinner";
-import { NUM_MAX_REPLIES_SHOWED_DEFAULT } from "../constants";
 import { LatestUser } from "@/lib/user";
 import { ReplyWithLatestContentPostMeta } from "@/lib/reply";
 import stringifyTime from "@/lib/time";
@@ -22,6 +21,7 @@ import {
   BsJournalBookmark,
   BsThreeDots,
 } from "react-icons/bs";
+import { NUM_MAX_REPLIES_SHOWED_DEFAULT } from "../constants";
 
 interface PageData {
   data: (PostWithLatestContent & {
@@ -44,7 +44,7 @@ export default function UserParticipated({
         : `/user/${uid}/participated/data${
             pageIndex ? `?cursor=${previousPageData.nextCursor}` : ""
           }`,
-    fetcher
+    fetcher,
   );
 
   return (
@@ -115,7 +115,7 @@ export default function UserParticipated({
                         </span>
                       </summary>
                       <Content
-                        discussionAuthor={discussion.snapshots[0].author.id}
+                        // discussionAuthor={discussion.snapshots[0].author.id}
                         content={discussion.snapshots[0].content}
                         // usersMetioned={discussion.usersMetioned}
                       />
@@ -181,9 +181,9 @@ export default function UserParticipated({
                               </div>
                               <div className="px-4 py-2 position-relative">
                                 <Content
-                                  discussionAuthor={
-                                    discussion.snapshots[0].author.id
-                                  }
+                                  // discussionAuthor={
+                                  //   discussion.snapshots[0].author.id
+                                  // }
                                   content={reply.snapshots[0].content}
                                   // usersMetioned={reply.usersMetioned}
                                 />
@@ -228,7 +228,7 @@ export default function UserParticipated({
                 </div>
               </div>
             </div>
-          ))
+          )),
         )}
       </InfiniteScroll>
       {isValidating && <Spinner />}

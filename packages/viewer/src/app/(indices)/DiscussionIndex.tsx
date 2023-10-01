@@ -19,9 +19,7 @@ export default function PostIndex({
             <>
               <BsChatDots style={{ position: "relative", top: "-.1125em" }} />{" "}
               {post.replyCount}
-              <span className="float-end">
-                {stringifyTime(post.time)}
-              </span>
+              <span className="float-end">{stringifyTime(post.time)}</span>
             </>
           }
         />

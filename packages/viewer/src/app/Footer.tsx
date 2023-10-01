@@ -9,7 +9,7 @@ declare global {
 }
 
 function ExternalLink(
-  params: Omit<JSX.IntrinsicElements["a"], "className" | "target" | "rel">
+  params: Omit<JSX.IntrinsicElements["a"], "className" | "target" | "rel">,
 ) {
   return (
     <a // eslint-disable-line jsx-a11y/anchor-has-content

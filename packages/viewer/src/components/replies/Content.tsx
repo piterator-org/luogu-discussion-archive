@@ -1,11 +1,9 @@
-// eslint-disable
-// Not impl: Context
 "use client";
 
 import "katex/dist/katex.min.css";
 import "highlight.js/styles/tokyo-night-dark.css";
 import gfm from "remark-gfm";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 
 // import { computePosition, shift } from "@floating-ui/dom";
 // import type { UserMetioned } from "@/lib/serialize-reply";
@@ -16,17 +14,13 @@ import rehypeKatex from "rehype-katex";
 import remarkMath from "remark-math";
 
 export default function Content({
-  // Markdown
   content,
-  discussionAuthor,
-  // usersMetioned,
-  userIdState,
 }: {
   content: string;
-  discussionAuthor: number;
+  // discussionAuthor: number;
   // usersMetioned: UserMetioned[];
   // eslint-disable-next-line react/require-default-props
-  userIdState?: [number | null, (userId: number | null) => void];
+  // userIdState?: [number | null, (userId: number | null) => void];
 }) {
   const contentRef = useRef<HTMLDivElement>(null);
   // const userRefs = useRef<Record<number, HTMLDivElement | null>>({});
@@ -89,7 +83,7 @@ export default function Content({
       <Markdown
         rehypePlugins={[rehypeKatex]}
         remarkPlugins={[remarkMath, [gfm, { singleTilde: false }]]}
-        skipHtml={true}
+        skipHtml
       >
         {content}
       </Markdown>

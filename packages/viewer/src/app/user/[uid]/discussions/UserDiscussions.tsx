@@ -24,7 +24,7 @@ export default function UserDiscussions({ uid }: { uid: string }) {
         : `/user/${uid}/discussions/data${
             pageIndex ? `?cursor=${previousPageData.nextCursor}` : ""
           }`,
-    fetcher
+    fetcher,
   );
 
   return (
@@ -56,17 +56,19 @@ export default function UserDiscussions({ uid }: { uid: string }) {
                     style={{ position: "relative", top: "-.1125em" }}
                   />{" "}
                   {discussion.replyCount}
-                  <span className="float-end">{stringifyTime(discussion.time)}</span>
+                  <span className="float-end">
+                    {stringifyTime(discussion.time)}
+                  </span>
                 </>
               }
             >
               <Content
-                discussionAuthor={discussion.snapshots[0].author.id}
+                // discussionAuthor={discussion.snapshots[0].author.id}
                 content={discussion.snapshots[0].content}
                 // usersMetioned={discussion.usersMetioned}
               />
             </DiscussionEntry>
-          ))
+          )),
         )}
       </InfiniteScroll>
       {isValidating && <Spinner />}

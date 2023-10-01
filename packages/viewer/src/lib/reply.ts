@@ -1,6 +1,5 @@
 import { Prisma } from "@prisma/client";
 import { selectUser } from "./user";
-import { get } from "http";
 
 export const selectReply = {
   withBasic: Prisma.validator<Prisma.ReplyDefaultArgs>()({

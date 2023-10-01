@@ -25,7 +25,7 @@ export default function UserInfo({
         <Link
           href={getUserUrl(user.id)}
           className={`text-decoration-none lg-fg-${getNameClassByColor(
-            snapshot.color
+            snapshot.color,
           )}`}
         >
           {snapshot.name}
@@ -34,7 +34,7 @@ export default function UserInfo({
         <a
           href={href}
           className={`text-decoration-none lg-fg-${getNameClassByColor(
-            snapshot.color
+            snapshot.color,
           )}`}
           target="_blank"
           rel="noopener noreferrer"
@@ -58,7 +58,7 @@ export default function UserInfo({
       {snapshot.badge && (
         <span
           className={`ms-1 badge position-relative lg-bg-${getNameClassByColor(
-            snapshot.color
+            snapshot.color,
           )} d-inline-block`}
           style={{ top: "-.15em", left: ".08em", marginRight: ".08em" }}
         >

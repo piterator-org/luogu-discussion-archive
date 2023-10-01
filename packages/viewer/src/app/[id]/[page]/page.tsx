@@ -39,7 +39,7 @@ export default async function Page({
         _count: { select: { replies: true } },
       },
     })
-    .then((post) => post ?? notFound())
+    .then((post) => post ?? notFound());
   const numPages = Math.ceil(numReplies / REPLIES_PER_PAGE);
   const { pagesLocalAttachedFront, pagesLocalAttachedBack, pagesLocal } =
     paginate(numPages, page);
@@ -47,7 +47,11 @@ export default async function Page({
   return (
     <>
       {replies.map((reply) => (
-        <Reply post={{ id, authorId: snapshots[0].author.id }} reply={reply} key={reply.id} />
+        <Reply
+          post={{ id, authorId: snapshots[0].author.id }}
+          reply={reply}
+          key={reply.id}
+        />
       ))}
       {numPages > 1 && (
         <div className="bg-body rounded-4 shadow-bssb my-4s px-4 py-3 py-md-4 text-center">

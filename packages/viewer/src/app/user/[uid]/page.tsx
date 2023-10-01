@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import prisma from "@/lib/prisma";
-import UserParticipated from "./participated/UserParticipated";
 import { selectUser } from "@/lib/user";
+import UserParticipated from "./participated/UserParticipated";
 
 export default async function Page({ params }: { params: { uid: string } }) {
   const user =

@@ -7,10 +7,10 @@ export default async function Page({
   params: { id: string; time: string };
 }) {
   const snapshot =
-    (await prisma.snapshot.findUnique({
+    (await prisma.postSnapshot.findUnique({
       where: {
-        discussionId_time: {
-          discussionId: parseInt(params.id, 10),
+        postId_time: {
+          postId: parseInt(params.id, 10),
           time: decodeURIComponent(params.time),
         },
       },

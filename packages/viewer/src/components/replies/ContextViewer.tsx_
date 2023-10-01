@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import useSWR from "swr";
-import fetcher from "@/lib/fetcher";
-import UserInfo from "@/components/UserInfo";
-import type { UserMetioned } from "@/lib/serialize-reply";
-import Content from "./Content";
+// import { useState } from "react";
+// import useSWR from "swr";
+// import fetcher from "@/lib/fetcher";
+// import UserInfo from "@/components/UserInfo";
+// import type { UserMetioned } from "@/lib/serialize-reply";
+// import Content from "./Content";
 
 interface Data {
   id: number;
@@ -13,7 +13,7 @@ interface Data {
   authorId: number;
   time: string;
   content: string;
-  usersMetioned: UserMetioned[];
+  // usersMetioned: UserMetioned[];
 }
 
 export default function ContextViewer({

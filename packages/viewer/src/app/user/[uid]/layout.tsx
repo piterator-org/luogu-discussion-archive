@@ -4,9 +4,9 @@ import prisma from "@/lib/prisma";
 import { getUserAvatarUrl, getUserRealUrl } from "@/lib/luogu";
 import UserInfo from "@/components/UserInfo";
 import "@/components/markdown.css";
+import { selectUser } from "@/lib/user";
 import TabNavigation from "./TabNavigation";
 import UserStatistics from "./UserStatistics";
-import { selectUser } from "@/lib/user";
 
 export async function generateMetadata({
   params,

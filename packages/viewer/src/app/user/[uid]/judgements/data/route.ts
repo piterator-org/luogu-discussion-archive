@@ -1,11 +1,11 @@
 import { NextResponse, type NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
-import { NUM_PER_PAGE } from "../../constants";
 import { selectUser } from "@/lib/user";
+import { NUM_PER_PAGE } from "../../constants";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { uid: string } }
+  { params }: { params: { uid: string } },
 ) {
   const uid = parseInt(params.uid, 10);
   const cursor = request.nextUrl.searchParams.get("cursor");

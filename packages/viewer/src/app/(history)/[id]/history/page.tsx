@@ -3,8 +3,8 @@ import prisma from "@/lib/prisma";
 
 export default async function Page({ params }: { params: { id: string } }) {
   const id = parseInt(params.id, 10);
-  const snapshots = await prisma.snapshot.findMany({
-    where: { discussionId: id },
+  const snapshots = await prisma.postSnapshot.findMany({
+    where: { postId: id },
     orderBy: { time: "desc" },
   });
   return (

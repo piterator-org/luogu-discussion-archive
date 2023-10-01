@@ -1,16 +1,16 @@
 "use client";
 
+import type { ReplyWithLatestContent } from "@/lib/reply";
 import { useState } from "react";
+import { BsThreeDots } from "react-icons/bs";
 import useSWRInfinite from "swr/infinite";
 import InfiniteScroll from "react-infinite-scroll-component";
-// import type { User } from "@prisma/client";
-// import type { UserMetioned } from "@/lib/serialize-reply";
 import fetcher from "@/lib/fetcher";
 import Spinner from "@/components/Spinner";
 import PageButtons from "./PageButtons";
 import Reply from "./Reply";
-import { ReplyWithLatestContent } from "@/lib/reply";
-import { BsThreeDots } from "react-icons/bs";
+// import type { User } from "@prisma/client";
+// import type { UserMetioned } from "@/lib/serialize-reply";
 
 interface PageData {
   replies: ReplyWithLatestContent[];
@@ -43,7 +43,7 @@ export default function InfiniteScrollReplies({
 }) {
   const { data, size, setSize, isValidating } = useSWRInfinite<PageData>(
     getKey(discussion.id),
-    fetcher
+    fetcher,
   );
   const [showPageButtons, setShowPageButtons] = useState<boolean>(true);
 
@@ -60,10 +60,10 @@ export default function InfiniteScrollReplies({
         scrollThreshold="1024px"
       >
         {data?.map(
-          (data) =>
-            data.replies?.map((reply) => (
+          (dat) =>
+            dat.replies?.map((reply) => (
               <Reply post={discussion} reply={reply} key={reply.id} />
-            ))
+            )),
         )}
       </InfiniteScroll>
 

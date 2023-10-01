@@ -40,7 +40,7 @@ export function getUserIdFromUrl(target: URL) {
     (target.pathname.startsWith("/user/") && target.pathname.split("/")[2]) ||
       ((target.pathname === "/space/show" &&
         target.searchParams.get("uid")) as string),
-    10
+    10,
   );
   return Number.isNaN(uid) ? null : uid;
 }
@@ -52,7 +52,7 @@ export function getDiscussionIdFromUrl(target: URL) {
       target.pathname.split("/")[2]) ||
       ((target.pathname === "/discuss/show" &&
         target.searchParams.get("postid")) as string),
-    10
+    10,
   );
   return Number.isNaN(discussionId) ? null : discussionId;
 }
@@ -74,7 +74,7 @@ export function getDiscussionId(s: string) {
     (url.pathname === "/discuss/show" && url.searchParams.get("postid")) ||
       ((url.pathname.startsWith("/discuss/") &&
         url.pathname.split("/")[2]) as string),
-    10
+    10,
   );
 }
 
@@ -100,5 +100,7 @@ export function getNameClassByColor(color: Color) {
       return "purple";
     case "Red":
       return "red";
+    default:
+      return null;
   }
 }
