@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
 import { getPostUrl, getForumUrl } from "@/lib/luogu";
 import stringifyTime from "@/lib/time";
@@ -8,6 +8,8 @@ import "@/components/markdown.css";
 import UpdateButton from "@/components/UpdateButton";
 import Reply from "@/components/replies/Reply";
 import { selectPost } from "@/lib/post";
+import { checkExists } from "@/lib/utils";
+import savedInLegacyList from "./saved-in-legacy.json";
 
 export async function generateMetadata({
   params,
@@ -34,6 +36,7 @@ export default async function Page({
 }: React.PropsWithChildren<{ params: { id: string } }>) {
   const id = parseInt(params.id, 10);
   if (Number.isNaN(id)) notFound();
+  const savedAtLegacy = checkExists(savedInLegacyList, id);
   const {
     replyCount,
     time,
@@ -48,7 +51,8 @@ export default async function Page({
       ...selectPost.withTakedown,
       _count: { select: { replies: true } },
     },
-  })) ?? notFound();
+  })) ??
+  (savedAtLegacy ? redirect(`https://legacy.lglg.top/${id}`) : notFound());
 
   if (takedown)
     return (
@@ -111,6 +115,19 @@ export default async function Page({
             >
               查看原帖
             </a>
+            {savedAtLegacy ? (
+              <a
+                className="btn btn-outline-info shadow-bssb-sm ms-2"
+                // style={{ marginLeft: ".875em" }}
+                href={`https://legacy.lglg.top/${id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                前往旧站
+              </a>
+            ) : (
+              ""
+            )}
             <UpdateButton className="ms-2" target={params.id} key={params.id}>
               更新帖子
             </UpdateButton>

@@ -1,31 +1,59 @@
-// eslint-disable
-// Not impl yet
-import { notFound } from "next/navigation";
+import "@/components/markdown.css";
+import { notFound, redirect } from "next/navigation";
+import { checkExists } from "@/lib/utils";
 import Link from "next/link";
 import prisma from "@/lib/prisma";
-import "@/components/markdown.css";
 import Content from "@/components/replies/Content";
 import UserInfo from "@/components/UserInfo";
 import UserAvatar from "@/components/UserAvatar";
-// import serializeReply from "@/lib/serialize-reply";
 import stringifyTime from "@/lib/time";
 import getReplyRaw from "./get-reply-raw";
+import savedInLegacyList from "../saved-in-legacy.json";
+
+// import serializeReply from "@/lib/serialize-reply";
 
 export const metadata = { title: "金玉良言 - 洛谷帖子保存站" };
 
 const REPLIES_PER_PAGE = parseInt(process.env.REPLIES_PER_PAGE ?? "10", 10);
 
 export default async function Page({ params }: { params: { rid: string } }) {
-  // return <>抱歉，本功能暂未完成 TAT</>;
   const id = parseInt(params.rid, 10);
   if (Number.isNaN(id)) notFound();
   const reply = await getReplyRaw(id);
+  if (!reply) {
+    if (checkExists(savedInLegacyList, id))
+      redirect(`https://legacy.lglg.top/r/${id}`);
+    else notFound();
+  }
   const pages = Math.ceil(
     (await prisma.reply.count({
       where: { id: { lte: id }, postId: reply.post.id },
     })) / REPLIES_PER_PAGE,
   );
-  // return redirect(`/${discussionId}/${pages}#${params.rid}`);
+
+  if (reply.post.takedown) {
+    return (
+      <>
+        <p>{reply.post.takedown.reason}</p>
+        <p>
+          由于回复的帖子由 <UserInfo user={reply.post.takedown.submitter} />{" "}
+          申请删除，本回复无法查看。
+        </p>
+      </>
+    );
+  }
+
+  if (reply.takedown) {
+    return (
+      <>
+        <p>{reply.takedown.reason}</p>
+        <p>
+          由 <UserInfo user={reply.takedown.submitter} /> 申请删除。
+        </p>
+      </>
+    );
+  }
+
   return (
     <div className="row px-2 px-md-0">
       <div className="col-xl-9 col-lg-10 col-md-11 col-12 mt-3 mb-3x mx-auto">
@@ -57,6 +85,17 @@ export default async function Page({ params }: { params: { rid: string } }) {
           >
             <div>
               <UserInfo user={reply.snapshots[0].author} />
+              {reply.snapshots[0].author.id ===
+              reply.post.snapshots[0].author.id ? (
+                <span
+                  className="ms-1 badge position-relative bg-teal d-inline-block"
+                  style={{ top: "-.15em", left: ".08em", marginRight: ".08em" }}
+                >
+                  楼主
+                </span>
+              ) : (
+                ""
+              )}
               <span
                 className="float-end text-body-tertiary d-none d-md-inline"
                 style={{ marginRight: ".8em" }}

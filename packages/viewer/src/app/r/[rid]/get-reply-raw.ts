@@ -1,9 +1,9 @@
-import { notFound } from "next/navigation";
+import { selectPost } from "@/lib/post";
 import prisma from "@/lib/prisma";
 import { selectReply } from "@/lib/reply";
 
 export default async (id: number) =>
-  (await prisma.reply.findUnique({
+  prisma.reply.findUnique({
     select: {
       ...selectReply.withLatestContent,
       ...selectReply.withTakedown,
@@ -12,13 +12,10 @@ export default async (id: number) =>
       post: {
         select: {
           id: true,
-          snapshots: {
-            select: { title: true, authorId: true },
-            orderBy: { time: "desc" },
-            take: 1,
-          },
+          ...selectPost.withLatestSnapshotMeta,
+          ...selectPost.withTakedown,
         },
       },
     },
     where: { id },
-  })) ?? notFound();
+  });

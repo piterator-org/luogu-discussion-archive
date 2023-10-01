@@ -79,14 +79,15 @@ export default function Content({
       <div
         className="markdown text-break overflow-x-auto overflow-y-hidden"
         ref={contentRef}
-      />
-      <Markdown
-        rehypePlugins={[rehypeKatex]}
-        remarkPlugins={[remarkMath, [gfm, { singleTilde: false }]]}
-        skipHtml
       >
-        {content}
-      </Markdown>
+        <Markdown
+          rehypePlugins={[rehypeKatex]}
+          remarkPlugins={[remarkMath, [gfm, { singleTilde: false }]]}
+          skipHtml
+        >
+          {content}
+        </Markdown>
+      </div>
       {/* {usersMetioned.map((user) => (
         <div
           ref={(el) => {

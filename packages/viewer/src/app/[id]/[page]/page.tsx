@@ -1,11 +1,13 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
 import paginate from "@/lib/pagination";
 import PageButtons from "@/components/replies/PageButtons";
-// import serializeReply from "@/lib/serialize-reply";
 import Reply from "@/components/replies/Reply";
 import { selectReply } from "@/lib/reply";
 import { selectPost } from "@/lib/post";
+import { checkExists } from "@/lib/utils";
+import savedInLegacyList from "../saved-in-legacy.json";
+// import serializeReply from "@/lib/serialize-reply";
 
 const REPLIES_PER_PAGE = parseInt(process.env.REPLIES_PER_PAGE ?? "10", 10);
 
@@ -17,29 +19,31 @@ export default async function Page({
   const id = parseInt(params.id, 10);
   const page = parseInt(params.page, 10);
   if (Number.isNaN(page)) notFound();
+  const savedAtLegacy = checkExists(savedInLegacyList, id);
   const {
     snapshots,
     replies,
     _count: { replies: numReplies },
-  } = await prisma.post
-    .findUnique({
-      where: { id },
-      select: {
-        ...selectPost.withLatestSnapshotMeta,
-        replies: {
-          select: {
-            ...selectReply.withBasic,
-            ...selectReply.withTakedown,
-            ...selectReply.withLatestContent,
-          },
-          orderBy: { id: "asc" },
-          skip: (page - 1) * REPLIES_PER_PAGE,
-          take: REPLIES_PER_PAGE,
+  } = (await prisma.post.findUnique({
+    where: { id },
+    select: {
+      ...selectPost.withLatestSnapshotMeta,
+      replies: {
+        select: {
+          ...selectReply.withBasic,
+          ...selectReply.withTakedown,
+          ...selectReply.withLatestContent,
         },
-        _count: { select: { replies: true } },
+        orderBy: { id: "asc" },
+        skip: (page - 1) * REPLIES_PER_PAGE,
+        take: REPLIES_PER_PAGE,
       },
-    })
-    .then((post) => post ?? notFound());
+      _count: { select: { replies: true } },
+    },
+  })) ??
+  (savedAtLegacy
+    ? redirect(`https://legacy.lglg.top/${id}/${page}`)
+    : notFound());
   const numPages = Math.ceil(numReplies / REPLIES_PER_PAGE);
   const { pagesLocalAttachedFront, pagesLocalAttachedBack, pagesLocal } =
     paginate(numPages, page);
