@@ -2,7 +2,9 @@
 
 import "katex/dist/katex.min.css";
 import "highlight.js/styles/tokyo-night-dark.css";
-import gfm from "remark-gfm";
+// import gfm from "remark-gfm";
+import remarkLuoguFlavor from "remark-luogu-flavor";
+import rehypeHighlight from "rehype-highlight";
 import { useRef } from "react";
 
 // import { computePosition, shift } from "@floating-ui/dom";
@@ -26,7 +28,7 @@ export default function Content({
   // const userRefs = useRef<Record<number, HTMLDivElement | null>>({});
 
   // useEffect(() => {
-  //   contentRef.current?.querySelectorAll("a[data-uid]").forEach((element) => {
+  //   contentRef.current?.querySelectorAll(".lfm-user-mention").forEach((element) => {
   //     const uid = parseInt(element.getAttribute("data-uid")!, 10);
   //     const tooltip = userRefs.current[uid]!;
   //     if (!tooltip) return;
@@ -48,29 +50,29 @@ export default function Content({
   //       tooltip.style.display = "none";
   //     }
 
-  //     (
-  //       [
-  //         ["mouseenter", showTooltip],
-  //         ["mouseleave", hideTooltip],
-  //         ["focus", showTooltip],
-  //         ["blur", hideTooltip],
-  //         ...(userIdState
-  //           ? [
-  //               [
-  //                 "click",
-  //                 (event: Event) => {
-  //                   event.preventDefault();
-  //                   hideTooltip();
-  //                   if (userIdState[0] !== uid) userIdState[1](uid);
-  //                   else userIdState[1](null);
-  //                 },
-  //               ],
-  //             ]
-  //           : []),
-  //       ] as [string, () => void][]
-  //     ).forEach(([event, listener]) =>
-  //       element.addEventListener(event, listener),
-  //     );
+  //     // (
+  //     //   [
+  //     //     ["mouseenter", showTooltip],
+  //     //     ["mouseleave", hideTooltip],
+  //     //     ["focus", showTooltip],
+  //     //     ["blur", hideTooltip],
+  //     //     ...(userIdState
+  //     //       ? [
+  //     //           [
+  //     //             "click",
+  //     //             (event: Event) => {
+  //     //               event.preventDefault();
+  //     //               hideTooltip();
+  //     //               if (userIdState[0] !== uid) userIdState[1](uid);
+  //     //               else userIdState[1](null);
+  //     //             },
+  //     //           ],
+  //     //         ]
+  //     //       : []),
+  //     //   ] as [string, () => void][]
+  //     // ).forEach(([event, listener]) =>
+  //     //   element.addEventListener(event, listener),
+  //     // );
   //   });
   // });
 
@@ -81,8 +83,11 @@ export default function Content({
         ref={contentRef}
       >
         <Markdown
-          rehypePlugins={[rehypeKatex]}
-          remarkPlugins={[remarkMath, [gfm, { singleTilde: false }]]}
+          rehypePlugins={[rehypeKatex, rehypeHighlight]}
+          remarkPlugins={[
+            remarkMath,
+            [remarkLuoguFlavor, { userLinkPointToLuogu: false }],
+          ]}
           skipHtml
         >
           {content}

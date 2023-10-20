@@ -29,7 +29,7 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
         )}
         <NavBar />
         <div className="container-lg" style={{ marginTop: "2rem" }}>
-          <div
+          {/* <div
             className="col-lg-6 col-md-7 col-12 mt-5 mb-4 mx-auto alert alert-warning"
             role="alert"
           >
@@ -42,7 +42,7 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
               升级了讨论区
             </a>
             ，暂未完成相关适配。
-          </div>
+          </div> */}
           {children}
         </div>
         <Footer />
