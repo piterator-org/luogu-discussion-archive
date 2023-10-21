@@ -69,17 +69,3 @@ export function getDiscussionIdFromLDAUrl(target: URL) {
   const discussionId = parseInt(target.pathname.split("/")[1], 10);
   return Number.isNaN(discussionId) ? null : discussionId;
 }
-
-export function getDiscussionId(s: string) {
-  const id = parseInt(s, 10);
-  if (!Number.isNaN(id)) return id;
-  const url = new URL(s);
-  if (!isLuoguUrl(url)) return NaN;
-  return parseInt(
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-    (url.pathname === "/discuss/show" && url.searchParams.get("postid")) ||
-      ((url.pathname.startsWith("/discuss/") &&
-        url.pathname.split("/")[2]) as string),
-    10,
-  );
-}

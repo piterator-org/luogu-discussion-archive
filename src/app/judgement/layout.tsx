@@ -1,5 +1,4 @@
 import { judgementUrl } from "@/lib/luogu";
-import UpdateButton from "@/components/UpdateButton";
 import JudgementCount from "./JudgementCount";
 
 export const dynamic = "force-dynamic";
@@ -29,9 +28,6 @@ export default function Page({ children }: React.PropsWithChildren) {
             >
               查看原网页
             </a>
-            <UpdateButton className="ms-2" target="judgement">
-              更新陶片放逐
-            </UpdateButton>
           </div>
         </div>
       </div>

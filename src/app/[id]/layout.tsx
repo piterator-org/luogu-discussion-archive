@@ -5,7 +5,6 @@ import { getDiscussionUrl, getForumName, getForumUrl } from "@/lib/luogu";
 import stringifyTime from "@/lib/time";
 import UserInfo from "@/components/UserInfo";
 import "@/components/markdown.css";
-import UpdateButton from "@/components/UpdateButton";
 import serializeReply from "@/lib/serialize-reply";
 import Reply from "@/components/replies/Reply";
 
@@ -124,9 +123,6 @@ export default async function Page({
             >
               查看原帖
             </a>
-            <UpdateButton className="ms-2" target={params.id} key={params.id}>
-              更新帖子
-            </UpdateButton>
           </div>
         </div>
       </div>
