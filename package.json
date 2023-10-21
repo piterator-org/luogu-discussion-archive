@@ -1,27 +1,56 @@
 {
-  "name": "luogu-discussion-archive",
+  "name": "@luogu-discussion-archive/viewer",
   "version": "0.0.1",
   "private": true,
   "scripts": {
     "prepare": "husky install && prisma generate",
-    "migrate": "dotenv -e .env.local -- pnpm exec prisma migrate deploy"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
-    "@prisma/client": "^5.3.1"
+    "@floating-ui/dom": "^1.5.3",
+    "@prisma/client": "^5.4.2",
+    "bootstrap": "^5.3.2",
+    "highlight.js": "^11.9.0",
+    "jsdom": "^22.1.0",
+    "katex": "^0.16.9",
+    "next": "^13.5.6",
+    "puppeteer": "^21.4.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-infinite-scroll-component": "^6.1.0",
+    "socket.io-client": "^4.7.2",
+    "swr": "^2.2.4"
   },
   "devDependencies": {
-    "dotenv-cli": "^7.3.0",
-    "eslint": "^8.49.0",
-    "eslint-config-airbnb-base": "^15.0.0",
+    "@next/bundle-analyzer": "^13.5.6",
+    "@types/bootstrap": "^5.2.8",
+    "@types/jsdom": "^21.1.4",
+    "@types/katex": "^0.16.5",
+    "@types/node": "^20.8.7",
+    "@types/react": "^18.2.31",
+    "@types/react-dom": "^18.2.14",
+    "@typescript-eslint/eslint-plugin": "^6.8.0",
+    "eslint": "^8.52.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-typescript": "^17.1.0",
+    "eslint-config-next": "^13.5.6",
     "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-prettier": "^5.0.1",
+    "eslint-plugin-react": "^7.33.2",
+    "git-revision-webpack-plugin": "^5.0.0",
     "husky": "^8.0.3",
     "lint-staged": "^14.0.1",
     "prettier": "^3.0.3",
-    "prisma": "^5.3.1",
-    "puppeteer": "^21.3.1"
+    "prisma": "^5.4.2",
+    "sass": "^1.69.4",
+    "typescript": "^5.2.2",
+    "webpack": "^5.89.0"
   },
-  "engines": {
-    "pnpm": "^8.6.0"
+  "optionalDependencies": {
+    "sharp": "^0.32.6"
   }
 }

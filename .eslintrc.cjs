@@ -1,5 +1,3 @@
-const { join } = require("node:path");
-
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
   root: true,
@@ -9,7 +7,6 @@ module.exports = {
     "plugin:react/jsx-runtime",
     "plugin:prettier/recommended",
   ],
-  settings: { next: { rootDir: __dirname } },
   overrides: [
     {
       files: ["*.ts", "*.tsx"],
@@ -19,14 +16,8 @@ module.exports = {
         "plugin:@typescript-eslint/stylistic-type-checked",
         "plugin:prettier/recommended",
       ],
-      settings: {
-        "import/resolver": {
-          typescript: { project: join(__dirname, "tsconfig.json") },
-        },
-      },
       parserOptions: {
         project: "tsconfig.json",
-        tsconfigRootDir: __dirname,
       },
       rules: {
         "no-underscore-dangle": ["error", { allow: ["_count"] }],

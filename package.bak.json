@@ -1,0 +1,27 @@
+{
+  "name": "luogu-discussion-archive",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "prepare": "husky install && prisma generate",
+    "migrate": "dotenv -e .env.local -- pnpm exec prisma migrate deploy"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.3.1"
+  },
+  "devDependencies": {
+    "dotenv-cli": "^7.3.0",
+    "eslint": "^8.49.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^14.0.1",
+    "prettier": "^3.0.3",
+    "prisma": "^5.3.1",
+    "puppeteer": "^21.3.1"
+  },
+  "engines": {
+    "pnpm": "^8.6.0"
+  }
+}
