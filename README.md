@@ -24,12 +24,6 @@ export DATABASE_URL="postgresql://postgres@localhost:5432/luogu_discussion_archi
 pnpm exec prisma migrate deploy
 ```
 
-## 构建
-
-```bash
-pnpm run build
-```
-
 ## 开发
 
 ```bash
@@ -41,5 +35,6 @@ pnpm run dev
 ## 生产
 
 ```bash
-node .next/standalone/server.js
+pnpm run build # 构建
+pnpm run start
 ```
