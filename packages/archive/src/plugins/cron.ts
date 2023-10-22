@@ -11,6 +11,13 @@ const AUTO_SAVE_PAGES = 5;
 
 const AUTO_SAVE_INTERVAL = 1000;
 
+function repeat(functionRef: () => Promise<unknown>) {
+  const func: () => Promise<unknown> = () =>
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    functionRef().finally(() => setTimeout(func, AUTO_SAVE_INTERVAL));
+  func(); // eslint-disable-line @typescript-eslint/no-floating-promises
+}
+
 export default fastifyPlugin(
   function cron(fastify, options, done) {
     const logger = fastify.log.child({ type: "cron" });
@@ -51,16 +58,10 @@ export default fastifyPlugin(
           );
         });
 
-    saveActivities(logger, fastify.prisma)
-      .catch((err) => logger.error(err))
-      .finally(() =>
-        setTimeout(() => {
-          // eslint-disable-next-line @typescript-eslint/no-floating-promises
-          save();
-        }, AUTO_SAVE_INTERVAL),
-      );
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    save();
+    repeat(save);
+    repeat(() =>
+      saveActivities(logger, fastify.prisma).catch((err) => logger.error(err)),
+    );
     done();
   } as FastifyPluginCallback,
   { decorators: { fastify: ["prisma", "io"] } },
