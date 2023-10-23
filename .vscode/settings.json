@@ -1,4 +1,9 @@
 {
   "eslint.packageManager": "pnpm",
-  "eslint.workingDirectories": [".", "./packages/viewer"]
+  "eslint.workingDirectories": [".", "./packages/viewer"],
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#FFFFFF",
+    "titleBar.activeBackground": "#FFFFFF",
+    "titleBar.activeForeground": "#191919"
+  }
 }

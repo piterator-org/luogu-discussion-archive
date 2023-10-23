@@ -4,6 +4,7 @@ import paginate from "@/lib/pagination";
 import PageButtons from "@/components/replies/PageButtons";
 import Ostracon from "@/components/Ostracon";
 import { selectUser } from "@/lib/user";
+import { getPermissionNames } from "@/lib/judgement";
 
 const OSTRACA_PER_PAGE = parseInt(process.env.OSTRACA_PER_PAGE ?? "10", 10);
 
@@ -14,7 +15,9 @@ export default async function Page({ params }: { params: { page: string } }) {
       select: {
         time: true,
         user: { select: selectUser.withLatest },
-        content: true,
+        permissionGranted: true,
+        permissionRevoked: true,
+        reason: true,
       },
       orderBy: { time: "desc" },
       skip: (page - 1) * OSTRACA_PER_PAGE,
@@ -34,7 +37,21 @@ export default async function Page({ params }: { params: { page: string } }) {
         <Ostracon
           ostracon={ostracon}
           key={`${ostracon.time.toISOString()}${ostracon.user.id}`}
-        />
+        >
+          <ul>
+            {getPermissionNames(ostracon.permissionGranted).map((name) => (
+              <li>
+                授予 <code>{name}</code> 权限
+              </li>
+            ))}
+            {getPermissionNames(ostracon.permissionRevoked).map((name) => (
+              <li>
+                撤销 <code>{name}</code> 权限
+              </li>
+            ))}
+          </ul>
+          {ostracon.reason}。
+        </Ostracon>
       ))}
       {numPages > 1 && (
         <div className="bg-body rounded-4 shadow-bssb my-4s px-4 py-3 py-md-4 text-center">

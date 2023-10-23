@@ -6,9 +6,16 @@ import fetcher from "@/lib/fetcher";
 import Spinner from "@/components/Spinner";
 import Ostracon from "@/components/Ostracon";
 import { LatestUser } from "@/lib/user";
+import { getPermissionNames } from "@/lib/judgement";
 
 interface PageData {
-  data: { user: LatestUser; time: string; content: string }[];
+  data: {
+    user: LatestUser;
+    time: string;
+    permissionGranted: number;
+    permissionRevoked: number;
+    reason: string;
+  }[];
   nextCursor: string;
 }
 
@@ -42,7 +49,21 @@ export default function Ostraca() {
             <Ostracon
               ostracon={{ ...ostracon, time: new Date(ostracon.time) }}
               key={`${ostracon.time}${ostracon.user.id}`}
-            />
+            >
+              <ul>
+                {getPermissionNames(ostracon.permissionGranted).map((name) => (
+                  <li>
+                    授予 <code>{name}</code> 权限
+                  </li>
+                ))}
+                {getPermissionNames(ostracon.permissionRevoked).map((name) => (
+                  <li>
+                    撤销 <code>{name}</code> 权限
+                  </li>
+                ))}
+              </ul>
+              {ostracon.reason}。
+            </Ostracon>
           )),
         )}
       </InfiniteScroll>

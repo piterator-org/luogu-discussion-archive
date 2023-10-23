@@ -1,16 +1,18 @@
 import UserAvatar from "@/components/UserAvatar";
 import UserInfo from "@/components/UserInfo";
 import type { LatestUser } from "@/lib/user";
+import { ReactNode } from "react";
 import { BsArrowReturnRight } from "react-icons/bs";
 
 export default function Ostracon({
   ostracon,
+  children,
 }: {
   ostracon: {
     time: Date;
     user: LatestUser;
-    content: string;
   };
+  children: ReactNode;
 }) {
   return (
     <div className="position-relative">
@@ -21,8 +23,7 @@ export default function Ostracon({
           </span>
         </div>
         <div className="px-4 py-3">
-          {/* eslint-disable-next-line react/no-danger */}
-          <div dangerouslySetInnerHTML={{ __html: ostracon.content }} />
+          <div>{children}</div>
           <span className="text-body-tertiary">
             <BsArrowReturnRight /> <UserInfo user={ostracon.user} />
           </span>

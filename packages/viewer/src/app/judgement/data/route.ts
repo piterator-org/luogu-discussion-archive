@@ -10,7 +10,9 @@ export async function GET(request: NextRequest) {
     select: {
       user: { select: selectUser.withLatest },
       time: true,
-      content: true,
+      permissionGranted: true,
+      permissionRevoked: true,
+      reason: true,
     },
     // TODO: Unique filter (userId & time)
     where: { time: { lt: cursor ? new Date(cursor) : undefined } },

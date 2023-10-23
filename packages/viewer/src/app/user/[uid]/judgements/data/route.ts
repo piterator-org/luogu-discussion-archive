@@ -13,7 +13,9 @@ export async function GET(
     select: {
       time: true,
       user: { select: selectUser.withLatest },
-      content: true,
+      permissionGranted: true,
+      permissionRevoked: true,
+      reason: true,
     },
     where: {
       userId: uid,
