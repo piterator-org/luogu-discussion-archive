@@ -44,7 +44,7 @@ export default async function saveJudgements(
   for (const judgement of judgements) {
     // eslint-disable-next-line no-await-in-loop
     await upsertUserSnapshotHook(prisma, judgement.user);
-    if (new Date(judgement.time * 1000) <= latestJudgement.time) return;
+    if (new Date(judgement.time * 1000) <= latestJudgement.time) break;
     operations.push(
       prisma.judgement.upsert({
         where: {
