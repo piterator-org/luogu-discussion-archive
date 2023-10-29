@@ -15,7 +15,7 @@
     "highlight.js": "^11.8.0",
     "jsdom": "^22.1.0",
     "katex": "^0.16.8",
-    "next": "^13.5.3",
+    "next": "^13.5.6",
     "puppeteer": "^21.3.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -28,7 +28,7 @@
     "remark-luogu-flavor": "^1.0.0",
     "remark-math": "^6.0.0",
     "socket.io-client": "^4.7.2",
-    "swr": "^2.2.2"
+    "swr": "^2.2.4"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^13.5.2",
