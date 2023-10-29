@@ -7,7 +7,6 @@ import { selectReply } from "@/lib/reply";
 import { selectPost } from "@/lib/post";
 import { checkExists } from "@/lib/utils";
 import savedInLegacyList from "../saved-in-legacy.json";
-// import serializeReply from "@/lib/serialize-reply";
 
 const REPLIES_PER_PAGE = parseInt(process.env.REPLIES_PER_PAGE ?? "10", 10);
 

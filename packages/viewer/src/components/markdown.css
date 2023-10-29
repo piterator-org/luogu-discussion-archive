@@ -236,3 +236,12 @@
   margin-left: auto;
   margin-right: auto;
 } */
+
+.markdown .lfm-user-mention {
+  text-decoration: none;
+}
+
+.markdown .lfm-user-mention:focus {
+  background-color: var(--bs-primary);
+  color: white;
+}

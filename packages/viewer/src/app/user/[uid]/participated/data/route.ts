@@ -1,7 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
 import { getPost } from "@/lib/post";
-// import serializeReply from "@/lib/serialize-reply";
 import { getReply } from "@/lib/reply";
 import { NUM_PER_PAGE } from "../../constants";
 

@@ -10,8 +10,6 @@ import stringifyTime from "@/lib/time";
 import getReplyRaw from "./get-reply-raw";
 import savedInLegacyList from "../saved-in-legacy.json";
 
-// import serializeReply from "@/lib/serialize-reply";
-
 export const metadata = { title: "金玉良言 - 洛谷帖子保存站" };
 
 const REPLIES_PER_PAGE = parseInt(process.env.REPLIES_PER_PAGE ?? "10", 10);
@@ -61,9 +59,8 @@ export default async function Page({ params }: { params: { rid: string } }) {
           <div className="rounded-4 shadow-bssb">
             <div className="px-md-4x px-4 pt-md-3x pt-2x pb-md-4x pb-4 position-relative">
               <Content
-                // discussionAuthor={reply.post.snapshots[0].authorId}
+                discussionAuthor={reply.post.snapshots[0].author.id}
                 content={reply.snapshots[0].content}
-                // usersMetioned={reply.usersMetioned}
               />
               <span
                 className="text-end text-body-tertiary d-block d-md-none"

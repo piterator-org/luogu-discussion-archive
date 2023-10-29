@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-// import serializeReply from "@/lib/serialize-reply";
 
 import { selectReply } from "@/lib/reply";
 

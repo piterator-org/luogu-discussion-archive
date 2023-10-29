@@ -3,8 +3,6 @@
 import Link from "next/link";
 import useSWRInfinite from "swr/infinite";
 import InfiniteScroll from "react-infinite-scroll-component";
-// import type { User } from "@prisma/client";
-// import type { UserMetioned } from "@/lib/serialize-reply";
 import fetcher from "@/lib/fetcher";
 import Reply from "@/components/replies/Reply";
 import Spinner from "@/components/Spinner";

@@ -3,7 +3,6 @@
 import useSWRInfinite from "swr/infinite";
 import InfiniteScroll from "react-infinite-scroll-component";
 import type { PostWithLatestContent } from "@/lib/post";
-// import type { UserMetioned } from "@/lib/serialize-reply";
 import Content from "@/components/replies/Content";
 import fetcher from "@/lib/fetcher";
 import Spinner from "@/components/Spinner";
@@ -63,7 +62,7 @@ export default function UserDiscussions({ uid }: { uid: string }) {
               }
             >
               <Content
-                // discussionAuthor={discussion.snapshots[0].author.id}
+                discussionAuthor={discussion.snapshots[0].author.id}
                 content={discussion.snapshots[0].content}
                 // usersMetioned={discussion.usersMetioned}
               />

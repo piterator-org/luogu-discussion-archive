@@ -9,8 +9,6 @@ import fetcher from "@/lib/fetcher";
 import Spinner from "@/components/Spinner";
 import PageButtons from "./PageButtons";
 import Reply from "./Reply";
-// import type { User } from "@prisma/client";
-// import type { UserMetioned } from "@/lib/serialize-reply";
 
 interface PageData {
   replies: ReplyWithLatestContent[];

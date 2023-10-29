@@ -59,6 +59,16 @@ export const selectPost = {
       },
     },
   }).select,
+
+  withAuthorId: Prisma.validator<Prisma.PostDefaultArgs>()({
+    select: {
+      snapshots: {
+        select: { authorId: true },
+        orderBy: { time: "desc" },
+        take: 1,
+      },
+    },
+  }).select,
 };
 
 export const getPost = {

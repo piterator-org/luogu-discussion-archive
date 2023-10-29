@@ -1,6 +1,5 @@
 "use client";
 
-// import { useState } from "react";
 import Link from "next/link";
 import UserAvatar from "@/components/UserAvatar";
 import UserInfo from "@/components/UserInfo";
@@ -8,10 +7,9 @@ import UserInfo from "@/components/UserInfo";
 import type { ReplyWithLatestContent } from "@/lib/reply";
 import stringifyTime from "@/lib/time";
 import { BsBoxArrowUpRight } from "react-icons/bs";
+import { useState } from "react";
 import Content from "./Content";
-// import type { User } from "@prisma/client";
-// import type { UserMetioned } from "@/lib/serialize-reply";
-// import ContextViewer from "./ContextViewer";
+import ContextViewer from "./ContextViewer";
 
 export default function Reply({
   post,
@@ -21,7 +19,7 @@ export default function Reply({
   post: { id: number; authorId: number };
   reply: ReplyWithLatestContent;
 }>) {
-  // const [userId, setUserId] = useState<number | null>(null);
+  const [userId, setUserId] = useState<number | null>(null);
   const snapshot = reply.snapshots[0];
 
   return (
@@ -29,17 +27,15 @@ export default function Reply({
       className={reply.id !== -1 /* && userId */ ? "my-5m" : undefined}
       id={(reply.id ?? 0).toString()}
     >
-      {/* {reply.id !== -1 && userId && (
+      {reply.id !== -1 && userId && (
         <ContextViewer
           discussionAuthor={post.authorId}
           discussionId={post.id}
           userId={userId}
           replyId={reply.id}
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          // userMetioned={reply.usersMetioned.find((user) => user.id === userId)!}
           key={userId}
         />
-      )} */}
+      )}
       <div className="reply position-relative">
         <UserAvatar className="reply-avatar" user={snapshot.author} />
         <div className="reply-card rounded-4 shadow-bssb mb-4s">
@@ -67,16 +63,16 @@ export default function Reply({
                 >
                   <BsBoxArrowUpRight width="1em" height="1em" />
                 </Link>
-              ) : undefined}
+              ) : null}
             </span>
           </div>
           <div className="reply-content pe-4 py-2 position-relative">
             {children}
             <Content
-              // discussionAuthor={post.authorId}
+              discussionAuthor={post.authorId}
               content={snapshot.content}
-              // usersMetioned={reply.usersMetioned}
-              // userIdState={[userId, setUserId]}
+              userMentionedState={[userId, setUserId]}
+              key={userId}
             />
             <span
               className="text-end text-body-tertiary d-block d-md-none"
