@@ -52,6 +52,9 @@ model Post {
   replies    Reply[]
 
   takedown PostTakedown?
+
+  @@index([time])
+  @@index([replyCount(sort: Desc)])
 }
 
 model Reply {
@@ -66,6 +69,7 @@ model Reply {
   takedown  ReplyTakedown?
 
   @@index([postId])
+  @@index([time])
 }
 
 model Activity {
