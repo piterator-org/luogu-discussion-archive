@@ -7,19 +7,19 @@
     "migrate": "dotenv -e .env.local -- pnpm exec prisma migrate deploy"
   },
   "dependencies": {
-    "@prisma/client": "^5.3.1"
+    "@prisma/client": "^5.5.2"
   },
   "devDependencies": {
     "dotenv-cli": "^7.3.0",
-    "eslint": "^8.49.0",
+    "eslint": "^8.53.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-prettier": "^5.0.1",
     "husky": "^8.0.3",
-    "lint-staged": "^14.0.1",
+    "lint-staged": "^15.0.2",
     "prettier": "^3.0.3",
-    "prisma": "^5.3.1",
-    "puppeteer": "^21.3.1"
+    "prisma": "^5.5.2",
+    "puppeteer": "^21.5.0"
   },
   "engines": {
     "pnpm": "^8.6.0"
