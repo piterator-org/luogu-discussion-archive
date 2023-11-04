@@ -25,6 +25,7 @@ export default function NavBar() {
             />
           </div>
         </Link>
+        {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
         <button
           className="navbar-toggler border-0 shadow-bssb-sm"
           type="button"

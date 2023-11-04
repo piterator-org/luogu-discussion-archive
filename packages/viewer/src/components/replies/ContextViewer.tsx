@@ -96,6 +96,7 @@ export default function ContextViewer({
           )}
         </div>
         <div className="ps-2">
+          {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
           <button
             className="btn btn-light-bssb shadow-bssb-sm d-block border-0 rounded-circle mb-1x"
             type="submit"
@@ -105,6 +106,7 @@ export default function ContextViewer({
           >
             <BsChevronUp className="text-body-secondary" />
           </button>
+          {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
           <button
             className="btn btn-light-bssb shadow-bssb-sm d-block border-0 rounded-circle"
             type="submit"
