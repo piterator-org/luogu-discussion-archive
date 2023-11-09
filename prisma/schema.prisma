@@ -128,6 +128,7 @@ model UserSnapshot {
 
   @@id([userId, time])
   @@index([userId])
+  @@index([userId, time(sort: Desc)])
 }
 
 model PostSnapshot {
@@ -148,6 +149,7 @@ model PostSnapshot {
   @@id([postId, time])
   @@index([postId])
   @@index([authorId])
+  @@index([postId, time(sort: Desc)])
 }
 
 model ReplySnapshot {
@@ -164,6 +166,7 @@ model ReplySnapshot {
   @@id([replyId, time])
   @@index([replyId])
   @@index([authorId])
+  @@index([replyId, time(sort: Desc)])
 }
 
 model PasteSnapshot {
@@ -176,6 +179,7 @@ model PasteSnapshot {
   data   String?
 
   @@id([pasteId, time])
+  @@index([pasteId, time(sort: Desc)])
 }
 
 model PostTakedown {
