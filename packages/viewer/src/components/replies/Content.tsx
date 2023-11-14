@@ -3,7 +3,7 @@
 import "katex/dist/katex.min.css";
 import "highlight.js/styles/tokyo-night-dark.css";
 import remarkLuoguFlavor from "remark-luogu-flavor";
-import rehypeHighlight from "rehype-highlight";
+// import rehypeHighlight from "rehype-highlight";
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 
 import { computePosition, shift } from "@floating-ui/dom";
@@ -168,7 +168,8 @@ export default function Content({
         ref={contentRef}
       >
         <Markdown
-          rehypePlugins={[rehypeKatex, rehypeHighlight]}
+          // TODO: upgrade the version of rehypeHighlight
+          rehypePlugins={[rehypeKatex /* , rehypeHighlight */]}
           remarkPlugins={[
             [remarkMath, {}],
             [remarkLuoguFlavor, { userLinkPointToLuogu: false }],
