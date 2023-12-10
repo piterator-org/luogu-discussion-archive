@@ -37,6 +37,8 @@ const nextConfig = {
   output: "standalone",
 };
 
+process.env.TZ = "Asia/Shanghai";
+
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
