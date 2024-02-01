@@ -36,6 +36,7 @@ export const upsertUserSnapshotHook = async (
         },
         data: { until: new Date() },
       });
+      return;
     }
     const userSnapshot = {
       ...user,
