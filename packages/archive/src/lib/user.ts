@@ -43,6 +43,7 @@ export const upsertUserSnapshotHook = async (
       uid: undefined,
       background: undefined,
       slogan: undefined,
+      avatar: undefined,
     };
     await tx.userSnapshot.create({
       data: {
