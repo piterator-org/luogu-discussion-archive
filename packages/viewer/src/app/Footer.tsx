@@ -54,7 +54,7 @@ export default function Footer() {
               we and Microsoft can collect and use this data.
             </div>
             <div className="mt-2">
-              &copy; 2023 Piterator &middot;{" "}
+              &copy; 2023 - 2024 Piterator &middot;{" "}
               <ExternalLink
                 href="mailto:lda@piterator.com"
                 title="电子邮箱：lda@piterator.com"
