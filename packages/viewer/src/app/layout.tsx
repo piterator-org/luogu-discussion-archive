@@ -5,6 +5,7 @@ import NavBar from "./NavBar";
 import Footer from "./Footer";
 import GoogleAnalytics from "./GoogleAnalytics";
 import MicrosoftClarity from "./MicrosoftClarity";
+import AdSense from "./AdSense";
 
 export const metadata = {
   title: "洛谷帖子保存站",
@@ -26,6 +27,9 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
           <MicrosoftClarity
             projectId={process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID}
           />
+        )}
+        {process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID && (
+          <AdSense publisherId={process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID} />
         )}
         <NavBar />
         <div className="container-lg" style={{ marginTop: "2rem" }}>
