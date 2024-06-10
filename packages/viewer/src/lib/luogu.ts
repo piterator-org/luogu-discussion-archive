@@ -1,31 +1,31 @@
 import { Color, Forum } from "@prisma/client";
 
 export const getPostUrl = (discussion: number, page?: number) =>
-  `https://www.luogu.com.cn/discuss/${discussion}${
+  `https://www.luogu.com/discuss/${discussion}${
     page !== undefined ? `?page=${page}` : ""
   }`;
 
 export const getUserUrl = (user: number) => `/user/${user}`;
 
 export const getUserRealUrl = (user: number) =>
-  `https://www.luogu.com.cn/user/${user}`;
+  `https://www.luogu.com/user/${user}`;
 
 export const getUserAvatarUrl = (user: number) =>
   `https://cdn.luogu.com.cn/upload/usericon/${user}.png`;
 
 export const getForumUrl = (forum: Forum) =>
-  `https://www.luogu.com.cn/discuss/lists?forumname=${forum.slug}`;
+  `https://www.luogu.com/discuss/lists?forumname=${forum.slug}`;
 
 export const getForumName = (forum: Forum) => forum.name;
 
-export const judgementUrl = "https://www.luogu.com.cn/judgement";
+export const judgementUrl = "https://www.luogu.com/judgement";
 
 const isHTTPorHTTPS = (url: URL) =>
   (url.protocol === "https:" && ["", "443"].includes(url.port)) ||
   (url.protocol === "http:" && ["", "80"].includes(url.port));
 
 const isLuoguUrl = (url: URL) =>
-  url.hostname === "www.luogu.com.cn" && isHTTPorHTTPS(url);
+  url.hostname === "www.luogu.com" && isHTTPorHTTPS(url);
 
 const isLDAHackUrl = (url: URL) =>
   url.hostname === "www.luogu.com.co" && isHTTPorHTTPS(url);
