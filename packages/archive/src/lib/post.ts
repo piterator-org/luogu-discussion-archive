@@ -65,8 +65,8 @@ export async function savePost(
   const fetchPage = (page: number) =>
     getResponse(
       logger,
-      `https://www.luogu.com.cn/discuss/${id}?_contentOnly&page=${page}`,
-      true,
+      `https://www.luogu.com/discuss/${id}?_contentOnly&page=${page}`,
+      false,
     ).then((response): Promise<ResponseBody> => response.json());
 
   const saveReplies = async (replies: ReplyContent[]) => {
