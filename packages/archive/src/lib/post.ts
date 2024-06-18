@@ -9,7 +9,7 @@ import { UserSummary, upsertUserSnapshotHook } from "./user";
 const PAGES_PER_SAVE = parseInt(process.env.PAGES_PER_SAVE ?? "64", 10);
 export const emitters: Record<number, EventEmitter> = {};
 
-interface ForumData {
+export interface ForumData {
   name: string;
   type: number;
   slug: string;
@@ -24,7 +24,7 @@ interface PostData {
   content: string;
 }
 
-interface ReplyContent {
+export interface ReplyContent {
   id: number;
   author: UserSummary;
   time: number;

@@ -1,35 +1,34 @@
 import type { BaseLogger } from "pino";
 import type { PrismaClient } from "@prisma/client";
+import type { UserSummary } from "./user";
+import type { ForumData, ReplyContent } from "./post";
 import { getResponse } from "./parser";
 
-interface LegacyDiscussList {
-  status: 200;
-  data: {
-    count: number;
-    result: {
-      PostID: number;
-      Title: string;
-      Author: { _instance: "Luogu\\Model\\User\\User" };
-      Forum: {
-        Forum: {
-          ForumID: number;
-          Name: string;
-          InternalName: string;
-          _instance: "Luogu\\Model\\Discuss\\Forum";
-        };
-      };
-      Top: number;
-      SubmitTime: number;
-      isValid: boolean;
-      LatestReply: {
-        Author: { _instance: "Luogu\\Model\\User\\User" };
-        ReplyTime: number;
-        Content: string;
-        _instance: "Luogu\\Model\\Discuss\\PostReply";
-      } | null;
-      RepliesCount: number;
-      _instance: "Luogu\\Model\\Discuss\\Post";
-    }[];
+interface PostData {
+  id: number;
+  title: string;
+  author: UserSummary;
+  time: number;
+  forum: ForumData;
+  topped: boolean;
+  valid: boolean;
+  locked: false;
+  replyCount: number;
+  recentReply: ReplyContent | false;
+}
+
+interface PostListResponse {
+  code: 200;
+  currentTemplate: "DiscussList";
+  currentData: {
+    forum: ForumData | null;
+    publicForums: ForumData[];
+    posts: {
+      perPage: number;
+      count: number;
+      result: PostData[];
+    };
+    canPost: boolean;
   };
 }
 
@@ -41,38 +40,39 @@ export default async function getPostList(
 ) {
   const response = await getResponse(
     logger,
-    `https://www.luogu.com/api/discuss?page=${page}`,
+    `https://www.luogu.com/discuss?_contentOnly&page=${page}`,
     false,
   );
   const {
-    data: { result },
-  } = (await response.json()) as LegacyDiscussList;
+    currentData: {
+      posts: { result },
+    },
+  } = (await response.json()) as PostListResponse;
   const saved = Object.fromEntries(
     (
       await prisma.post.findMany({
         select: {
           id: true,
-          replies: { select: { time: true }, orderBy: { id: "desc" }, take: 1 },
+          replies: { select: { id: true }, orderBy: { id: "desc" }, take: 1 },
         },
         where: {
           id: {
             in: result
-              .filter((post) => post.SubmitTime < after)
-              .map((post) => post.PostID),
+              .filter((post) => post.time < after)
+              .map((post) => post.id),
           },
         },
       })
-    ).map(({ id, replies }) => [id, replies[0]?.time]),
+    ).map(({ id, replies }) => [id, replies[0]?.id as number | undefined]),
   );
   return result
     .filter(
       (post) =>
-        post.SubmitTime >= after ||
-        !(post.PostID in saved) ||
-        (post.LatestReply &&
-          (!saved[post.PostID] ||
-            Math.floor(saved[post.PostID].getTime() / 60000) !==
-              Math.floor(post.LatestReply.ReplyTime / 60))),
+        post.time >= after || // 晚于特定时间则一定尝试保存
+        !(post.id in saved) || // 没有保存过亦如此
+        (post.recentReply && // 有回复并
+          (!saved[post.id] || // 上一次保存时没有回复或
+            saved[post.id] !== post.recentReply.id)), // 最新回复 id 不一致
     )
-    .map((post) => post.PostID);
+    .map((post) => post.id);
 }
