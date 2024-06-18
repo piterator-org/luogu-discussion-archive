@@ -53,7 +53,7 @@ export default async function getPostList(
       await prisma.post.findMany({
         select: {
           id: true,
-          replies: { select: { time: true }, orderBy: { id: "desc" }, take: 1 },
+          replies: { select: { id: true }, orderBy: { id: "desc" }, take: 1 },
         },
         where: {
           id: {
@@ -63,17 +63,16 @@ export default async function getPostList(
           },
         },
       })
-    ).map(({ id, replies }) => [id, replies[0]?.time]),
+    ).map(({ id, replies }) => [id, replies[0]?.id as number | undefined]),
   );
   return result
     .filter(
       (post) =>
-        post.time >= after ||
-        !(post.id in saved) ||
-        (post.recentReply &&
-          (!saved[post.id] ||
-            Math.floor(saved[post.id].getTime() / 60000) !==
-              Math.floor(post.recentReply.time / 60))),
+        post.time >= after || // 晚于特定时间则一定尝试保存
+        !(post.id in saved) || // 没有保存过亦如此
+        (post.recentReply && // 有回复并
+          (!saved[post.id] || // 上一次保存时没有回复或
+            saved[post.id] !== post.recentReply.id)), // 最新回复 id 不一致
     )
     .map((post) => post.id);
 }
