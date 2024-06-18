@@ -57,11 +57,10 @@ export default function InfiniteScrollReplies({
         style={{ overflow: "inherit" }}
         scrollThreshold="1024px"
       >
-        {data?.map(
-          (dat) =>
-            dat.replies?.map((reply) => (
-              <Reply post={discussion} reply={reply} key={reply.id} />
-            )),
+        {data?.map((dat) =>
+          dat.replies?.map((reply) => (
+            <Reply post={discussion} reply={reply} key={reply.id} />
+          )),
         )}
       </InfiniteScroll>
 

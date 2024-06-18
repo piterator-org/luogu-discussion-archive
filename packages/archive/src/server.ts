@@ -9,6 +9,7 @@ import cron from "./plugins/cron";
 const fastify = Fastify({
   logger: process.env.SOURCE_TOKEN
     ? pino(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         pino.transport<{ sourceToken: string }>({
           target: "@logtail/pino",
           options: { sourceToken: process.env.SOURCE_TOKEN },
