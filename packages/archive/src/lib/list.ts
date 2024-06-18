@@ -1,35 +1,34 @@
 import type { BaseLogger } from "pino";
 import type { PrismaClient } from "@prisma/client";
+import type { UserSummary } from "./user";
+import type { ForumData, ReplyContent } from "./post";
 import { getResponse } from "./parser";
 
-interface LegacyDiscussList {
-  status: 200;
-  data: {
-    count: number;
-    result: {
-      PostID: number;
-      Title: string;
-      Author: { _instance: "Luogu\\Model\\User\\User" };
-      Forum: {
-        Forum: {
-          ForumID: number;
-          Name: string;
-          InternalName: string;
-          _instance: "Luogu\\Model\\Discuss\\Forum";
-        };
-      };
-      Top: number;
-      SubmitTime: number;
-      isValid: boolean;
-      LatestReply: {
-        Author: { _instance: "Luogu\\Model\\User\\User" };
-        ReplyTime: number;
-        Content: string;
-        _instance: "Luogu\\Model\\Discuss\\PostReply";
-      } | null;
-      RepliesCount: number;
-      _instance: "Luogu\\Model\\Discuss\\Post";
-    }[];
+interface PostData {
+  id: number;
+  title: string;
+  author: UserSummary;
+  time: number;
+  forum: ForumData;
+  topped: boolean;
+  valid: boolean;
+  locked: false;
+  replyCount: number;
+  recentReply: ReplyContent | false;
+}
+
+interface PostListResponse {
+  code: 200;
+  currentTemplate: "DiscussList";
+  currentData: {
+    forum: ForumData | null;
+    publicForums: ForumData[];
+    posts: {
+      perPage: number;
+      count: number;
+      result: PostData[];
+    };
+    canPost: boolean;
   };
 }
 
@@ -41,12 +40,14 @@ export default async function getPostList(
 ) {
   const response = await getResponse(
     logger,
-    `https://www.luogu.com/api/discuss?page=${page}`,
+    `https://www.luogu.com/discuss?_contentOnly&page=${page}`,
     false,
   );
   const {
-    data: { result },
-  } = (await response.json()) as LegacyDiscussList;
+    currentData: {
+      posts: { result },
+    },
+  } = (await response.json()) as PostListResponse;
   const saved = Object.fromEntries(
     (
       await prisma.post.findMany({
@@ -57,8 +58,8 @@ export default async function getPostList(
         where: {
           id: {
             in: result
-              .filter((post) => post.SubmitTime < after)
-              .map((post) => post.PostID),
+              .filter((post) => post.time < after)
+              .map((post) => post.id),
           },
         },
       })
@@ -67,12 +68,12 @@ export default async function getPostList(
   return result
     .filter(
       (post) =>
-        post.SubmitTime >= after ||
-        !(post.PostID in saved) ||
-        (post.LatestReply &&
-          (!saved[post.PostID] ||
-            Math.floor(saved[post.PostID].getTime() / 60000) !==
-              Math.floor(post.LatestReply.ReplyTime / 60))),
+        post.time >= after ||
+        !(post.id in saved) ||
+        (post.recentReply &&
+          (!saved[post.id] ||
+            Math.floor(saved[post.id].getTime() / 60000) !==
+              Math.floor(post.recentReply.time / 60))),
     )
-    .map((post) => post.PostID);
+    .map((post) => post.id);
 }
