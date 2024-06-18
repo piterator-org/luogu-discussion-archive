@@ -14,22 +14,22 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@fastify/cors": "^8.4.1",
-    "@logtail/pino": "^0.4.12",
-    "@prisma/client": "^5.5.2",
+    "@fastify/cors": "^8.5.0",
+    "@logtail/pino": "^0.4.22",
+    "@prisma/client": "^5.15.0",
     "@socket.io/admin-ui": "^0.5.1",
-    "fastify": "^4.24.3",
+    "fastify": "^4.28.0",
     "fastify-plugin": "^4.5.1",
     "jsdom": "^22.1.0",
-    "pino": "^8.16.1",
-    "socket.io": "^4.7.2"
+    "pino": "^8.21.0",
+    "socket.io": "^4.7.5"
   },
   "devDependencies": {
-    "@types/jsdom": "^21.1.4",
-    "@typescript-eslint/eslint-plugin": "^6.9.1",
-    "eslint": "^8.53.0",
-    "eslint-config-airbnb-typescript": "^17.1.0",
-    "typescript": "^5.2.2"
+    "@types/jsdom": "^21.1.7",
+    "@typescript-eslint/eslint-plugin": "^7.13.0",
+    "eslint": "^8.57.0",
+    "eslint-config-airbnb-typescript": "^18.0.0",
+    "typescript": "^5.4.5"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.8",

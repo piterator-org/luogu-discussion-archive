@@ -41,7 +41,8 @@ export default async function getPostList(
 ) {
   const response = await getResponse(
     logger,
-    `https://www.luogu.com.cn/api/discuss?page=${page}`,
+    `https://www.luogu.com/api/discuss?page=${page}`,
+    false,
   );
   const {
     data: { result },
