@@ -2,11 +2,12 @@
 name: Build artifacts
 
 on:
+  pull_request:
   push:
     branches: [main]
 
 jobs:
-  build:
+  build-viewer:
     runs-on: ubuntu-latest
 
     steps:
@@ -46,16 +47,38 @@ jobs:
       - name: Build
         run: pnpm -r run build
 
-      - name: Upload luogu-discussion-archive
-        uses: actions/upload-artifact@v3
-        with:
-          name: luogu-discussion-archive
-          path: packages/archive/dist/
+      # - name: Upload luogu-discussion-archive
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: luogu-discussion-archive
+      #     path: packages/archive/dist/
 
-      - name: Upload luogu-discussion-viewer
-        uses: actions/upload-artifact@v3
+      # - name: Upload luogu-discussion-viewer
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: luogu-discussion-viewer
+      #     path: |
+      #       packages/viewer/.next/
+      #       !packages/viewer/.next/cache/
+
+  build-archive:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2
         with:
-          name: luogu-discussion-viewer
-          path: |
-            packages/viewer/.next/
-            !packages/viewer/.next/cache/
+          version: 9
+
+      - name: Use Node.js LTS
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build
+        run: pnpm -r run build
