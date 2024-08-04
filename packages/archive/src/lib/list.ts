@@ -72,7 +72,8 @@ export default async function getPostList(
         !(post.id in saved) || // 没有保存过亦如此
         (post.recentReply && // 有回复并
           (!saved[post.id] || // 上一次保存时没有回复或
-            saved[post.id] < post.recentReply.id)), // 存在更新的回复（该 id 随时间单调递增）
+            /* eslint-disable @typescript-eslint/no-non-null-assertion */
+            saved[post.id]! < post.recentReply.id)), // 存在更新的回复（该 id 随时间单调递增）
     )
     .map((post) => post.id);
 }
