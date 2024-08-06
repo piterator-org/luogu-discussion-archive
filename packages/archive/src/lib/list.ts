@@ -53,7 +53,11 @@ export default async function getPostList(
       await prisma.post.findMany({
         select: {
           id: true,
-          replies: { select: { id: true }, orderBy: { id: "desc" }, take: 1 },
+          replies: {
+            select: { id: true },
+            orderBy: { id: "desc" },
+            take: 1,
+          },
         },
         where: {
           id: {
