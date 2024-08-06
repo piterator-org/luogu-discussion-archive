@@ -11,17 +11,29 @@ export default function UserInfo({
   user,
   snapshotId,
   href,
+  noHref,
 }: {
   user: LatestUser;
   // eslint-disable-next-line react/require-default-props
   snapshotId?: number;
   // eslint-disable-next-line react/require-default-props
   href?: string;
+  // eslint-disable-next-line react/require-default-props
+  noHref?: boolean;
 }) {
   const snapshot = user.userSnapshots[snapshotId ?? 0];
   return (
     <span className="text-nowrap">
-      {href === undefined ? (
+      {/* eslint-disable-next-line no-nested-ternary */}
+      {noHref ? (
+        <span
+          className={`text-decoration-none lg-fg-${getNameClassByColor(
+            snapshot.color,
+          )}`}
+        >
+          {snapshot.name}
+        </span>
+      ) : href === undefined ? (
         <Link
           href={getUserUrl(user.id)}
           className={`text-decoration-none lg-fg-${getNameClassByColor(

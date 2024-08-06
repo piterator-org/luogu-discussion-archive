@@ -11,7 +11,7 @@ export interface UserSummary {
   isRoot?: true;
 }
 
-export const upsertUserSnapshotHook = async (
+export const upsertUserSnapshot = async (
   prisma: PrismaClient,
   user: UserSummary,
 ) => {
