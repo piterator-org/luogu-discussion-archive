@@ -2,7 +2,7 @@ import type { BaseLogger } from "pino";
 import type { PrismaClient } from "@prisma/client";
 import { getResponse } from "./parser";
 import { type UserSummary } from "./user";
-import { upsertUserSnapshotHook } from "./user";
+import { upsertUserSnapshot } from "./user";
 
 interface Paste {
   data: string;
@@ -49,7 +49,7 @@ export default async function savePaste(
   }
   if (json.code !== 200) throw Error(json.currentData.errorMessage);
   const { paste } = json.currentData;
-  await upsertUserSnapshotHook(prisma, paste.user);
+  await upsertUserSnapshot(prisma, paste.user);
   await prisma.$transaction([
     prisma.paste.upsert({
       where: { id: paste.id },

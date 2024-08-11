@@ -4,7 +4,7 @@ import type { BaseLogger } from "pino";
 import type { PrismaClient, PrismaPromise } from "@prisma/client";
 import { getResponse } from "./parser";
 import type { UserSummary } from "./user";
-import { upsertUserSnapshotHook } from "./user";
+import { upsertUserSnapshot } from "./user";
 
 export interface Activity {
   content: string;
@@ -37,7 +37,7 @@ export async function saveActivityPage(
   // eslint-disable-next-line no-restricted-syntax
   for (const { user } of res.feeds.result) {
     // eslint-disable-next-line no-await-in-loop
-    await upsertUserSnapshotHook(prisma, user);
+    await upsertUserSnapshot(prisma, user);
   }
 
   res.feeds.result.forEach((activity) => {
