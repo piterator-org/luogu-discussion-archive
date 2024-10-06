@@ -3,6 +3,7 @@ import type { PrismaClient } from "@prisma/client";
 import { getResponse } from "./parser";
 import { type UserSummary } from "./user";
 import { upsertUserSnapshot } from "./user";
+import lgUrl from "../utils/url";
 
 interface Paste {
   data: string;
@@ -25,7 +26,7 @@ export default async function savePaste(
 ) {
   const response = await getResponse(
     logger,
-    `https://www.luogu.com.cn/paste/${id}?_contentOnly`,
+    lgUrl(`/paste/${id}?_contentOnly`, false),
   );
   const json = (await response.json()) as
     | { code: 403 | 404; currentData: LuoguError }

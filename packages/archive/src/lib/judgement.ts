@@ -2,6 +2,7 @@ import type { PrismaClient, PrismaPromise } from "@prisma/client";
 import type { BaseLogger } from "pino";
 import { getResponse } from "./parser";
 import { UserSummary, upsertUserSnapshot } from "./user";
+import lgUrl from "../utils/url";
 
 interface JudgementBody {
   user: UserSummary;
@@ -23,7 +24,7 @@ export default async function saveJudgements(
 ) {
   const res = await getResponse(
     logger,
-    `https://www.luogu.com.cn/judgement?_contentOnly`,
+    lgUrl(`/judgement?_contentOnly`, false),
     false,
   ).then((response): Promise<JudgementResponse> => response.json());
 

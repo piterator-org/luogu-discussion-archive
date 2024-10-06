@@ -5,6 +5,7 @@ import type { PostSnapshot, PrismaClient } from "@prisma/client";
 import { getResponse } from "./parser";
 import type { ServerToClientEvents } from "../plugins/socket.io";
 import { UserSummary, upsertUserSnapshot } from "./user";
+import lgUrl from "../utils/url";
 
 const PAGES_PER_SAVE = parseInt(process.env.PAGES_PER_SAVE ?? "64", 10);
 export const emitters: Record<number, EventEmitter> = {};
@@ -65,7 +66,7 @@ export async function savePost(
   const fetchPage = (page: number) =>
     getResponse(
       logger,
-      `https://www.luogu.com/discuss/${id}?_contentOnly&page=${page}`,
+      lgUrl(`/discuss/${id}?_contentOnly&page=${page}`),
       false,
     ).then((response): Promise<ResponseBody> => response.json());
 
