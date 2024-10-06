@@ -3,6 +3,7 @@ import type { PrismaClient } from "@prisma/client";
 import type { UserSummary } from "./user";
 import type { ForumData, ReplyContent } from "./post";
 import { getResponse } from "./parser";
+import lgUrl from "../utils/url";
 
 interface PostData {
   id: number;
@@ -40,7 +41,7 @@ export default async function getPostList(
 ) {
   const response = await getResponse(
     logger,
-    `https://www.luogu.com/discuss?_contentOnly&page=${page}`,
+    lgUrl(`/discuss?_contentOnly&page=${page}`),
     false,
   );
   const {

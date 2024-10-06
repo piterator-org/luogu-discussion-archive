@@ -1,7 +1,8 @@
 import type { PrismaClient, PrismaPromise } from "@prisma/client";
 import type { BaseLogger } from "pino";
 import { getResponse } from "./parser";
-import { UserSummary, upsertUserSnapshotHook } from "./user";
+import { UserSummary, upsertUserSnapshot } from "./user";
+import lgUrl from "../utils/url";
 
 interface JudgementBody {
   user: UserSummary;
@@ -23,7 +24,7 @@ export default async function saveJudgements(
 ) {
   const res = await getResponse(
     logger,
-    `https://www.luogu.com.cn/judgement?_contentOnly`,
+    lgUrl(`/judgement?_contentOnly`, false),
     false,
   ).then((response): Promise<JudgementResponse> => response.json());
 
@@ -43,7 +44,7 @@ export default async function saveJudgements(
   // eslint-disable-next-line no-restricted-syntax
   for (const judgement of judgements) {
     // eslint-disable-next-line no-await-in-loop
-    await upsertUserSnapshotHook(prisma, judgement.user);
+    await upsertUserSnapshot(prisma, judgement.user);
     if (new Date(judgement.time * 1000) <= latestJudgement.time) break;
     operations.push(
       prisma.judgement.upsert({

@@ -6,6 +6,8 @@ import routes from "./plugins/routes";
 import io from "./plugins/socket.io";
 import cron from "./plugins/cron";
 
+import "dotenv/config";
+
 const fastify = Fastify({
   logger: process.env.SOURCE_TOKEN
     ? pino(

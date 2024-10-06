@@ -4,7 +4,8 @@ import type { BroadcastOperator } from "socket.io";
 import type { PostSnapshot, PrismaClient } from "@prisma/client";
 import { getResponse } from "./parser";
 import type { ServerToClientEvents } from "../plugins/socket.io";
-import { UserSummary, upsertUserSnapshotHook } from "./user";
+import { UserSummary, upsertUserSnapshot } from "./user";
+import lgUrl from "../utils/url";
 
 const PAGES_PER_SAVE = parseInt(process.env.PAGES_PER_SAVE ?? "64", 10);
 export const emitters: Record<number, EventEmitter> = {};
@@ -65,7 +66,7 @@ export async function savePost(
   const fetchPage = (page: number) =>
     getResponse(
       logger,
-      `https://www.luogu.com/discuss/${id}?_contentOnly&page=${page}`,
+      lgUrl(`/discuss/${id}?_contentOnly&page=${page}`),
       false,
     ).then((response): Promise<ResponseBody> => response.json());
 
@@ -73,7 +74,7 @@ export async function savePost(
     // eslint-disable-next-line no-restricted-syntax
     for (const { author } of replies) {
       // eslint-disable-next-line no-await-in-loop
-      await upsertUserSnapshotHook(prisma, author);
+      await upsertUserSnapshot(prisma, author);
     }
     allReplies = [...allReplies, ...replies];
   };
@@ -129,7 +130,7 @@ export async function savePost(
   const { post, replies, forum } = (await fetchPage(1)).currentData;
   const postTime = new Date(post.time * 1000);
 
-  await upsertUserSnapshotHook(prisma, post.author);
+  await upsertUserSnapshot(prisma, post.author);
 
   await prisma.$transaction(
     async (tx) => {
