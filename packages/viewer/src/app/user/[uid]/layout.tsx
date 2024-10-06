@@ -7,6 +7,7 @@ import "@/components/markdown.css";
 import { selectUser } from "@/lib/user";
 import TabNavigation from "./TabNavigation";
 import UserStatistics from "./UserStatistics";
+import SnapshotTimeline from "./SnapshotTimeline";
 
 export async function generateMetadata({
   params,
@@ -64,6 +65,10 @@ export default async function Layout({
               洛谷个人主页
             </a>
           </div>
+        </div>
+
+        <div className="rounded-4 shadow-bssb px-4 py-4 text-center mt-3">
+          <SnapshotTimeline uid={user.id} />
         </div>
       </div>
       <div className="col-md-8 col-12">

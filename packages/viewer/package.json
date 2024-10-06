@@ -26,6 +26,7 @@
     "rehype-katex": "^7.0.0",
     "remark-luogu-flavor": "^1.0.0",
     "remark-math": "^6.0.0",
+    "rsuite": "^5.68.1",
     "socket.io-client": "^4.7.5",
     "swr": "^2.2.5"
   },
