@@ -28,7 +28,10 @@ export async function getResponse(
   retries = 1,
 ) {
   const response = await fetch(url, {
-    headers: cookie ? { cookie: process.env.COOKIE! } : undefined,
+    headers: {
+      "x-luogu-type": "content-only",
+      ...(cookie ? { cookie: process.env.COOKIE! } : {}),
+    },
     cache: "no-cache",
   });
   logger.info(

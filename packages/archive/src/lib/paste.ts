@@ -24,10 +24,7 @@ export default async function savePaste(
   prisma: PrismaClient,
   id: string,
 ) {
-  const response = await getResponse(
-    logger,
-    lgUrl(`/paste/${id}?_contentOnly`, false),
-  );
+  const response = await getResponse(logger, lgUrl(`/paste/${id}`, false));
   const json = (await response.json()) as
     | { code: 403 | 404; currentData: LuoguError }
     | { code: 200; currentData: { paste: Paste } };
