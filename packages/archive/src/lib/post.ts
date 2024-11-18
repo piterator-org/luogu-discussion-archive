@@ -39,7 +39,7 @@ interface ReplyData {
 }
 
 interface ResponseBody {
-  currentData: {
+  data: {
     forum: ForumData;
     post: PostData;
     replies: ReplyData;
@@ -125,7 +125,7 @@ export async function savePost(
     });
   };
 
-  const { post, replies, forum } = (await fetchPage(1)).currentData;
+  const { post, replies, forum } = (await fetchPage(1)).data;
   const postTime = new Date(post.time * 1000);
 
   await upsertUserSnapshot(prisma, post.author);
@@ -184,7 +184,7 @@ export async function savePost(
     )[0];
     for (let i = Math.min(pages, maxPages); i > 0; i -= 1) {
       // eslint-disable-next-line no-await-in-loop
-      const { replies: newReplies } = (await fetchPage(i)).currentData;
+      const { replies: newReplies } = (await fetchPage(i)).data;
       // eslint-disable-next-line no-await-in-loop
       await saveReplies(newReplies.result);
       if (newReplies.result[newReplies.result.length - 1].id <= lastReply)

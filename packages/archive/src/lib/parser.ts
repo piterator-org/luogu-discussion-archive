@@ -30,6 +30,7 @@ export async function getResponse(
   const response = await fetch(url, {
     headers: {
       "x-luogu-type": "content-only",
+      "x-lentille-request": "content-only",
       ...(cookie ? { cookie: process.env.COOKIE! } : {}),
     },
     cache: "no-cache",

@@ -19,9 +19,7 @@ interface PostData {
 }
 
 interface PostListResponse {
-  code: 200;
-  currentTemplate: "DiscussList";
-  currentData: {
+  data: {
     forum: ForumData | null;
     publicForums: ForumData[];
     posts: {
@@ -45,7 +43,7 @@ export default async function getPostList(
     false,
   );
   const {
-    currentData: {
+    data: {
       posts: { result },
     },
   } = (await response.json()) as PostListResponse;
