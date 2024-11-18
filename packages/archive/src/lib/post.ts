@@ -64,11 +64,9 @@ export async function savePost(
   let allReplies: ReplyContent[] = [];
 
   const fetchPage = (page: number) =>
-    getResponse(
-      logger,
-      lgUrl(`/discuss/${id}?_contentOnly&page=${page}`),
-      false,
-    ).then((response): Promise<ResponseBody> => response.json());
+    getResponse(logger, lgUrl(`/discuss/${id}?page=${page}`), false).then(
+      (response): Promise<ResponseBody> => response.json(),
+    );
 
   const saveReplies = async (replies: ReplyContent[]) => {
     // eslint-disable-next-line no-restricted-syntax

@@ -22,11 +22,9 @@ export default async function saveJudgements(
   logger: BaseLogger,
   prisma: PrismaClient,
 ) {
-  const res = await getResponse(
-    logger,
-    lgUrl(`/judgement?_contentOnly`, false),
-    false,
-  ).then((response): Promise<JudgementResponse> => response.json());
+  const res = await getResponse(logger, lgUrl(`/judgement`, false), false).then(
+    (response): Promise<JudgementResponse> => response.json(),
+  );
 
   const operations: PrismaPromise<unknown>[] = [];
   const judgements = res.currentData.logs;

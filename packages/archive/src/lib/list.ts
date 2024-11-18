@@ -41,7 +41,7 @@ export default async function getPostList(
 ) {
   const response = await getResponse(
     logger,
-    lgUrl(`/discuss?_contentOnly&page=${page}`),
+    lgUrl(`/discuss?page=${page}`),
     false,
   );
   const {
