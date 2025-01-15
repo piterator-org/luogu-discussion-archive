@@ -2,11 +2,14 @@
 
 import "katex/dist/katex.min.css";
 import "highlight.js/styles/tokyo-night-dark.css";
-import remarkLuoguFlavor from "remark-luogu-flavor";
-// import rehypeHighlight from "rehype-highlight";
+import "prismjs/themes/prism-okaidia.min.css";
+import remarkLuoguFlavor from "@luogu-discussion-archive/remark-lda-lfm";
+import rehypePrism from "rehype-prism-plus";
+
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 
 import { computePosition, shift } from "@floating-ui/dom";
+
 import UserInfo from "@/components/UserInfo";
 import UserAvatar from "@/components/UserAvatar";
 import useSWR from "swr";
@@ -40,7 +43,7 @@ function Tooltip({
       <div className="bg-body rounded-4 shadow-bssb-sm px-3 py-2x mb-2">
         <div className="d-flex me-auto">
           <div>
-            <UserAvatar className="" user={{ id: uid }} decoratorShadow="sm" />
+            <UserAvatar user={{ id: uid }} decoratorShadow="sm" />
           </div>
           <div className="ms-2x mt-1x">
             <div>
@@ -116,7 +119,7 @@ export default function Content({
             placement: "top",
             middleware: [shift()],
           }).then(({ x, y }) =>
-            Object.assign(tooltip.style, { left: `${x}px`, top: `${y}px` }),
+            Object.assign(tooltip.style, { left: `${x}px`, top: `${y}px` })
           );
         }
 
@@ -156,7 +159,7 @@ export default function Content({
             ],
           ] as [string, () => void][]
         ).forEach(([event, listener]) =>
-          element.addEventListener(event, listener),
+          element.addEventListener(event, listener)
         );
       });
   }, [contentRef, userMentions, userMentionedState]);
@@ -168,8 +171,7 @@ export default function Content({
         ref={contentRef}
       >
         <Markdown
-          // TODO: upgrade the version of rehypeHighlight
-          rehypePlugins={[rehypeKatex /* , rehypeHighlight */]}
+          rehypePlugins={[rehypeKatex, rehypePrism]}
           remarkPlugins={[
             [remarkMath, {}],
             [remarkLuoguFlavor, { userLinkPointToLuogu: false }],
