@@ -31,6 +31,8 @@ export async function getResponse(
     headers: {
       "x-luogu-type": "content-only",
       "x-lentille-request": "content-only",
+      "User-Agent": "LDABot",
+      From: "lda@piterator.com",
       ...(cookie ? { cookie: process.env.COOKIE! } : {}),
     },
     cache: "no-cache",
