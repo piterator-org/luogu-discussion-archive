@@ -96,21 +96,21 @@ export default function remarkLuoguFlavor(options) {
     gfmFootnote(),
     gfmStrikethrough({ singleTilde: false, ...settings }),
     gfmTable(),
-    gfmAutolinkLiteral()
+    gfmAutolinkLiteral(),
   );
 
   fromMarkdownExtensions.push(
     gfmFootnoteFromMarkdown(),
     gfmStrikethroughFromMarkdown(),
     gfmTableFromMarkdown(),
-    gfmAutolinkLiteralFromMarkdown()
+    gfmAutolinkLiteralFromMarkdown(),
   );
 
   toMarkdownExtensions.push(
     gfmFootnoteToMarkdown(),
     gfmTableToMarkdown(),
     gfmStrikethroughToMarkdown(),
-    gfmAutolinkLiteralToMarkdown()
+    gfmAutolinkLiteralToMarkdown(),
   );
 
   /**

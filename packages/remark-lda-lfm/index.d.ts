@@ -34,5 +34,5 @@ declare module "mdast" {
 }
 
 export default function remarkLuoguFlavor(): (
-  tree: import("mdast").Root
+  tree: import("mdast").Root,
 ) => void;
