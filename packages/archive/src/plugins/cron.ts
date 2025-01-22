@@ -1,7 +1,7 @@
 import { once } from "node:events";
 import type { FastifyPluginCallback } from "fastify";
 import fastifyPlugin from "fastify-plugin";
-import saveActivities from "../lib/activity";
+// import saveActivities from "../lib/activity";
 
 import delay from "../utils/delay";
 import getPostList from "../lib/list";
@@ -59,9 +59,9 @@ export default fastifyPlugin(
         });
 
     repeat(save);
-    repeat(() =>
-      saveActivities(logger, fastify.prisma).catch((err) => logger.error(err)),
-    );
+    // repeat(() =>
+    //   saveActivities(logger, fastify.prisma).catch((err) => logger.error(err)),
+    // );
     done();
   } as FastifyPluginCallback,
   { decorators: { fastify: ["prisma", "io"] } },
