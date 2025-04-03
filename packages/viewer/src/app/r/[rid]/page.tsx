@@ -59,7 +59,7 @@ export default async function Page({ params }: { params: { rid: string } }) {
           <div className="rounded-4 shadow-bssb">
             <div className="px-md-4x px-4 pt-md-3x pt-2x pb-md-4x pb-4 position-relative">
               <Content
-                discussionAuthor={reply.post.snapshots[0].author.id}
+                postAuthor={reply.post.snapshots[0].author.id}
                 content={reply.snapshots[0].content}
               />
               <span

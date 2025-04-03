@@ -62,7 +62,7 @@ export default function UserDiscussions({ uid }: { uid: string }) {
               }
             >
               <Content
-                discussionAuthor={discussion.snapshots[0].author.id}
+                postAuthor={discussion.snapshots[0].author.id}
                 content={discussion.snapshots[0].content}
                 // usersMetioned={discussion.usersMetioned}
               />

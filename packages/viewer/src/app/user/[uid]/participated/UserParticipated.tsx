@@ -114,7 +114,7 @@ export default function UserParticipated({
                         </span>
                       </summary>
                       <Content
-                        discussionAuthor={discussion.snapshots[0].author.id}
+                        postAuthor={discussion.snapshots[0].author.id}
                         content={discussion.snapshots[0].content}
                         // usersMetioned={discussion.usersMetioned}
                       />
@@ -180,9 +180,7 @@ export default function UserParticipated({
                               </div>
                               <div className="px-4 py-2 position-relative">
                                 <Content
-                                  discussionAuthor={
-                                    discussion.snapshots[0].author.id
-                                  }
+                                  postAuthor={discussion.snapshots[0].author.id}
                                   content={reply.snapshots[0].content}
                                   // usersMetioned={reply.usersMetioned}
                                 />

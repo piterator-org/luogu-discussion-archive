@@ -69,7 +69,7 @@ export default function Reply({
           <div className="reply-content pe-4 py-2 position-relative">
             {children}
             <Content
-              discussionAuthor={post.authorId}
+              postAuthor={post.authorId}
               content={snapshot.content}
               userMentionedState={[userId, setUserId]}
               key={userId}
