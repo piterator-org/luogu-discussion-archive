@@ -1,10 +1,10 @@
 "use client";
 
 import "katex/dist/katex.min.css";
-import "highlight.js/styles/tokyo-night-dark.css";
-import "prismjs/themes/prism-okaidia.min.css";
+import "highlight.js/styles/base16/tomorrow.min.css";
+
 import remarkLuoguFlavor from "@luogu-discussion-archive/remark-lda-lfm";
-import rehypePrism from "rehype-prism-plus";
+import rehypeHighlight from "rehype-highlight";
 
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 
@@ -82,11 +82,11 @@ function Tooltip({
 
 export default function Content({
   content,
-  discussionAuthor: postAuthor,
+  postAuthor,
   userMentionedState,
 }: {
   content: string;
-  discussionAuthor: number;
+  postAuthor: number;
   // eslint-disable-next-line react/require-default-props
   userMentionedState?: [number | null, (uid: number | null) => void];
 }) {
@@ -171,7 +171,7 @@ export default function Content({
         ref={contentRef}
       >
         <Markdown
-          rehypePlugins={[rehypeKatex, rehypePrism]}
+          rehypePlugins={[rehypeKatex, rehypeHighlight]}
           remarkPlugins={[
             [remarkMath, {}],
             [remarkLuoguFlavor, { userLinkPointToLuogu: false }],

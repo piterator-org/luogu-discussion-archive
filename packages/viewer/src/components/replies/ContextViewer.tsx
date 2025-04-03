@@ -79,7 +79,7 @@ export default function ContextViewer({
                 </span>
               )}
               <Content
-                discussionAuthor={discussionAuthor}
+                postAuthor={discussionAuthor}
                 content={data!.reply.snapshots[0].content}
               />
             </div>
