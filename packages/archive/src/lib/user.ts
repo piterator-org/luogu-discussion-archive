@@ -9,6 +9,7 @@ export interface UserSummary {
   color: Color;
   ccfLevel: number;
   isRoot?: true;
+  xcpcLevel?: number;
 }
 
 export const upsertUserSnapshot = async (
@@ -44,6 +45,8 @@ export const upsertUserSnapshot = async (
       background: undefined,
       slogan: undefined,
       avatar: undefined,
+      // TODO: 这里以后加上
+      xcpcLevel: undefined,
     };
     await tx.userSnapshot.create({
       data: {
