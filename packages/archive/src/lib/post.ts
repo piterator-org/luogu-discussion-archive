@@ -64,7 +64,7 @@ export async function savePost(
   let allReplies: ReplyContent[] = [];
 
   const fetchPage = (page: number) =>
-    getResponse(logger, lgUrl(`/discuss/${id}?page=${page}`), false).then(
+    getResponse(logger, lgUrl(`/discuss/${id}?page=${page}`)).then(
       (response): Promise<ResponseBody> => response.json(),
     );
 
