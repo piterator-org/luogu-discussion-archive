@@ -17,7 +17,7 @@
   "dependencies": {
     "@fastify/cors": "^8.5.0",
     "@logtail/pino": "^0.4.22",
-    "@prisma/client": "^5.15.0",
+    "@prisma/client": "^6.9.0",
     "@socket.io/admin-ui": "^0.5.1",
     "dotenv": "^16.4.5",
     "fastify": "^4.28.0",
@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "@luogu-discussion-archive/eslint-config": "workspace:*",
+    "@luogu-discussion-archive/typescript-config": "workspace:*",
     "@types/jsdom": "^21.1.7",
     "eslint": "^9.29.0",
     "typescript": "^5.4.5"

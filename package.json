@@ -3,22 +3,16 @@
   "private": true,
   "license": "AGPL-3.0-only",
   "scripts": {
-    "prepare": "husky install && prisma generate",
-    "migrate": "dotenv -e .env.local -- pnpm exec prisma migrate deploy"
+    "prepare": "pnpm --filter db run db:generate && husky"
   },
   "packageManager": "pnpm@10.12.1",
   "pnpm": {
     "neverBuiltDependencies": []
   },
-  "dependencies": {
-    "@prisma/client": "^5.15.0"
-  },
   "devDependencies": {
-    "dotenv-cli": "^7.4.2",
     "eslint": "^9.29.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.2",
-    "prettier": "^3.5.3",
-    "prisma": "^5.15.0"
+    "prettier": "^3.5.3"
   }
 }
