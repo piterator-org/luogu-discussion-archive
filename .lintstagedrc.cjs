@@ -1,10 +1,9 @@
-const eslint = "eslint --fix";
+const eslint = "eslint --flag unstable_config_lookup_from_file --fix";
 const prettier = "prettier --write";
-const prettierCheck = "prettier --check";
 const prisma = "prisma format --schema";
 
 module.exports = {
-  "*.{js,mjs,cjs,jsx,ts,tsx}": [eslint, prettierCheck],
+  "*.{js,mjs,cjs,jsx,ts,tsx}": [eslint, prettier],
   "*.{md,html,css,scss,json,yml,yaml}": prettier,
   "*.prisma": prisma,
 };

@@ -1,7 +1,0 @@
-node_modules/
-.next/
-dist/
-out/
-
-!.*rc.js
-!.*rc.[mc]js

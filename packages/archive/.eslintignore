@@ -1,5 +1,0 @@
-node_modules/
-dist/
-
-!.*rc.js
-!.*rc.[mc]js
