@@ -1,3 +1,4 @@
 {
+  "material-icon-theme.activeIconPack": "react",
   "prisma.scriptRunner": "pnpm --filter db exec"
 }
