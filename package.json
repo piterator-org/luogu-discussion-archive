@@ -20,8 +20,5 @@
     "lint-staged": "^15.2.7",
     "prettier": "^3.3.2",
     "prisma": "^5.15.0"
-  },
-  "engines": {
-    "pnpm": "^9"
   }
 }
