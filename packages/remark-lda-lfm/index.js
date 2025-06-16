@@ -43,26 +43,24 @@
  *   /user/${uid} (userMention) point to luogu or not. Default true. (optional)
  */
 
-import { visit } from "unist-util-visit";
-
-import { gfmFootnote } from "micromark-extension-gfm-footnote";
-import { gfmStrikethrough } from "micromark-extension-gfm-strikethrough";
-import { gfmTable } from "micromark-extension-gfm-table";
-import { gfmAutolinkLiteral } from "micromark-extension-gfm-autolink-literal";
-
 import {
   gfmAutolinkLiteralFromMarkdown,
   gfmAutolinkLiteralToMarkdown,
 } from "mdast-util-gfm-autolink-literal";
-import { gfmTableFromMarkdown, gfmTableToMarkdown } from "mdast-util-gfm-table";
-import {
-  gfmStrikethroughFromMarkdown,
-  gfmStrikethroughToMarkdown,
-} from "mdast-util-gfm-strikethrough";
 import {
   gfmFootnoteFromMarkdown,
   gfmFootnoteToMarkdown,
 } from "mdast-util-gfm-footnote";
+import {
+  gfmStrikethroughFromMarkdown,
+  gfmStrikethroughToMarkdown,
+} from "mdast-util-gfm-strikethrough";
+import { gfmTableFromMarkdown, gfmTableToMarkdown } from "mdast-util-gfm-table";
+import { gfmAutolinkLiteral } from "micromark-extension-gfm-autolink-literal";
+import { gfmFootnote } from "micromark-extension-gfm-footnote";
+import { gfmStrikethrough } from "micromark-extension-gfm-strikethrough";
+import { gfmTable } from "micromark-extension-gfm-table";
+import { visit } from "unist-util-visit";
 
 const mentionReg = /^\/user\/(\d+)$/;
 const legacyMentionReg = /^\/space\/show\?uid=(\d+)$/;
